@@ -1,7 +1,7 @@
 # Alcance del Proyecto — Versión 1.0
 
 ## Nombre del proyecto
-PatitasConectadas — Sistema de Gestión de Adopción de Mascotas
+Patitas Conectadas — Sistema de Gestión de Adopción de Mascotas
 
 ## 1. Objetivo general
 Desarrollar una aplicación web que permita a personas interesadas en adoptar consultar mascotas disponibles en un refugio, enviar solicitudes de adopción y darles seguimiento, mientras el refugio gestiona y responde dichas solicitudes.
