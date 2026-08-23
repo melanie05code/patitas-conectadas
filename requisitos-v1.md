@@ -21,4 +21,4 @@
 | RNF-03 | La aplicación debe ser responsive (accesible desde móvil y escritorio) |
 | RNF-04 | Solo un administrador autenticado puede modificar el catálogo de mascotas o el estado de una solicitud |
 
-> Nota: este listado corresponde a la versión inicial (v1.0) y se irá refinando en próximas iteraciones, según lo indica la guía de la actividad.
+> Nota: este listado corresponde a la versión inicial y se irá refinando en próximas iteraciones
