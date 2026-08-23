@@ -1,4 +1,4 @@
-# PatitasConectadas — Sistema de Gestión de Adopción de Mascotas
+# Patitas Conectadas — Sistema de Gestión de Adopción de Mascotas
 
 Proyecto universitario: Avance 1 del Proyecto Integrador — análisis de requisitos y arquitectura inicial de un sistema de adopción de mascotas.
 
