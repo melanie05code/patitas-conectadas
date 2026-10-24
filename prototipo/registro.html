@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Crear cuenta — Patitas Conectadas</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div id="topbar" class="topbar"></div>
+  <div class="container narrow">
+    <div class="card">
+      <div class="logo-block">
+        <div class="paw">🐾</div>
+        <h1>Crear cuenta</h1>
+        <p class="subtitle">Únete y empieza a buscar a tu mascota ideal</p>
+      </div>
+      <div id="alertBox"></div>
+      <form id="regForm">
+        <label>Nombre completo</label>
+        <input type="text" id="name" required placeholder="Tu nombre">
+        <label>Correo electrónico</label>
+        <input type="email" id="email" required placeholder="tu@correo.com">
+        <label>Contraseña</label>
+        <input type="password" id="password" required placeholder="Mínimo 6 caracteres" minlength="6">
+        <label>Confirmar contraseña</label>
+        <input type="password" id="password2" required minlength="6">
+        <button type="submit" class="full">Crear cuenta</button>
+      </form>
+      <p class="link-line">¿Ya tienes cuenta? <a href="login.html">Inicia sesión</a></p>
+    </div>
+  </div>
+    <footer class="site-footer-mini">📍 Managua, Nicaragua &nbsp;·&nbsp; 📞 +505 8888-0000 &nbsp;·&nbsp; ✉ contacto@patitasconectadas.com<br><span style="opacity:0.7;">Patitas Conectadas — Proyecto Integrador UCN 2026</span></footer>
+  <script src="js/app.js"></script>
+  <script>
+    renderTopbar();
+    document.getElementById("regForm").addEventListener("submit", function(e){
+      e.preventDefault();
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim().toLowerCase();
+      const password = document.getElementById("password").value;
+      const password2 = document.getElementById("password2").value;
+      const box = document.getElementById("alertBox");
+
+      if (password !== password2) {
+        box.innerHTML = '<div class="alert error">Las contraseñas no coinciden.</div>';
+        return;
+      }
+      const users = db.getUsers();
+      if (users.some(u => u.email.toLowerCase() === email)) {
+        box.innerHTML = '<div class="alert error">Ya existe una cuenta con ese correo.</div>';
+        return;
+      }
+      const newUser = { id: Date.now(), name, email, password, role: "adoptante" };
+      users.push(newUser);
+      db.saveUsers(users);
+      session.set(newUser);
+      window.location.href = "catalogo.html";
+    });
+  </script>
+</body>
+</html>

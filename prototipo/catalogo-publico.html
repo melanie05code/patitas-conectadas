@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Mascotas disponibles — Patitas Conectadas</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div id="topbar" class="topbar"></div>
+  <div class="container">
+    <h1>Mascotas disponibles</h1>
+    <p class="subtitle">Explora nuestro catálogo. Para solicitar una adopción necesitarás crear una cuenta gratis.</p>
+
+    <input type="text" id="search" placeholder="Buscar mascota por nombre...">
+    <div class="filters" style="margin-top:14px;">
+      <div class="filter-chip active" data-type="Todos">Todos</div>
+      <div class="filter-chip" data-type="Perro">Perros</div>
+      <div class="filter-chip" data-type="Gato">Gatos</div>
+    </div>
+
+    <div class="pet-grid" id="petGrid"></div>
+  </div>
+    <footer class="site-footer-mini">📍 Managua, Nicaragua &nbsp;·&nbsp; 📞 +505 8888-0000 &nbsp;·&nbsp; ✉ contacto@patitasconectadas.com<br><span style="opacity:0.7;">Patitas Conectadas — Proyecto Integrador UCN 2026</span></footer>
+  <script src="js/app.js"></script>
+  <script>
+    renderTopbar("catalogo");
+
+    let currentFilter = "Todos";
+
+    function renderPets() {
+      const pets = db.getPets();
+      const query = document.getElementById("search").value.trim().toLowerCase();
+      const filtered = pets.filter(p => {
+        const matchesType = currentFilter === "Todos" || p.type === currentFilter;
+        const matchesQuery = p.name.toLowerCase().includes(query);
+        return matchesType && matchesQuery;
+      });
+      const grid = document.getElementById("petGrid");
+      if (filtered.length === 0) {
+        grid.innerHTML = '<div class="empty-state">No se encontraron mascotas con ese criterio.</div>';
+        return;
+      }
+      grid.innerHTML = filtered.map(p => `
+        <a class="pet-card" href="detalle.html?id=${p.id}">
+          <div class="pet-photo">${petIcon(p.type)}</div>
+          <div class="pet-info">
+            <div class="name">${p.name}</div>
+            <div class="age">${p.age} · ${p.type}</div>
+            <span class="badge ${p.status==='Disponible' ? 'green' : 'gray'}" style="margin-top:8px;">${p.status}</span>
+          </div>
+        </a>
+      `).join("");
+    }
+
+    document.getElementById("search").addEventListener("input", renderPets);
+    document.querySelectorAll(".filter-chip").forEach(chip => {
+      chip.addEventListener("click", () => {
+        document.querySelectorAll(".filter-chip").forEach(c => c.classList.remove("active"));
+        chip.classList.add("active");
+        currentFilter = chip.dataset.type;
+        renderPets();
+      });
+    });
+
+    renderPets();
+  </script>
+</body>
+</html>

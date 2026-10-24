@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Patitas Conectadas — Adopta a tu nuevo mejor amigo</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div id="topbar" class="topbar"></div>
+
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-paw">🐾</div>
+      <h1 class="hero-title">Encuentra a tu nuevo mejor amigo</h1>
+      <p class="hero-subtitle">Conectamos mascotas rescatadas con familias que quieren darles un hogar. Adopta, no compres.</p>
+      <div class="hero-actions">
+        <a href="catalogo-publico.html" class="btn hero-btn">Ver mascotas disponibles</a>
+        <a href="registro.html" class="btn secondary hero-btn">Crear cuenta</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="container">
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-number" id="statAvailable">--</div>
+        <div class="stat-label">Mascotas disponibles</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="statAdopted">--</div>
+        <div class="stat-label">Adopciones realizadas</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">100%</div>
+        <div class="stat-label">Sin costo de adopción</div>
+      </div>
+    </div>
+
+    <div class="card mission-card">
+      <h2>Nuestra misión</h2>
+      <p style="color:#555; line-height:1.6;">
+        En Patitas Conectadas trabajamos junto a refugios locales para dar visibilidad a mascotas que buscan un hogar responsable.
+        Facilitamos todo el proceso: desde que exploras el catálogo hasta que das seguimiento a tu solicitud de adopción,
+        de forma transparente y sencilla.
+      </p>
+    </div>
+
+    <div class="steps-row">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <div class="step-title">Explora el catálogo</div>
+        <div class="step-desc">Conoce a las mascotas disponibles y su historia.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <div class="step-title">Envía tu solicitud</div>
+        <div class="step-desc">Cuéntanos por qué quieres adoptar y tus datos de contacto.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <div class="step-title">Da seguimiento</div>
+        <div class="step-desc">Consulta el estado de tu solicitud en cualquier momento.</div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-col">
+        <strong>🐾 Patitas Conectadas</strong>
+        <p>Adopción responsable de mascotas.</p>
+      </div>
+      <div class="footer-col">
+        <strong>Contacto del refugio</strong>
+        <p>📍 Managua, Nicaragua</p>
+        <p>📞 +505 8888-0000</p>
+        <p>✉ contacto@patitasconectadas.com</p>
+      </div>
+      <div class="footer-col">
+        <strong>Síguenos</strong>
+        <p>Facebook · Instagram · TikTok</p>
+      </div>
+    </div>
+    <div class="footer-bottom">Patitas Conectadas — Proyecto Integrador UCN 2026</div>
+  </footer>
+
+  <script src="js/app.js"></script>
+  <script>
+    renderTopbar();
+    const pets = db.getPets();
+    document.getElementById("statAvailable").textContent = pets.filter(p => p.status === "Disponible").length;
+    document.getElementById("statAdopted").textContent = pets.filter(p => p.status === "Adoptada").length;
+  </script>
+</body>
+</html>
