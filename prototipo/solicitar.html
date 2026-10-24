@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Solicitar adopción — Patitas Conectadas</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div id="topbar" class="topbar"></div>
+  <div class="container narrow">
+    <div class="card">
+      <h1>Solicitar Adopción</h1>
+      <div id="petBanner"></div>
+      <div id="alertBox"></div>
+      <form id="reqForm">
+        <label>Teléfono de contacto</label>
+        <input type="tel" id="phone" required placeholder="8888-1234" pattern="[0-9]{4}-[0-9]{4}" title="Formato: 8888-1234">
+        <small id="phoneHint" style="display:block; color:var(--gray); font-size:0.78rem; margin-top:4px;">Formato: 8888-1234</small>
+        <label>Dirección</label>
+        <input type="text" id="address" required placeholder="Tu dirección">
+        <label>¿Por qué quieres adoptar a esta mascota?</label>
+        <textarea id="reason" required placeholder="Cuéntanos un poco..."></textarea>
+        <button type="submit" class="full">Enviar solicitud</button>
+      </form>
+      <p class="link-line" style="color:#999; font-size:0.8rem; margin-top:14px;">Un miembro del refugio revisará tu solicitud pronto</p>
+    </div>
+  </div>
+    <footer class="site-footer-mini">📍 Managua, Nicaragua &nbsp;·&nbsp; 📞 +505 8888-0000 &nbsp;·&nbsp; ✉ contacto@patitasconectadas.com<br><span style="opacity:0.7;">Patitas Conectadas — Proyecto Integrador UCN 2026</span></footer>
+  <script src="js/app.js"></script>
+  <script>
+    const s = requireAuth();
+    renderTopbar("catalogo");
+
+    const params = new URLSearchParams(window.location.search);
+    const petId = parseInt(params.get("id"));
+    const pet = db.getPets().find(p => p.id === petId);
+
+    if (pet) {
+      document.getElementById("petBanner").innerHTML = `
+        <div class="row-flex" style="background:var(--orange-light); padding:12px 16px; border-radius:8px; margin-bottom:6px;">
+          <div class="avatar" style="background:#F4D9A8; color:var(--orange-text);">${petIcon(pet.type)}</div>
+          <div style="flex:1; font-weight:bold; color:var(--orange-text);">Adoptando a: ${pet.name}</div>
+        </div>
+      `;
+    }
+
+    document.getElementById("reqForm").addEventListener("submit", function(e){
+      e.preventDefault();
+      if (!pet) return;
+      const phone = document.getElementById("phone").value.trim();
+      const phonePattern = /^[0-9]{4}-[0-9]{4}$/;
+      if (!phonePattern.test(phone)) {
+        document.getElementById("alertBox").innerHTML = '<div class="alert error">El teléfono debe tener el formato 8888-1234.</div>';
+        return;
+      }
+      const requests = db.getRequests();
+      requests.push({
+        id: Date.now(),
+        petId: pet.id,
+        userId: s.id,
+        phone: phone,
+        address: document.getElementById("address").value,
+        reason: document.getElementById("reason").value,
+        status: "En revisión",
+        date: new Date().toISOString().slice(0,10),
+      });
+      db.saveRequests(requests);
+
+      // marcar mascota como "En proceso" para que no la soliciten dos veces
+      const pets = db.getPets();
+      const p = pets.find(p => p.id === pet.id);
+      if (p) p.status = "En proceso";
+      db.savePets(pets);
+
+      window.location.href = "mis-solicitudes.html";
+    });
+  </script>
+</body>
+</html>

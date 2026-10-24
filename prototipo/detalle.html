@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Detalle de mascota — Patitas Conectadas</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div id="topbar" class="topbar"></div>
+  <div class="container narrow">
+    <div class="card" id="detailCard"></div>
+  </div>
+    <footer class="site-footer-mini">📍 Managua, Nicaragua &nbsp;·&nbsp; 📞 +505 8888-0000 &nbsp;·&nbsp; ✉ contacto@patitasconectadas.com<br><span style="opacity:0.7;">Patitas Conectadas — Proyecto Integrador UCN 2026</span></footer>
+  <script src="js/app.js"></script>
+  <script>
+    requireAuth();
+    renderTopbar("catalogo");
+
+    const params = new URLSearchParams(window.location.search);
+    const petId = parseInt(params.get("id"));
+    const pet = db.getPets().find(p => p.id === petId);
+    const card = document.getElementById("detailCard");
+
+    if (!pet) {
+      card.innerHTML = '<div class="empty-state">Mascota no encontrada. <a href="catalogo.html">Volver al catálogo</a></div>';
+    } else {
+      card.innerHTML = `
+        <div class="detail-photo">
+          ${petIcon(pet.type)}
+          <span class="badge ${pet.status==='Disponible' ? 'green' : 'gray'}">${pet.status}</span>
+        </div>
+        <h1>${pet.name}</h1>
+        <p class="subtitle">${pet.breed} · ${pet.age} · ${pet.sex}</p>
+        <h2 style="margin-top:10px;">Sobre mí</h2>
+        <p style="color:#555; line-height:1.5;">${pet.desc}</p>
+        ${pet.status === 'Disponible'
+          ? `<a class="btn full" href="solicitar.html?id=${pet.id}" style="margin-top:20px; display:block;">🐾 Solicitar Adopción</a>`
+          : `<button class="full" disabled style="background:#ccc; margin-top:20px;">Ya no disponible</button>`}
+        <a class="link-line" href="catalogo.html" style="display:block; margin-top:14px;">← Volver al catálogo</a>
+      `;
+    }
+  </script>
+</body>
+</html>
