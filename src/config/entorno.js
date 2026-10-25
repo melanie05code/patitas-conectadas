@@ -2,6 +2,7 @@ const path = require("path");
 require("dotenv").config({ path: path.join(__dirname, "..", "..", ".env"), quiet: true });
 
 const esPrueba = process.env.NODE_ENV === "test";
+const raizProyecto = path.join(__dirname, "..", "..");
 
 function requerida(nombre) {
   const valor = process.env[nombre];
@@ -14,6 +15,12 @@ function requerida(nombre) {
 module.exports = {
   esPrueba,
   puerto: Number(process.env.PORT) || 3000,
+  subidas: {
+    directorio: path.join(raizProyecto, esPrueba ? "uploads-pruebas" : "uploads"),
+    rutaPublica: "/uploads",
+    carpetaMascotas: "mascotas",
+    tamanoMaximo: 2 * 1024 * 1024,
+  },
   jwt: {
     secreto: requerida("JWT_SECRET"),
     expira: process.env.JWT_EXPIRA || "4h",
