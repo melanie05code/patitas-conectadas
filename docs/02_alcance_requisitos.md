@@ -1,7 +1,7 @@
 # 2. Alcance y requisitos actualizados
 
 > Versión 2.0 — Segundo Parcial. Reemplaza la sección de alcance y requisitos del Hito 1 (`docs/hito1/`).
-> Los estados de esta sección se actualizan al cerrar cada fase para que coincidan con el código de la rama `main`.
+> Estados verificados contra el código de la rama `main` al cierre del Segundo Parcial: cada "Implementado" o "Completado" tiene su archivo o su prueba como evidencia.
 
 ## 2.1 Alcance actualizado
 
