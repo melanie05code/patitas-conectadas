@@ -3,6 +3,7 @@ node_modules/
 .env.*
 !.env.example
 uploads/
+uploads-pruebas/
 database/migracion/respaldos/
 database/migracion/migracion_reporte.txt
 respaldo_localstorage.json

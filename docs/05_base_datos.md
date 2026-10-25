@@ -114,7 +114,7 @@ Se generan con `npm run db:seed`, que lee [`database/datos-semilla.js`](../datab
 |---|---|
 | `tipos_mascota` | 9: Perro, Gato, Ave, Conejo, Cuyo, Hámster, Pez, Tortuga, Otro |
 | `usuarios` | 2: Administrador Refugio (`admin@patitas.com`) y Edwin Obando (`edwin.obando@correo.com`) |
-| `mascotas` | 10 mascotas reales del refugio: 7 disponibles, 1 en proceso (Mechudo), 2 adoptadas (Encantador y Lara) |
+| `mascotas` | 10 mascotas reales del refugio: 7 disponibles, 1 en proceso (Mechudo), 2 adoptadas (Encantador y Lara); cada una con su foto real en `foto_url` |
 | `solicitudes` | 4 de Edwin: Mechudo *En revisión*, Encantador *Aprobada*, Lara *Aprobada*, Princesa Sucia *Rechazada* (volvió a estar disponible) |
 | `notificaciones` | 5, coherentes con las solicitudes, más un aviso de nueva mascota |
 
@@ -189,3 +189,11 @@ COMMIT;
 | Campos vacíos o demasiado largos | Servidor (validadores) y BD (`NOT NULL`, `CHECK`, longitudes) | 400 con el detalle de cada campo |
 | Mascota, tipo o solicitud inexistente | Servicio | 404 |
 | Cualquier otro error de MySQL | Middleware central de errores | Código coherente (400/409) o 500 genérico, nunca el detalle interno |
+
+## 5.10 Fotos de las mascotas
+
+- La base de datos guarda solo la **ruta pública** de la foto en `mascotas.foto_url` (por ejemplo `/uploads/mascotas/mechudo.jpg`), nunca el archivo. `NULL` significa "sin foto", y la interfaz muestra el ícono del tipo.
+- Los archivos viven en `uploads/mascotas/` (excluida de Git) y Express los sirve como estáticos en `/uploads`. Las pruebas usan `uploads-pruebas/` para no tocar las fotos reales.
+- Las fotos de los datos semilla están versionadas en [`database/seed-fotos/`](../database/seed-fotos/); `npm run db:instalar` las copia a `uploads/mascotas/`. Antes de incluirlas se verificó que ninguna tuviera metadatos EXIF (ubicación GPS).
+- Las subidas nuevas reciben un nombre aleatorio (UUID). Se aceptan solo JPG, PNG o WEBP de hasta 2 MB, y se comprueba la firma binaria del archivo, no solo el tipo declarado por el navegador.
+- Si una petición falla después de subir la foto (datos inválidos, tipo inexistente, regla de estado), el archivo se borra antes de responder. Al reemplazar o quitar una foto, la anterior se borra solo después de confirmar la transacción.

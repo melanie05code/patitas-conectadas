@@ -176,3 +176,8 @@ function fechaRelativa(valor) {
   if (dias < 7) return `Hace ${dias} días`;
   return formatearFecha(valor);
 }
+
+function fotoMascota(mascota) {
+  if (!mascota || !mascota.fotoUrl) return iconoMascota(mascota);
+  return `<img src="${escaparHtml(mascota.fotoUrl)}" alt="Foto de ${escaparHtml(mascota.nombre)}" loading="lazy">`;
+}

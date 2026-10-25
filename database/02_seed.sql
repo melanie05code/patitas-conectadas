@@ -14,20 +14,20 @@ INSERT INTO tipos_mascota (id, nombre, icono) VALUES
   (9, 'Otro', '🐾');
 
 INSERT INTO usuarios (id, nombre, email, password_hash, rol) VALUES
-  (1, 'Administrador Refugio', 'admin@patitas.com', '$2b$10$0Q5XpXVhKNlXiEksPgyBwOeAzNe7YIgpySwnZe0G4eNmVt.XAChFe', 'admin'),
-  (2, 'Edwin Obando', 'edwin.obando@correo.com', '$2b$10$RtmkhNCIIZHZHsJYGDBcl.lkuQQS31LLhxVRf6pVF7Ftu0opcsZYq', 'adoptante');
+  (1, 'Administrador Refugio', 'admin@patitas.com', '$2b$10$bbDynpT25srx75q2VaP09uYh3jpvaVCDY052Zc8a/NRuoik0DlvaS', 'admin'),
+  (2, 'Edwin Obando', 'edwin.obando@correo.com', '$2b$10$LWV6/e9HpCNJjSKZbQpu2.InJptnvhq.PHKjc1fEbKZAmvpE0dD3a', 'adoptante');
 
-INSERT INTO mascotas (id, nombre, tipo_id, edad, raza, sexo, descripcion, estado) VALUES
-  (1, 'Mechudo', 1, '5 años', 'Yorkshire Terrier', 'Macho', 'Pequeño, cariñoso y muy apegado a las personas. Le encanta que lo carguen y usar su suéter en los días frescos. Ideal para apartamento.', 'En proceso'),
-  (2, 'Cjotas', 1, '4 meses', 'Mestizo', 'Macho', 'Cachorro curioso de pelaje blanco con manchitas grises. Un poco tímido al principio, pero muy noble cuando toma confianza.', 'Disponible'),
-  (3, 'El Hambriento', 1, '3 años', 'Mestizo', 'Macho', 'Grande, tranquilo y siempre pendiente de la hora de comer. Es leal y protector, ideal para una casa con patio.', 'Disponible'),
-  (4, 'Encantador', 2, '2 años', 'Común atigrado', 'Macho', 'Gato atigrado muy sociable y juguetón. Se lleva bien con otros gatos y le encanta tomar el sol.', 'Adoptada'),
-  (5, 'Dormilona', 1, '6 meses', 'Mestiza', 'Hembra', 'Cachorra dulce y tranquila que ama dormir panza arriba en su camita. Perfecta para una familia que busque una compañera calmada.', 'Disponible'),
-  (6, 'Vaquita', 1, '2 años', 'Mestiza', 'Hembra', 'Blanca con negro, de ahí su nombre. Muy cariñosa, le encanta que le rasquen la pancita y se lleva bien con niños.', 'Disponible'),
-  (7, 'Calenturiento', 2, '1 año', 'Pelo largo atigrado', 'Macho', 'Gato de pelo largo con mucha personalidad y caras graciosas. Activo, curioso y muy expresivo.', 'Disponible'),
-  (8, 'Princesa Sucia', 1, '6 años', 'Poodle mestiza', 'Hembra', 'Pequeña de pelo rizado, tranquila y obediente. Le gusta jugar en el patio aunque termine llena de tierra. Necesita baños frecuentes.', 'Disponible'),
-  (9, 'Mordelona', 1, '3 años', 'Mestiza', 'Hembra', 'Juguetona y llena de energía; muerde suavecito cuando juega. Ideal para alguien activo con tiempo para paseos.', 'Disponible'),
-  (10, 'Lara', 3, '4 años', 'Lora de frente roja', 'Hembra', 'Lora verde muy sociable que disfruta estar en el hombro de las personas. Requiere un adoptante con experiencia en aves.', 'Adoptada');
+INSERT INTO mascotas (id, nombre, tipo_id, edad, raza, sexo, descripcion, estado, foto_url) VALUES
+  (1, 'Mechudo', 1, '5 años', 'Yorkshire Terrier', 'Macho', 'Pequeño, cariñoso y muy apegado a las personas. Le encanta que lo carguen y usar su suéter en los días frescos. Ideal para apartamento.', 'En proceso', '/uploads/mascotas/mechudo.jpg'),
+  (2, 'Cjotas', 1, '4 meses', 'Mestizo', 'Macho', 'Cachorro curioso de pelaje blanco con manchitas grises. Un poco tímido al principio, pero muy noble cuando toma confianza.', 'Disponible', '/uploads/mascotas/cjotas.jpg'),
+  (3, 'El Hambriento', 1, '3 años', 'Mestizo', 'Macho', 'Grande, tranquilo y siempre pendiente de la hora de comer. Es leal y protector, ideal para una casa con patio.', 'Disponible', '/uploads/mascotas/el-hambriento.jpg'),
+  (4, 'Encantador', 2, '2 años', 'Común atigrado', 'Macho', 'Gato atigrado muy sociable y juguetón. Se lleva bien con otros gatos y le encanta tomar el sol.', 'Adoptada', '/uploads/mascotas/encantador.jpg'),
+  (5, 'Dormilona', 1, '6 meses', 'Mestiza', 'Hembra', 'Cachorra dulce y tranquila que ama dormir panza arriba en su camita. Perfecta para una familia que busque una compañera calmada.', 'Disponible', '/uploads/mascotas/dormilona.jpg'),
+  (6, 'Vaquita', 1, '2 años', 'Mestiza', 'Hembra', 'Blanca con negro, de ahí su nombre. Muy cariñosa, le encanta que le rasquen la pancita y se lleva bien con niños.', 'Disponible', '/uploads/mascotas/vaquita.jpg'),
+  (7, 'Calenturiento', 2, '1 año', 'Pelo largo atigrado', 'Macho', 'Gato de pelo largo con mucha personalidad y caras graciosas. Activo, curioso y muy expresivo.', 'Disponible', '/uploads/mascotas/calenturiento.jpg'),
+  (8, 'Princesa Sucia', 1, '6 años', 'Poodle mestiza', 'Hembra', 'Pequeña de pelo rizado, tranquila y obediente. Le gusta jugar en el patio aunque termine llena de tierra. Necesita baños frecuentes.', 'Disponible', '/uploads/mascotas/princesa-sucia.jpg'),
+  (9, 'Mordelona', 1, '3 años', 'Mestiza', 'Hembra', 'Juguetona y llena de energía; muerde suavecito cuando juega. Ideal para alguien activo con tiempo para paseos.', 'Disponible', '/uploads/mascotas/mordelona.jpg'),
+  (10, 'Lara', 3, '4 años', 'Lora de frente roja', 'Hembra', 'Lora verde muy sociable que disfruta estar en el hombro de las personas. Requiere un adoptante con experiencia en aves.', 'Adoptada', '/uploads/mascotas/lara.jpg');
 
 INSERT INTO solicitudes (id, mascota_id, usuario_id, telefono, direccion, motivo, estado, fecha, actualizado_en) VALUES
   (1, 1, 2, '8888-1234', 'Barrio Altamira, Managua', 'Vivo en un apartamento tranquilo y trabajo desde casa, así que Mechudo tendría compañía todo el día.', 'En revisión', '2026-10-20 10:15:00', '2026-10-20 10:15:00'),

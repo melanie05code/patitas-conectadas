@@ -10,7 +10,7 @@ if (requiereSesion("adoptante")) {
   function tarjeta(solicitud) {
     return `
       <a class="card row-flex" href="seguimiento.html?id=${solicitud.id}" style="text-decoration:none; color:inherit;">
-        <div class="avatar">${iconoMascota(solicitud.mascota)}</div>
+        <div class="avatar">${fotoMascota(solicitud.mascota)}</div>
         <div style="flex:1;">
           <div style="font-weight:bold;">${escaparHtml(solicitud.mascota.nombre)}</div>
           <div style="color:var(--gray); font-size:0.85rem;">Solicitud ${numeroSolicitud(solicitud.id)} · ${escaparHtml(formatearFecha(solicitud.fecha))}</div>
