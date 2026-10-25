@@ -1,10 +1,11 @@
 const servicio = require("./servicio");
 const ErrorApp = require("../../utils/ErrorApp");
+const { validarDiagnostico } = require("./validaciones");
 
 async function diagnostico(req, res) {
-  const host = typeof req.query.host === "string" ? req.query.host : "";
-  if (!host) throw new ErrorApp(400, "Indica el host a diagnosticar.");
-  res.json(await servicio.diagnosticarHost(host));
+  const { errores, datos } = validarDiagnostico(req.query);
+  if (errores.length > 0) throw new ErrorApp(400, errores.join(" "));
+  res.json(await servicio.diagnosticarHost(datos.host));
 }
 
 module.exports = { diagnostico };
