@@ -1,6 +1,6 @@
 # 5. Base de datos
 
-> Motor: **MySQL 8.0** (servicio local `MySQL80`; el script también es compatible con XAMPP/MariaDB 10.4+).
+> Motor: **MySQL 8.0** (servicio local `MySQL80`). Todo se probó con MySQL 8.0. El script usa columnas generadas, `CHECK` con `REGEXP` y `utf8mb4`, disponibles también en MariaDB 10.4+ (la de XAMPP), pero **no se probó con XAMPP/MariaDB**.
 > Scripts: [`database/01_schema.sql`](../database/01_schema.sql) y [`database/02_seed.sql`](../database/02_seed.sql) (generado por [`database/generar-seed.js`](../database/generar-seed.js)).
 
 ## 5.1 Por qué un modelo relacional (cambio respecto al Hito 1)

@@ -6,7 +6,7 @@
 |---|---|---|---|
 | Estilo | Cliente-servidor por capas, monolito modular | **Se mantiene** | Sigue siendo adecuado para un solo refugio y un equipo de una persona |
 | Backend | Node.js + Express | **Node.js + Express 5** (API REST) en capas `routes → controller → service → repository` | Se conserva; Express 5 maneja de forma nativa los errores de funciones `async` |
-| Base de datos | MongoDB | **MySQL 8.0** (compatible con XAMPP/MariaDB) con `mysql2/promise` y pool de conexiones | El dominio es relacional (solicitud = usuario + mascota) y la rúbrica exige `CREATE TABLE`, PK, FK, UNIQUE, NOT NULL, integridad referencial y transacciones, que un motor relacional demuestra directamente |
+| Base de datos | MongoDB | **MySQL 8.0** (el Hito 1 mencionaba XAMPP; se usó el MySQL 8.0 instalado) con `mysql2/promise` y pool de conexiones | El dominio es relacional (solicitud = usuario + mascota) y la rúbrica exige `CREATE TABLE`, PK, FK, UNIQUE, NOT NULL, integridad referencial y transacciones, que un motor relacional demuestra directamente |
 | Frontend | React (SPA) | **HTML + CSS + JavaScript** del prototipo, servido por Express y consumiendo la API con `fetch` | El prototipo ya estaba validado con usuarios (evaluación heurística del Hito 1); reescribirlo en React no aporta a los requisitos de esta etapa y consumiría el tiempo de backend, pruebas y migración |
 | Datos en el navegador | localStorage como base de datos (usuarios y contraseñas en texto plano) | Solo un token JWT y datos mínimos de sesión en `sessionStorage` | Cumple RNF-02 y la retroalimentación del docente |
 | Tipos de mascota | Lista fija (Perro, Gato) | Tabla catálogo `tipos_mascota` administrable | El refugio puede recibir aves, conejos u otros animales sin cambiar código |
