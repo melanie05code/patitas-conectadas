@@ -40,15 +40,15 @@
     </div>
   </div>
     <footer class="site-footer-mini">📍 Managua, Nicaragua &nbsp;·&nbsp; 📞 +505 8888-0000 &nbsp;·&nbsp; ✉ contacto@patitasconectadas.com<br><span style="opacity:0.7;">Patitas Conectadas — Proyecto Integrador UCN 2026</span></footer>
+  <script src="js/comun.js"></script>
   <script src="js/app.js"></script>
   <script>
-    requireAuth("admin");
-    renderTopbar("admin");
+    requiereSesion("admin");
+    renderizarBarra("admin");
 
     function renderPending() {
       const requests = db.getRequests().filter(r => r.status === "En revisión");
       const pets = db.getPets();
-      const users = db.getUsers();
       const el = document.getElementById("pendingList");
       if (requests.length === 0) {
         el.innerHTML = '<div class="empty-state">No hay solicitudes pendientes.</div>';
@@ -56,13 +56,12 @@
       }
       el.innerHTML = requests.map(r => {
         const pet = pets.find(p => p.id === r.petId);
-        const user = users.find(u => u.id === r.userId);
         return `
           <div class="row-flex" style="padding:12px 0; border-bottom:1px solid #eee;">
             <div class="avatar">${petIcon(pet ? pet.type : "")}</div>
             <div style="flex:1;">
               <div style="font-weight:bold;">${escaparHtml(pet ? pet.name : "Mascota")}</div>
-              <div style="color:var(--gray); font-size:0.85rem;">Solicitante: ${escaparHtml(user ? user.name : "Desconocido")}</div>
+              <div style="color:var(--gray); font-size:0.85rem;">Solicitante: adoptante #${escaparHtml(r.userId)}</div>
             </div>
             <button onclick="resolveRequest(${r.id}, 'Aprobada')" style="background:var(--green);">✔ Aprobar</button>
             <button onclick="resolveRequest(${r.id}, 'Rechazada')" class="danger">✕ Rechazar</button>

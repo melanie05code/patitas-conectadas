@@ -14,6 +14,10 @@ function requerida(nombre) {
 module.exports = {
   esPrueba,
   puerto: Number(process.env.PORT) || 3000,
+  jwt: {
+    secreto: requerida("JWT_SECRET"),
+    expira: process.env.JWT_EXPIRA || "4h",
+  },
   db: {
     host: process.env.DB_HOST || "localhost",
     port: Number(process.env.DB_PORT) || 3306,
