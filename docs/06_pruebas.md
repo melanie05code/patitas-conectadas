@@ -6,7 +6,7 @@
 - **Entorno seguro:** base de datos separada **`patitas_test`** (`DB_NAME_TEST` en `.env`) y carpeta de fotos separada (`uploads-pruebas/`). Las pruebas se niegan a ejecutarse si la base de datos configurada no es la de pruebas ([`tests/ayudantes.js`](../tests/ayudantes.js)).
 - **Datos limpios:** antes de cada prueba se reinstala `patitas_test` con `01_schema.sql`, `02_seed.sql` y las fotos semilla, así cada prueba es independiente.
 - **Ejecución:** `npm test` (en serie, `--runInBand`, porque todas comparten la misma base de datos).
-- **Resultado:** **27 pruebas, 27 aprobadas** (13 positivas y 14 negativas). Salida completa en [`docs/evidencias/npm-test.txt`](evidencias/npm-test.txt).
+- **Resultado:** **28 pruebas, 28 aprobadas** (14 positivas y 14 negativas). Salida completa en [`docs/evidencias/npm-test.txt`](evidencias/npm-test.txt).
 - **Capturas:** `npm run capturas` ([`scripts/capturas.js`](../scripts/capturas.js)) recorre la aplicación con Playwright sobre `patitas_test` y guarda las pantallas en [`docs/evidencias/`](evidencias/) con el ID de la prueba (`PR-xx_*.png`). Las pruebas que solo se pueden observar en la API (403, rollback, concurrencia, migración) se respaldan con la salida de `npm test` y los reportes de migración.
 
 ## 6.2 Tabla de pruebas
@@ -40,8 +40,9 @@
 | PR-25 | Migración (ETL completo) | Ejecutar la migración del respaldo de ejemplo contra `patitas_test` | Respaldo (JSON + `mysqldump`), conteos usuarios 5 = 2 + 2 + 1, mascotas 8 = 8, solicitudes 7 = 5 + 2, notificaciones 6 = 5 + 1, validaciones en OK, decisión ACEPTADA y contraseña de Juan verificable con bcrypt | Coincide | Aprobada | Test `PR-25 la migración de prueba hace respaldo, carga, valida y se acepta` · [`docs/evidencias/migracion.txt`](evidencias/migracion.txt) |
 | PR-26 | Migración (rollback) | Ejecutar la migración con `--max-descartes 0` | La validación del umbral falla, decisión RECHAZADA y los conteos del destino quedan idénticos | Coincide | Aprobada | Test `PR-26 si una validación falla, la migración hace rollback…` · [`docs/evidencias/migracion_rollback.txt`](evidencias/migracion_rollback.txt) |
 | PR-27 | Migración (entorno seguro) | Ejecutar la migración contra `patitas_conectadas` sin `--confirmar-produccion` y contra la base `mysql` | La migración se niega en ambos casos | Error "…agrega --confirmar-produccion…" y "Base de datos no permitida" | Aprobada | Test `PR-27 la migración se niega a correr contra producción sin confirmación expresa` · Salida en [`npm-test.txt`](evidencias/npm-test.txt) (prueba de API, sin pantalla) |
+| PR-28 | RF-03, RF-04 | Consultar el catálogo en su vista por defecto (`estado=Disponible,En proceso`), en la vista *Ver adoptadas* (`estado=Adoptada`), los filtros de tipo de cada vista y un estado inválido | Por defecto 8 mascotas sin adoptadas y Mechudo (*En proceso*) al final; adoptadas: Encantador y Lara; filtros Perro y Gato / Gato y Ave; estado inválido → 400 | Coincide | Aprobada | Test `PR-28 el catálogo muestra por defecto solo Disponibles y En proceso…` · Captura: [`PR-28_catalogo_sin_adoptadas.png`](evidencias/PR-28_catalogo_sin_adoptadas.png), [`PR-28_ver_adoptadas.png`](evidencias/PR-28_ver_adoptadas.png) |
 
-**Pruebas positivas (13):** PR-01, PR-04, PR-07, PR-08, PR-11, PR-13, PR-14, PR-18, PR-20, PR-21, PR-22, PR-24 y PR-25.
+**Pruebas positivas (14):** PR-01, PR-04, PR-07, PR-08, PR-11, PR-13, PR-14, PR-18, PR-20, PR-21, PR-22, PR-24, PR-25 y PR-28.
 **Pruebas negativas (14):** PR-02, PR-03, PR-05, PR-06, PR-09, PR-10, PR-12, PR-15, PR-16, PR-17, PR-19, PR-23, PR-26 y PR-27.
 
 ## 6.3 ¿La prueba de rollback de verdad detecta errores?

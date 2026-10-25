@@ -120,8 +120,8 @@ Detalle en [`05_base_datos.md` §5.7](05_base_datos.md).
 |---|---|---|---|---|---|
 | RF-01 Registro | Registro (`registro.html`) | `POST /api/auth/registro` | usuarios | `usuarios` | PR-01, PR-02, PR-03 |
 | RF-02 Inicio de sesión | Login (`login.html`) | `POST /api/auth/login`, `GET /api/auth/perfil` | usuarios | `usuarios` | PR-04, PR-05, PR-06 |
-| RF-03 Catálogo | Catálogo (`catalogo.html`, `catalogo-publico.html`) | `GET /api/mascotas`, `GET /api/tipos-mascota` | mascotas, tipos | `mascotas`, `tipos_mascota` | PR-07 |
-| RF-04 Detalle | Detalle (`detalle.html`) | `GET /api/mascotas/:id` | mascotas | `mascotas`, `tipos_mascota` | PR-08 |
+| RF-03 Catálogo | Catálogo (`catalogo.html`, `catalogo-publico.html`) | `GET /api/mascotas?estado=Disponible,En proceso` (o `estado=Adoptada` con *Ver adoptadas*), `GET /api/tipos-mascota` | mascotas, tipos | `mascotas`, `tipos_mascota` | PR-07, PR-28 |
+| RF-04 Detalle | Detalle (`detalle.html`) | `GET /api/mascotas/:id` | mascotas | `mascotas`, `tipos_mascota` | PR-08, PR-28 |
 | RF-05 Seguimiento | Seguimiento (`seguimiento.html`) | `GET /api/solicitudes/:id` | solicitudes | `solicitudes`, `mascotas`, `usuarios` | PR-21 |
 | RF-06 Enviar solicitud | Solicitar (`solicitar.html`) | `POST /api/solicitudes` | solicitudes | `solicitudes`, `mascotas`, `notificaciones` | PR-14, PR-15, PR-16, PR-20 |
 | RF-07 Notificaciones | Notificaciones (`notificaciones.html`) y contador en la barra | `GET /api/notificaciones`, `GET /api/notificaciones/no-leidas/total`, `PATCH /api/notificaciones/:id/leida`, `PATCH /api/notificaciones/leidas` | notificaciones | `notificaciones` | PR-18, PR-22, PR-23 |

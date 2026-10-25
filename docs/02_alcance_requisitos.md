@@ -95,6 +95,7 @@
 | 7 | *(nuevo)* Datos de usuario insertados con `innerHTML` sin escapar (riesgo XSS) | — | **Corregido**: función `escaparHtml` | `public/js/comun.js` |
 | 8 | *(nuevo)* Las páginas no tenían la etiqueta `viewport`, por lo que en móviles se veían con ancho de escritorio | — | **Corregido** | Todas las páginas de `public/` |
 | 9 | *(nuevo)* Las notificaciones no indicaban cuáles eran nuevas ni se podían marcar como leídas | — | **Corregido**: contador en la barra, no leídas destacadas y opción de marcarlas | `public/js/paginas/notificaciones.js` |
+| 10 | *(nuevo)* El catálogo se titula "Mascotas disponibles" pero mostraba también las mascotas adoptadas (Consistencia y estándares / Coincidencia entre el sistema y el mundo real) | — | **Corregido**: por defecto solo Disponibles y En proceso (estas al final); filtro *Ver adoptadas* con su propio título; el detalle de una adoptada no ofrece solicitarla | `public/js/paginas/catalogo.js`, [`PR-28_catalogo_sin_adoptadas.png`](evidencias/PR-28_catalogo_sin_adoptadas.png), [`PR-28_ver_adoptadas.png`](evidencias/PR-28_ver_adoptadas.png) |
 
 ## 2.6 Criterios de aceptación (RF-01 a RF-10)
 
@@ -112,15 +113,16 @@ Formato: **Dado** (contexto) / **Cuando** (acción) / **Entonces** (resultado ve
 4. **Dado** que el navegador guarda la sesión, **cuando** se revisa sessionStorage, **entonces** solo hay token y datos mínimos (id, nombre, rol), nunca la contraseña.
 
 ### RF-03 — Catálogo de mascotas
-1. **Dado** cualquier visitante, **cuando** abre el catálogo, **entonces** ve las mascotas con nombre, edad, tipo, estado y foto (o ícono del tipo).
+1. **Dado** cualquier visitante, **cuando** abre el catálogo ("Mascotas disponibles"), **entonces** ve solo las mascotas *Disponibles* y *En proceso*, con nombre, edad, tipo, estado y foto (o ícono del tipo); las *En proceso* aparecen al final con su etiqueta y **ninguna mascota adoptada aparece en esta vista**.
 2. **Dado** el catálogo, **cuando** escribe parte del nombre o elige un tipo, **entonces** solo se muestran las mascotas que coinciden.
 3. **Dado** que los tipos vienen de la base de datos, **cuando** el administrador agrega o desactiva un tipo, **entonces** los filtros del catálogo se actualizan sin cambiar código.
 4. **Dado** una búsqueda sin coincidencias, **entonces** se muestra *"No se encontraron mascotas con ese criterio"*.
+5. **Dado** el catálogo, **cuando** marca el filtro *Ver adoptadas*, **entonces** el título cambia a "Mascotas adoptadas", se muestran solo las mascotas *Adoptadas* con su etiqueta, los filtros de tipo muestran solo los tipos que tienen mascotas adoptadas, y no hay forma de solicitarlas; al desmarcarlo vuelve la vista de disponibles.
 
 ### RF-04 — Ficha de detalle
 1. **Dado** cualquier visitante, **cuando** abre una mascota del catálogo, **entonces** ve su foto, raza, edad, sexo, descripción y estado.
 2. **Dado** una mascota *Disponible* y un adoptante con sesión, **entonces** se muestra el botón *Solicitar adopción*; sin sesión, el botón invita a iniciar sesión.
-3. **Dado** una mascota *En proceso* o *Adoptada*, **entonces** el botón aparece deshabilitado como *Ya no disponible*.
+3. **Dado** una mascota *En proceso*, **entonces** el botón aparece deshabilitado como *En proceso de adopción*; **dado** una mascota *Adoptada*, **entonces** se muestra el aviso *"Esta mascota ya encontró un hogar"* y ningún botón para solicitarla.
 4. **Dado** un id inexistente, **entonces** se muestra *"Mascota no encontrada"* (HTTP 404).
 
 ### RF-05 — Seguimiento de solicitud
