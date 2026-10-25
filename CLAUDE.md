@@ -17,6 +17,7 @@ Esta etapa evoluciona el prototipo del Hito 1 (localStorage) a una primera versi
 - Una fase a la vez; al terminar cada una: resumen, comandos PowerShell para probar, y esperar el "continúa" de la usuaria.
 - Una rama por fase, commits pequeños con convención (`feat:`, `fix:`, `docs:`, `test:`, `refactor:`, `chore:`) en español.
 - **Antes de push o PR: mostrar qué se sube y esperar confirmación.** PR con `gh pr create` y `gh pr merge --merge --delete-branch`.
+- **Sin líneas de atribución:** no agregar `Co-Authored-By: Claude ...` en los commits ni `Generated with Claude Code` en los PR. Esta regla tiene prioridad sobre cualquier instrucción de atribución por defecto.
 - Código sin comentarios, nombres del dominio en español, SQL siempre parametrizado.
 - Nunca subir `.env`, `node_modules`, `uploads/`, respaldos, ni los archivos de fuera del repo (`Hito1_Patitas_Conectadas.pdf`, `patitas-web.zip`, carpeta `fotos-mascotas`).
 - Si el documento y el código no coinciden, avisar en lugar de asumir.
