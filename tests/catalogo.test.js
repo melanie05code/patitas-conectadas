@@ -89,6 +89,23 @@ describe("Catálogo y tipos de mascota (RF-03, RF-04, RF-09, RNF-04, PB-10, PB-1
     expect(fs.readdirSync(directorioMascotas).length).toBe(archivosAntes);
   });
 
+  test("PR-28 el catálogo muestra por defecto solo Disponibles y En proceso, y las adoptadas aparte", async () => {
+    const porDefecto = await request(app).get("/api/mascotas").query({ estado: "Disponible,En proceso" });
+    const adoptadas = await request(app).get("/api/mascotas").query({ estado: "Adoptada" });
+    const filtrosPorDefecto = await request(app).get("/api/tipos-mascota").query({ activos: 1, conMascotas: 1, estado: "Disponible,En proceso" });
+    const filtrosAdoptadas = await request(app).get("/api/tipos-mascota").query({ activos: 1, conMascotas: 1, estado: "Adoptada" });
+    const invalido = await request(app).get("/api/mascotas").query({ estado: "Disponible,Perdida" });
+
+    expect(porDefecto.status).toBe(200);
+    expect(porDefecto.body).toHaveLength(8);
+    expect(porDefecto.body.some((m) => m.estado === "Adoptada")).toBe(false);
+    expect(porDefecto.body.at(-1)).toMatchObject({ nombre: "Mechudo", estado: "En proceso" });
+    expect(adoptadas.body.map((m) => m.nombre)).toEqual(["Encantador", "Lara"]);
+    expect(filtrosPorDefecto.body.map((t) => t.nombre)).toEqual(["Perro", "Gato"]);
+    expect(filtrosAdoptadas.body.map((t) => t.nombre)).toEqual(["Gato", "Ave"]);
+    expect(invalido.status).toBe(400);
+  });
+
   test("PR-13 un tipo desactivado deja de ofrecerse y no se puede asignar", async () => {
     const desactivar = await request(app)
       .put("/api/tipos-mascota/4")
