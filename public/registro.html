@@ -30,36 +30,8 @@
     </div>
   </div>
     <footer class="site-footer-mini">📍 Managua, Nicaragua &nbsp;·&nbsp; 📞 +505 8888-0000 &nbsp;·&nbsp; ✉ contacto@patitasconectadas.com<br><span style="opacity:0.7;">Patitas Conectadas — Proyecto Integrador UCN 2026</span></footer>
-  <script src="js/app.js"></script>
-  <script>
-    if (!redirectIfLoggedIn()) renderTopbar();
-    document.getElementById("regForm").addEventListener("submit", function(e){
-      e.preventDefault();
-      const name = document.getElementById("name").value.trim();
-      const email = document.getElementById("email").value.trim().toLowerCase();
-      const password = document.getElementById("password").value;
-      const password2 = document.getElementById("password2").value;
-      const box = document.getElementById("alertBox");
-
-      if (password.length < 8) {
-        box.innerHTML = '<div class="alert error">La contraseña debe tener al menos 8 caracteres.</div>';
-        return;
-      }
-      if (password !== password2) {
-        box.innerHTML = '<div class="alert error">Las contraseñas no coinciden.</div>';
-        return;
-      }
-      const users = db.getUsers();
-      if (users.some(u => u.email.toLowerCase() === email)) {
-        box.innerHTML = '<div class="alert error">Ya existe una cuenta con ese correo.</div>';
-        return;
-      }
-      const newUser = { id: Date.now(), name, email, password, role: "adoptante" };
-      users.push(newUser);
-      db.saveUsers(users);
-      session.set(newUser);
-      window.location.href = "catalogo.html";
-    });
-  </script>
+  <script src="js/comun.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/paginas/registro.js"></script>
 </body>
 </html>
