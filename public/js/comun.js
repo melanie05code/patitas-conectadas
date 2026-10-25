@@ -88,7 +88,7 @@ function renderizarBarra(activa) {
   } else {
     enlaces = enlaceBarra("catalogo.html", "Mascotas", "catalogo", activa)
       + enlaceBarra("mis-solicitudes.html", "Mis Solicitudes", "solicitudes", activa)
-      + enlaceBarra("notificaciones.html", "Notificaciones", "notificaciones", activa);
+      + enlaceBarra("notificaciones.html", 'Notificaciones<span class="contador hidden" id="contadorNotificaciones"></span>', "notificaciones", activa);
   }
   if (actual) {
     enlaces += `<a href="login.html" id="btnSalir">Salir (${escaparHtml(actual.nombre.split(" ")[0])})</a>`;
@@ -103,6 +103,20 @@ function renderizarBarra(activa) {
       evento.preventDefault();
       cerrarSesion();
     });
+  }
+  if (actual && actual.rol === "adoptante") actualizarContadorNotificaciones();
+}
+
+async function actualizarContadorNotificaciones() {
+  const contador = document.getElementById("contadorNotificaciones");
+  if (!contador || typeof api === "undefined") return;
+  try {
+    const { total } = await api.get("/notificaciones/no-leidas/total");
+    contador.textContent = total > 9 ? "9+" : String(total);
+    contador.title = `${total} sin leer`;
+    contador.classList.toggle("hidden", total === 0);
+  } catch {
+    contador.classList.add("hidden");
   }
 }
 
@@ -143,4 +157,22 @@ function formatearFecha(valor, conHora = false) {
 
 function numeroSolicitud(id) {
   return `#${String(id).padStart(3, "0")}`;
+}
+
+function fechaRelativa(valor) {
+  const partes = /^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})(?::(\d{2}))?/.exec(valor || "");
+  if (!partes) return valor || "";
+  const [, anio, mes, dia, hora, minuto, segundo] = partes.map(Number);
+  const fecha = new Date(anio, mes - 1, dia, hora, minuto, segundo || 0);
+  const minutos = Math.floor((Date.now() - fecha.getTime()) / 60000);
+  if (minutos < 1) return "Hace un momento";
+  if (minutos < 60) return `Hace ${minutos} minuto${minutos === 1 ? "" : "s"}`;
+  const horas = Math.floor(minutos / 60);
+  if (horas < 24) return `Hace ${horas} hora${horas === 1 ? "" : "s"}`;
+  const hoy = new Date();
+  const inicioHoy = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
+  const dias = Math.round((inicioHoy - new Date(anio, mes - 1, dia)) / 86400000);
+  if (dias <= 1) return "Ayer";
+  if (dias < 7) return `Hace ${dias} días`;
+  return formatearFecha(valor);
 }
