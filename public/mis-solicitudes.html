@@ -32,10 +32,10 @@
           <a class="card row-flex" href="seguimiento.html?id=${r.id}" style="text-decoration:none; color:inherit;">
             <div class="avatar">${petIcon(pet ? pet.type : "")}</div>
             <div style="flex:1;">
-              <div style="font-weight:bold;">${pet ? pet.name : "Mascota eliminada"}</div>
-              <div style="color:var(--gray); font-size:0.85rem;">Solicitud #${String(r.id).slice(-3)} · ${r.date}</div>
+              <div style="font-weight:bold;">${escaparHtml(pet ? pet.name : "Mascota eliminada")}</div>
+              <div style="color:var(--gray); font-size:0.85rem;">Solicitud #${String(r.id).slice(-3)} · ${escaparHtml(r.date)}</div>
             </div>
-            <span class="badge ${badgeClass}">${r.status}</span>
+            <span class="badge ${badgeClass}">${escaparHtml(r.status)}</span>
           </a>
         `;
       }).join("");

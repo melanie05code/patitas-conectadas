@@ -9,7 +9,7 @@
   <div id="topbar" class="topbar"></div>
   <div class="container">
     <h1>Mascotas disponibles</h1>
-    <p class="subtitle">Explora nuestro catálogo. Para solicitar una adopción necesitarás crear una cuenta gratis.</p>
+    <p class="subtitle">Encuentra a tu compañero ideal entre nuestras mascotas rescatadas</p>
 
     <input type="text" id="search" placeholder="Buscar mascota por nombre...">
     <div class="filters" style="margin-top:14px;">
@@ -23,6 +23,7 @@
     <footer class="site-footer-mini">📍 Managua, Nicaragua &nbsp;·&nbsp; 📞 +505 8888-0000 &nbsp;·&nbsp; ✉ contacto@patitasconectadas.com<br><span style="opacity:0.7;">Patitas Conectadas — Proyecto Integrador UCN 2026</span></footer>
   <script src="js/app.js"></script>
   <script>
+    requireAuth();
     renderTopbar("catalogo");
 
     let currentFilter = "Todos";
@@ -44,9 +45,9 @@
         <a class="pet-card" href="detalle.html?id=${p.id}">
           <div class="pet-photo">${petIcon(p.type)}</div>
           <div class="pet-info">
-            <div class="name">${p.name}</div>
-            <div class="age">${p.age} · ${p.type}</div>
-            <span class="badge ${p.status==='Disponible' ? 'green' : 'gray'}" style="margin-top:8px;">${p.status}</span>
+            <div class="name">${escaparHtml(p.name)}</div>
+            <div class="age">${escaparHtml(p.age)} · ${escaparHtml(p.type)}</div>
+            <span class="badge ${p.status==='Disponible' ? 'green' : 'gray'}" style="margin-top:8px;">${escaparHtml(p.status)}</span>
           </div>
         </a>
       `).join("");

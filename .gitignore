@@ -1,0 +1,13 @@
+node_modules/
+.env
+.env.*
+!.env.example
+uploads/
+database/migracion/respaldos/
+database/migracion/migracion_reporte.txt
+respaldo_localstorage.json
+*.zip
+coverage/
+npm-debug.log*
+.DS_Store
+Thumbs.db
