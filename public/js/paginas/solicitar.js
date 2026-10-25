@@ -22,7 +22,7 @@ if (requiereSesion("adoptante")) {
       const mascota = await api.get(`/mascotas/${mascotaId}`);
       banner.innerHTML = `
         <div class="row-flex" style="background:var(--orange-light); padding:12px 16px; border-radius:8px; margin-bottom:6px;">
-          <div class="avatar" style="background:#F4D9A8; color:var(--orange-text);">${iconoMascota(mascota)}</div>
+          <div class="avatar" style="background:#F4D9A8; color:var(--orange-text);">${fotoMascota(mascota)}</div>
           <div style="flex:1; font-weight:bold; color:var(--orange-text);">Adoptando a: ${escaparHtml(mascota.nombre)}</div>
         </div>
       `;

@@ -74,7 +74,7 @@
 | PB-07 | Autenticación segura (hash bcrypt de contraseñas y JWT) | Alta | **Completado** | `src/modules/usuarios/servicio.js`, `src/middlewares/autenticacion.js` |
 | PB-08 | Validación de formato de teléfono | Media | **Completado** en el navegador, el servidor y la base de datos (hallazgo 5) | `public/js/paginas/solicitar.js`, `src/modules/solicitudes/validaciones.js` |
 | PB-09 | Notificaciones de cambio de estado (**internas en BD**; el correo queda fuera de alcance) | Media | **Completado** como notificaciones internas con contador de no leídas; el envío por correo queda como mejora futura | `src/modules/notificaciones/`, `public/js/paginas/notificaciones.js` |
-| PB-10 | Fotografías reales de las mascotas | Media | Pendiente | — |
+| PB-10 | Fotografías reales de las mascotas | Media | **Completado**: subida desde el panel (JPG, PNG o WEBP, máx. 2 MB) y fotos reales de las 10 mascotas en los datos semilla | `src/middlewares/subida.js`, `database/seed-fotos/` |
 | PB-11 | Reportes de adopciones para el refugio | Baja | Pendiente (mejora futura) | — |
 | PB-12 | Agendar cita de entrevista presencial tras la solicitud | Media | Pendiente (mejora futura) | — |
 | PB-13 | Registrar resultado de la entrevista y aprobación final | Media | Pendiente (mejora futura) | — |
@@ -89,7 +89,7 @@
 | 1 | Tipografía distinta en el campo de texto largo | Corregido | Corregido | `public/css/styles.css` |
 | 2 | Estado de la mascota desincronizado con la solicitud | Corregido | Corregido | `public/admin.html` |
 | 3 | Menú autenticado visible en Registro/Login con sesión iniciada | Pendiente | **Corregido**: con sesión se redirige al catálogo o al panel; sin sesión solo se ve el menú público | `public/login.html`, `public/registro.html`, `public/js/app.js` |
-| 4 | Fotos de mascotas como ícono, no imágenes reales | Parcial | Parcial (se cierra con PB-10) | — |
+| 4 | Fotos de mascotas como ícono, no imágenes reales | Parcial | **Corregido**: catálogo, detalle, solicitudes y panel muestran la foto real; si una mascota no tiene foto se muestra el ícono de su tipo | `public/js/comun.js` (`fotoMascota`), `public/js/paginas/catalogo.js` |
 | 5 | Teléfono sin validación de formato | Corregido | Corregido en el navegador, en el servidor (400) y en la BD (`CHECK`) | `public/js/paginas/solicitar.js`, `src/modules/solicitudes/validaciones.js`, `database/01_schema.sql` |
 | 6 | *(nuevo)* La ficha de detalle exigía sesión aunque el catálogo público enlazaba a ella | — | **Corregido**: detalle público, con botón para iniciar sesión | `public/detalle.html` |
 | 7 | *(nuevo)* Datos de usuario insertados con `innerHTML` sin escapar (riesgo XSS) | — | **Corregido**: función `escaparHtml` | `public/js/comun.js` |

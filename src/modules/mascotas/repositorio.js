@@ -68,10 +68,11 @@ async function crear({ nombre, tipoId, edad, raza, sexo, descripcion, fotoUrl = 
   return resultado.insertId;
 }
 
-async function actualizar(id, { nombre, tipoId, edad, raza, sexo, descripcion, estado }, conexion = pool) {
+async function actualizar(id, { nombre, tipoId, edad, raza, sexo, descripcion, estado, fotoUrl }, conexion = pool) {
+  const cambiaFoto = fotoUrl !== undefined;
   await conexion.execute(
-    "UPDATE mascotas SET nombre = ?, tipo_id = ?, edad = ?, raza = ?, sexo = ?, descripcion = ?, estado = ? WHERE id = ?",
-    [nombre, tipoId, edad, raza, sexo, descripcion, estado, id]
+    `UPDATE mascotas SET nombre = ?, tipo_id = ?, edad = ?, raza = ?, sexo = ?, descripcion = ?, estado = ?${cambiaFoto ? ", foto_url = ?" : ""} WHERE id = ?`,
+    [nombre, tipoId, edad, raza, sexo, descripcion, estado, ...(cambiaFoto ? [fotoUrl] : []), id]
   );
 }
 

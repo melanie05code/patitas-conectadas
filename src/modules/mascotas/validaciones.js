@@ -28,6 +28,7 @@ function validarMascota(cuerpo, { conEstado }) {
   if (conEstado) {
     datos.estado = texto(cuerpo.estado);
     if (!ESTADOS.includes(datos.estado)) errores.push("El estado debe ser Disponible, En proceso o Adoptada.");
+    datos.quitarFoto = cuerpo.quitarFoto === true || cuerpo.quitarFoto === "true";
   }
   return { errores, datos };
 }

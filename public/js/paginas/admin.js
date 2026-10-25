@@ -13,7 +13,38 @@ if (requiereSesion("admin")) {
     sexo: document.getElementById("m_sexo"),
     estado: document.getElementById("m_estado"),
     descripcion: document.getElementById("m_descripcion"),
+    foto: document.getElementById("m_foto"),
+    quitarFoto: document.getElementById("m_quitarFoto"),
   };
+  const FORMATOS_FOTO = ["image/jpeg", "image/png", "image/webp"];
+  const TAMANO_MAXIMO_FOTO = 2 * 1024 * 1024;
+
+  function mostrarVistaPrevia(src, texto) {
+    document.getElementById("vistaPrevia").classList.toggle("hidden", !src);
+    if (src) document.getElementById("imgVistaPrevia").src = src;
+    document.getElementById("textoVistaPrevia").textContent = texto || "";
+  }
+
+  campos.foto.addEventListener("change", () => {
+    const archivo = campos.foto.files[0];
+    const editando = estado.mascotaEditando;
+    const restaurar = () => mostrarVistaPrevia(editando && editando.fotoUrl, editando && editando.fotoUrl ? "Foto actual" : "");
+    if (!archivo) {
+      restaurar();
+      return;
+    }
+    if (!FORMATOS_FOTO.includes(archivo.type) || archivo.size > TAMANO_MAXIMO_FOTO) {
+      mostrarAlerta(alertaMascotas, "La foto debe ser JPG, PNG o WEBP y pesar como máximo 2 MB.");
+      campos.foto.value = "";
+      restaurar();
+      return;
+    }
+    alertaMascotas.innerHTML = "";
+    campos.quitarFoto.checked = false;
+    const lector = new FileReader();
+    lector.addEventListener("load", () => mostrarVistaPrevia(lector.result, `Nueva foto: ${archivo.name}`));
+    lector.readAsDataURL(archivo);
+  });
 
   const formTipo = document.getElementById("formTipo");
   const alertaTipos = document.getElementById("alertaTipos");
@@ -49,6 +80,8 @@ if (requiereSesion("admin")) {
       campos.estado.innerHTML = opcionesDeEstado(mascota.estado);
       campos.estado.value = mascota.estado;
     }
+    mostrarVistaPrevia(mascota && mascota.fotoUrl, mascota && mascota.fotoUrl ? "Foto actual" : "");
+    document.getElementById("campoQuitarFoto").classList.toggle("hidden", !(mascota && mascota.fotoUrl));
     formMascota.classList.remove("hidden");
     document.getElementById("btnNuevaMascota").classList.add("hidden");
     campos.nombre.focus();
@@ -71,7 +104,7 @@ if (requiereSesion("admin")) {
         <tr><th>Mascota</th><th>Tipo</th><th>Estado</th><th></th></tr>
         ${estado.mascotas.map((m) => `
           <tr>
-            <td>${escaparHtml(m.nombre)}</td>
+            <td><span class="miniatura">${fotoMascota(m)}</span>${escaparHtml(m.nombre)}</td>
             <td>${iconoMascota(m)} ${escaparHtml(m.tipo.nombre)}</td>
             <td><span class="badge ${claseEstado(m.estado)}">${escaparHtml(m.estado)}</span></td>
             <td><button type="button" class="small" data-editar-mascota="${m.id}">Editar</button></td>
@@ -103,7 +136,7 @@ if (requiereSesion("admin")) {
   function tarjetaSolicitud(solicitud) {
     return `
       <div class="row-flex" style="padding:12px 0; border-bottom:1px solid #eee; align-items:flex-start;">
-        <div class="avatar">${iconoMascota(solicitud.mascota)}</div>
+        <div class="avatar">${fotoMascota(solicitud.mascota)}</div>
         <div style="flex:1; min-width:200px;">
           <div style="font-weight:bold;">${escaparHtml(solicitud.mascota.nombre)} <span style="color:var(--gray); font-weight:normal; font-size:0.85rem;">· Solicitud ${numeroSolicitud(solicitud.id)} · ${escaparHtml(formatearFecha(solicitud.fecha))}</span></div>
           <div style="color:var(--gray); font-size:0.85rem;">Solicitante: ${escaparHtml(solicitud.usuario.nombre)} (${escaparHtml(solicitud.usuario.email)}) · Tel. ${escaparHtml(solicitud.telefono)}</div>
@@ -203,16 +236,19 @@ if (requiereSesion("admin")) {
   formMascota.addEventListener("submit", async (evento) => {
     evento.preventDefault();
     alertaMascotas.innerHTML = "";
-    const datos = {
-      nombre: campos.nombre.value.trim(),
-      tipoId: Number(campos.tipo.value),
-      edad: campos.edad.value.trim(),
-      raza: campos.raza.value.trim(),
-      sexo: campos.sexo.value,
-      descripcion: campos.descripcion.value.trim(),
-    };
+    const datos = new FormData();
+    datos.append("nombre", campos.nombre.value.trim());
+    datos.append("tipoId", campos.tipo.value);
+    datos.append("edad", campos.edad.value.trim());
+    datos.append("raza", campos.raza.value.trim());
+    datos.append("sexo", campos.sexo.value);
+    datos.append("descripcion", campos.descripcion.value.trim());
+    if (campos.foto.files[0]) datos.append("foto", campos.foto.files[0]);
     const editando = estado.mascotaEditando;
-    if (editando) datos.estado = campos.estado.value;
+    if (editando) {
+      datos.append("estado", campos.estado.value);
+      if (campos.quitarFoto.checked) datos.append("quitarFoto", "true");
+    }
     const boton = formMascota.querySelector("button[type=submit]");
     boton.disabled = true;
     try {
