@@ -1,0 +1,65 @@
+MIGRACIÓN DE DATOS — PATITAS CONECTADAS
+============================================================
+Fecha de ejecución : 2026-10-25 02:47:06
+Archivo de origen  : C:\proyectos\patitas-parcial2\patitas-conectadas\database\migracion\respaldo_localstorage.ejemplo.json
+Origen declarado   : Prototipo Hito 1 (localStorage del navegador) — ejemplo con casos de prueba
+Fecha de referencia: 2026-08-28 16:00:00 (para convertir fechas relativas)
+Base de datos      : patitas_test (entorno de pruebas)
+Modo               : real
+
+1. RESPALDO
+  Copia del JSON : C:\proyectos\patitas-parcial2\patitas-conectadas\database\migracion\respaldos\2026-10-25_0247\respaldo_localstorage_2026-10-25_0247.json
+  mysqldump      : C:\proyectos\patitas-parcial2\patitas-conectadas\database\migracion\respaldos\2026-10-25_0247\patitas_test_2026-10-25_0247.sql (12.3 KB)
+
+2-4. EXTRACCIÓN, TRANSFORMACIÓN Y CARGA
+  entidad         origen insertados vinculados descartados
+  usuarios             5          2          2           1
+  mascotas             8          8          0           0
+  solicitudes          7          5          0           2
+  notificaciones       6          5          0           1
+
+Registros vinculados a datos existentes (2)
+  - [usuarios] id origen 1: admin@patitas.com ya existía en el destino; se vincula sin modificarlo
+  - [usuarios] id origen 1724245200000: correo duplicado en el origen (juan@correo.com); se unifica con la primera cuenta
+
+Registros descartados (4)
+  - [usuarios] id origen 1724331600000: correo inválido ("correo-invalido")
+  - [solicitudes] id origen 1724677200000: huérfana: mascota 999 inexistente
+  - [solicitudes] id origen 1724763600000: teléfono inválido ("88-12")
+  - [notificaciones] id origen 1724600000000: huérfana: usuario 1724331600000 inexistente
+
+Transformaciones y avisos (10)
+  - [usuarios] id origen 2: contraseña en texto plano: se guardó con hash bcrypt
+  - [usuarios] id origen 2: contraseña de menos de 8 caracteres: se recomienda pedir que la cambie
+  - [usuarios] id origen 1724158800000: contraseña en texto plano: se guardó con hash bcrypt
+  - [mascotas] id origen 1724504400000: tipo desconocido ("Hurón"): se asigna "Otro"
+  - [solicitudes] id origen 1724590800000: teléfono normalizado de "8765 4321" a "8765-4321"
+  - [notificaciones] id origen 1: fecha relativa "Hace 2 horas" convertida a 2026-08-28 14:00:00
+  - [notificaciones] id origen 2: fecha relativa "Ayer" convertida a 2026-08-27 16:00:00
+  - [notificaciones] id origen 3: fecha relativa "Hace 2 días" convertida a 2026-08-26 16:00:00
+  - [notificaciones] id origen 1724590800001: fecha relativa "Hace un momento" convertida a 2026-08-28 16:00:00
+  - [notificaciones] id origen 1724700000000: fecha ilegible ("fecha desconocida"): se usa la fecha de exportación
+
+5. VALIDACIÓN
+  [OK] Conteo usuarios: origen = insertados + vinculados + descartados — 5 = 2 + 2 + 1
+  [OK] Registros de usuarios presentes en el destino — 2 de 2
+  [OK] Conteo mascotas: origen = insertados + vinculados + descartados — 8 = 8 + 0 + 0
+  [OK] Registros de mascotas presentes en el destino — 8 de 8
+  [OK] Conteo solicitudes: origen = insertados + vinculados + descartados — 7 = 5 + 0 + 2
+  [OK] Registros de solicitudes presentes en el destino — 5 de 5
+  [OK] Conteo notificaciones: origen = insertados + vinculados + descartados — 6 = 5 + 0 + 1
+  [OK] Registros de notificaciones presentes en el destino — 5 de 5
+  [OK] Sin correos duplicados en usuarios — 0 duplicados
+  [OK] Sin solicitudes huérfanas (sin usuario o mascota) — 0 huérfanas
+  [OK] Sin notificaciones huérfanas — 0 huérfanas
+  [FALLA] Descartes dentro del umbral aceptado (máximo 0) — 4 descartados
+
+Conteos en el destino
+  antes:    usuarios=2  mascotas=10  solicitudes=4  notificaciones=5
+  después:  usuarios=2  mascotas=10  solicitudes=4  notificaciones=5
+
+6. DECISIÓN
+  RECHAZADA — una o más validaciones fallaron; se revirtió todo (ROLLBACK)
+
+
+Reporte guardado en database\migracion\migracion_reporte.txt

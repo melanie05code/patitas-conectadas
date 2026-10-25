@@ -15,7 +15,8 @@
     "db:seed": "node database/generar-seed.js",
     "db:instalar": "node database/instalar.js",
     "db:instalar:test": "node database/instalar.js --test",
-    "test": "cross-env NODE_ENV=test jest --runInBand"
+    "test": "cross-env NODE_ENV=test jest --runInBand",
+    "migrar": "node database/migracion/migrar.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
