@@ -28,8 +28,8 @@
         <div class="notif card">
           <div class="avatar">🔔</div>
           <div>
-            <div>${n.text}</div>
-            <small>${n.date}</small>
+            <div>${escaparHtml(n.text)}</div>
+            <small>${escaparHtml(n.date)}</small>
           </div>
         </div>
       `).join("");

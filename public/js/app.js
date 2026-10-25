@@ -88,7 +88,7 @@ function renderTopbar(active) {
     if (s.role === "admin") {
       links += `<a href="admin.html" class="${active==='admin'?'active':''}">Panel Admin</a>`;
     }
-    links += `<a href="#" onclick="logout(); return false;">Salir (${s.name.split(" ")[0]})</a>`;
+    links += `<a href="#" onclick="logout(); return false;">Salir (${escaparHtml(s.name.split(" ")[0])})</a>`;
   } else {
     links += `<a href="catalogo-publico.html">Mascotas</a>`;
     links += `<a href="login.html">Iniciar sesión</a>`;
@@ -98,6 +98,15 @@ function renderTopbar(active) {
     <a class="brand" href="${s ? (s.role==='admin'?'admin.html':'catalogo.html') : 'index.html'}"><span class="paw">🐾</span> Patitas Conectadas</a>
     <nav>${links}</nav>
   `;
+}
+
+function escaparHtml(valor) {
+  return String(valor ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 }
 
 function initial(name) { return (name || "?").trim().charAt(0).toUpperCase(); }

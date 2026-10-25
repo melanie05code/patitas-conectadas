@@ -45,9 +45,9 @@
         <a class="pet-card" href="detalle.html?id=${p.id}">
           <div class="pet-photo">${petIcon(p.type)}</div>
           <div class="pet-info">
-            <div class="name">${p.name}</div>
-            <div class="age">${p.age} · ${p.type}</div>
-            <span class="badge ${p.status==='Disponible' ? 'green' : 'gray'}" style="margin-top:8px;">${p.status}</span>
+            <div class="name">${escaparHtml(p.name)}</div>
+            <div class="age">${escaparHtml(p.age)} · ${escaparHtml(p.type)}</div>
+            <span class="badge ${p.status==='Disponible' ? 'green' : 'gray'}" style="margin-top:8px;">${escaparHtml(p.status)}</span>
           </div>
         </a>
       `).join("");

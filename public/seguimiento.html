@@ -36,7 +36,7 @@
       content.innerHTML = `
         <div style="background:var(--orange-light); padding:14px 16px; border-radius:8px; margin-bottom:18px;">
           <div style="font-size:0.85rem; color:var(--orange-text);">Solicitud #${String(request.id).slice(-3)}</div>
-          <div style="font-weight:bold; font-size:1.1rem; color:var(--orange-text);">${pet ? pet.name : "Mascota"}</div>
+          <div style="font-weight:bold; font-size:1.1rem; color:var(--orange-text);">${escaparHtml(pet ? pet.name : "Mascota")}</div>
         </div>
         <div class="timeline">
           ${labels.map((label, i) => {
@@ -47,7 +47,7 @@
         </div>
         <div class="card" style="background:var(--gray-light); box-shadow:none; margin-top:16px;">
           <div style="font-size:0.85rem; font-weight:bold; color:#555;">Fecha de la solicitud</div>
-          <div>${request.date}</div>
+          <div>${escaparHtml(request.date)}</div>
         </div>
         <a class="link-line" href="mis-solicitudes.html" style="display:block; margin-top:14px;">← Volver a mis solicitudes</a>
       `;
