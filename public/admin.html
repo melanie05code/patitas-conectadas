@@ -55,6 +55,16 @@
             <label for="m_descripcion">Descripción</label>
             <textarea id="m_descripcion" required minlength="10" maxlength="2000"></textarea>
           </div>
+          <div class="full-row">
+            <label for="m_foto">Foto (opcional)</label>
+            <input type="file" id="m_foto" accept="image/jpeg,image/png,image/webp">
+            <small class="ayuda">JPG, PNG o WEBP de hasta 2 MB. Si la mascota no tiene foto se muestra el ícono de su tipo.</small>
+            <div class="vista-previa hidden" id="vistaPrevia">
+              <img id="imgVistaPrevia" alt="Vista previa de la foto">
+              <span id="textoVistaPrevia"></span>
+            </div>
+            <label class="campo-check hidden" id="campoQuitarFoto"><input type="checkbox" id="m_quitarFoto"> Quitar la foto actual</label>
+          </div>
         </div>
         <div class="form-actions">
           <button type="button" class="secondary" id="btnCancelarMascota">Cancelar</button>
