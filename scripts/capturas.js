@@ -57,11 +57,20 @@ async function principal() {
     await capturar(pagina, "pantalla_inicio");
 
     await pagina.goto(`${base}/catalogo-publico.html`);
-    await pagina.waitForFunction(() => [...document.querySelectorAll(".pet-photo img")].length === 10 && [...document.querySelectorAll(".pet-photo img")].every((i) => i.complete));
+    const fotosCargadas = (cantidad) => pagina.waitForFunction((n) => {
+      const fotos = [...document.querySelectorAll(".pet-photo img")];
+      return fotos.length === n && fotos.every((i) => i.complete);
+    }, cantidad);
+    await fotosCargadas(8);
     await capturar(pagina, "pantalla_catalogo_publico");
+    await capturar(pagina, "PR-28_catalogo_sin_adoptadas", { fullPage: true });
+    await pagina.check("#verAdoptadas");
+    await fotosCargadas(2);
+    await capturar(pagina, "PR-28_ver_adoptadas");
+    await pagina.uncheck("#verAdoptadas");
+    await fotosCargadas(8);
     await pagina.click(".filter-chip:has-text('Gato')");
-    await pagina.waitForFunction(() => document.querySelectorAll(".pet-card").length === 2);
-    await pagina.waitForFunction(() => [...document.querySelectorAll(".pet-photo img")].every((i) => i.complete));
+    await fotosCargadas(1);
     await capturar(pagina, "PR-07_catalogo_filtro_gato");
 
     await pagina.goto(`${base}/detalle.html?id=10`);
