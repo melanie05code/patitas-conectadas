@@ -9,11 +9,12 @@
 <body>
   <div id="topbar" class="topbar"></div>
   <div class="container">
-    <h1>Mascotas disponibles</h1>
-    <p class="subtitle">Explora nuestro catálogo. Para solicitar una adopción necesitarás crear una cuenta gratis.</p>
+    <h1 id="tituloCatalogo">Mascotas disponibles</h1>
+    <p class="subtitle" id="subtituloCatalogo">Explora nuestro catálogo. Para solicitar una adopción necesitarás crear una cuenta gratis.</p>
 
     <input type="text" id="search" placeholder="Buscar mascota por nombre...">
     <div class="filters" id="filtros" style="margin-top:14px;"></div>
+    <label class="campo-check"><input type="checkbox" id="verAdoptadas"> Ver adoptadas</label>
 
     <div class="pet-grid" id="petGrid"></div>
   </div>
