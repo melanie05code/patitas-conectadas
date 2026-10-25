@@ -41,8 +41,8 @@
 
 | Código | Descripción | Pantalla | Estado |
 |---|---|---|---|
-| RF-01 | El sistema debe permitir el registro de nuevos adoptantes | Registro | Prototipo (localStorage) |
-| RF-02 | El sistema debe permitir el inicio de sesión de adoptantes registrados | Login | Prototipo (localStorage) |
+| RF-01 | El sistema debe permitir el registro de nuevos adoptantes | Registro | **Implementado** (`POST /api/auth/registro`) |
+| RF-02 | El sistema debe permitir el inicio de sesión de adoptantes registrados | Login | **Implementado** (`POST /api/auth/login`, JWT) |
 | RF-03 | El sistema debe mostrar el catálogo de mascotas disponibles | Catálogo | Prototipo (localStorage) |
 | RF-04 | El sistema debe mostrar la ficha detallada de una mascota | Detalle | Prototipo (localStorage) |
 | RF-05 | El sistema debe permitir consultar el estado de una solicitud de adopción | Seguimiento | Prototipo (localStorage) |
@@ -57,21 +57,21 @@
 | Código | Descripción | Estado |
 |---|---|---|
 | RNF-01 | El sistema debe responder las consultas de seguimiento en menos de 2 segundos | Pendiente de medir con backend |
-| RNF-02 | Las contraseñas de usuario deben almacenarse cifradas (hash) | **No cumple aún**: el prototipo guarda contraseñas en texto plano en localStorage |
+| RNF-02 | Las contraseñas de usuario deben almacenarse cifradas (hash) | **Cumple**: hash bcrypt (10 rondas) en MySQL; el navegador solo guarda el token |
 | RNF-03 | La aplicación debe ser responsive (accesible desde móvil y escritorio) | Cumple (CSS del prototipo) |
-| RNF-04 | Solo un administrador autenticado puede modificar el catálogo o el estado de una solicitud | Parcial: solo se controla en el navegador |
+| RNF-04 | Solo un administrador autenticado puede modificar el catálogo o el estado de una solicitud | Parcial: middlewares `requiereAuth` y `requiereRol` listos; se aplican a las rutas de catálogo y solicitudes en las fases 4 y 5 |
 
 ## 2.4 Backlog priorizado actualizado
 
 | ID | Funcionalidad / Tarea | Prioridad | Estado | Evidencia |
 |---|---|---|---|---|
-| PB-01 | Registro y autenticación de adoptantes | Alta | Completado en prototipo; migración a backend en PB-06/PB-07 | `public/registro.html`, `public/login.html` |
+| PB-01 | Registro y autenticación de adoptantes | Alta | **Completado** con backend | `src/modules/usuarios/`, `public/js/paginas/login.js`, `public/js/paginas/registro.js` |
 | PB-02 | Catálogo de mascotas con filtros | Alta | Completado en prototipo | `public/catalogo.html`, `public/catalogo-publico.html` |
 | PB-03 | Solicitud y seguimiento de adopción | Alta | Completado en prototipo | `public/solicitar.html`, `public/seguimiento.html` |
 | PB-04 | Panel administrativo (aprobar/rechazar) | Alta | Completado en prototipo | `public/admin.html` |
-| PB-05 | Conexión a base de datos real (**MySQL**; antes MongoDB) | Alta | Pendiente | — |
-| PB-06 | Backend real con Node.js + Express | Alta | Pendiente | — |
-| PB-07 | Autenticación segura (hash bcrypt de contraseñas y JWT) | Alta | Pendiente | — |
+| PB-05 | Conexión a base de datos real (**MySQL**; antes MongoDB) | Alta | **Completado** (esquema, seed y pool de conexiones) | `database/01_schema.sql`, `src/config/db.js` |
+| PB-06 | Backend real con Node.js + Express | Alta | En progreso: servidor y módulo de usuarios listos | `src/app.js`, `src/modules/usuarios/` |
+| PB-07 | Autenticación segura (hash bcrypt de contraseñas y JWT) | Alta | **Completado** | `src/modules/usuarios/servicio.js`, `src/middlewares/autenticacion.js` |
 | PB-08 | Validación de formato de teléfono | Media | **Completado** en el navegador (hallazgo 5); la validación en el servidor se agrega con PB-06 | `public/solicitar.html` |
 | PB-09 | Notificaciones de cambio de estado (**internas en BD**; el correo queda fuera de alcance) | Media | Pendiente | — |
 | PB-10 | Fotografías reales de las mascotas | Media | Pendiente | — |

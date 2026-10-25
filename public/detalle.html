@@ -11,10 +11,11 @@
     <div class="card" id="detailCard"></div>
   </div>
     <footer class="site-footer-mini">📍 Managua, Nicaragua &nbsp;·&nbsp; 📞 +505 8888-0000 &nbsp;·&nbsp; ✉ contacto@patitasconectadas.com<br><span style="opacity:0.7;">Patitas Conectadas — Proyecto Integrador UCN 2026</span></footer>
+  <script src="js/comun.js"></script>
   <script src="js/app.js"></script>
   <script>
-    const s = session.get();
-    renderTopbar("catalogo");
+    const s = sesion.obtener();
+    renderizarBarra("catalogo");
 
     const catalogUrl = s ? "catalogo.html" : "catalogo-publico.html";
     const params = new URLSearchParams(window.location.search);
@@ -25,6 +26,8 @@
     let action;
     if (!pet || pet.status !== "Disponible") {
       action = `<button class="full" disabled style="background:#ccc; margin-top:20px;">Ya no disponible</button>`;
+    } else if (s && s.rol !== "adoptante") {
+      action = "";
     } else if (s) {
       action = `<a class="btn full" href="solicitar.html?id=${pet.id}" style="margin-top:20px; display:block;">🐾 Solicitar Adopción</a>`;
     } else {
