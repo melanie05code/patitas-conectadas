@@ -130,3 +130,17 @@ function parametroId(nombre = "id") {
   const valor = Number(new URLSearchParams(window.location.search).get(nombre));
   return Number.isInteger(valor) && valor > 0 ? valor : null;
 }
+
+const MESES = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
+
+function formatearFecha(valor, conHora = false) {
+  const partes = /^(\d{4})-(\d{2})-(\d{2})(?:[ T](\d{2}):(\d{2}))?/.exec(valor || "");
+  if (!partes) return valor || "";
+  const [, anio, mes, dia, hora, minuto] = partes;
+  const fecha = `${Number(dia)} ${MESES[Number(mes) - 1]} ${anio}`;
+  return conHora && hora ? `${fecha}, ${hora}:${minuto}` : fecha;
+}
+
+function numeroSolicitud(id) {
+  return `#${String(id).padStart(3, "0")}`;
+}
