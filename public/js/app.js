@@ -65,6 +65,12 @@ function requireAuth(role) {
   return s;
 }
 
+function redirectIfLoggedIn() {
+  const s = session.get();
+  if (s) window.location.replace(s.role === "admin" ? "admin.html" : "catalogo.html");
+  return !!s;
+}
+
 function logout() {
   session.clear();
   window.location.href = "login.html";

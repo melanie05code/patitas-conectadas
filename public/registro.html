@@ -32,7 +32,7 @@
     <footer class="site-footer-mini">📍 Managua, Nicaragua &nbsp;·&nbsp; 📞 +505 8888-0000 &nbsp;·&nbsp; ✉ contacto@patitasconectadas.com<br><span style="opacity:0.7;">Patitas Conectadas — Proyecto Integrador UCN 2026</span></footer>
   <script src="js/app.js"></script>
   <script>
-    renderTopbar();
+    if (!redirectIfLoggedIn()) renderTopbar();
     document.getElementById("regForm").addEventListener("submit", function(e){
       e.preventDefault();
       const name = document.getElementById("name").value.trim();
