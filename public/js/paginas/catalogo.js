@@ -13,7 +13,7 @@ if (!esPrivado || requiereSesion()) {
   function tarjeta(mascota) {
     return `
       <a class="pet-card" href="detalle.html?id=${mascota.id}">
-        <div class="pet-photo">${iconoMascota(mascota)}</div>
+        <div class="pet-photo">${fotoMascota(mascota)}</div>
         <div class="pet-info">
           <div class="name">${escaparHtml(mascota.nombre)}</div>
           <div class="age">${escaparHtml(mascota.edad)} · ${escaparHtml(mascota.tipo.nombre)}</div>
