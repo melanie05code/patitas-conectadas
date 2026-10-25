@@ -1,0 +1,41 @@
+{
+  "origen": "Prototipo Hito 1 (localStorage del navegador) — ejemplo con casos de prueba",
+  "exportadoEn": "2026-08-28T22:00:00.000Z",
+  "claves": ["pc_users", "pc_pets", "pc_requests", "pc_notifications"],
+  "datos": {
+    "pc_users": [
+      { "id": 1, "name": "Administrador Refugio", "email": "admin@patitas.com", "password": "admin123", "role": "admin" },
+      { "id": 2, "name": "Juan Pérez", "email": "juan@correo.com", "password": "123456", "role": "adoptante" },
+      { "id": 1724158800000, "name": "María López", "email": "  Maria.Lopez@Correo.com ", "password": "maria2026", "role": "adoptante" },
+      { "id": 1724245200000, "name": "Juan P.", "email": "JUAN@correo.com", "password": "otra1234", "role": "adoptante" },
+      { "id": 1724331600000, "name": "Cuenta sin correo", "email": "correo-invalido", "password": "12345678", "role": "adoptante" }
+    ],
+    "pc_pets": [
+      { "id": 1, "name": "Firulais", "age": "2 años", "type": "Perro", "breed": "Mestizo", "sex": "Macho", "desc": "Juguetón, sociable y le encanta correr en el parque. Ya está vacunado y esterilizado.", "status": "En proceso" },
+      { "id": 2, "name": "Michi", "age": "1 año", "type": "Gato", "breed": "Común europeo", "sex": "Hembra", "desc": "Tranquila y cariñosa, ideal para apartamentos. Le gusta dormir al sol.", "status": "Adoptada" },
+      { "id": 3, "name": "Rocky", "age": "3 años", "type": "Perro", "breed": "Pastor mestizo", "sex": "Macho", "desc": "Muy leal y protector. Necesita un hogar con espacio para jugar.", "status": "Disponible" },
+      { "id": 4, "name": "Luna", "age": "6 meses", "type": "Gato", "breed": "Siamés mestizo", "sex": "Hembra", "desc": "Cachorra muy curiosa y llena de energía.", "status": "Disponible" },
+      { "id": 5, "name": "Toby", "age": "4 años", "type": "Perro", "breed": "Poodle", "sex": "Macho", "desc": "Tranquilo, ya entrenado y perfecto para familias con niños.", "status": "Disponible" },
+      { "id": 6, "name": "Nina", "age": "2 años", "type": "Gato", "breed": "Persa mestiza", "sex": "Hembra", "desc": "Independiente pero cariñosa cuando toma confianza.", "status": "Disponible" },
+      { "id": 1724418000000, "name": "Pelusa", "age": "8 meses", "type": "conejo", "breed": "Mini lop", "sex": "Hembra", "desc": "Coneja dócil que disfruta las zanahorias y los mimos.", "status": "En proceso" },
+      { "id": 1724504400000, "name": "Kiwi", "age": "1 año", "type": "Hurón", "breed": "Hurón albino", "sex": "Macho", "desc": "Muy activo y curioso, necesita supervisión.", "status": "Disponible" }
+    ],
+    "pc_requests": [
+      { "id": 101, "petId": 1, "userId": 2, "phone": "8888-1234", "address": "Managua, Nicaragua", "reason": "Tengo patio grande y experiencia con perros.", "status": "En revisión", "date": "2026-08-20" },
+      { "id": 102, "petId": 2, "userId": 2, "phone": "8888-1234", "address": "Managua, Nicaragua", "reason": "Vivo solo y quiero compañía.", "status": "Aprobada", "date": "2026-08-15" },
+      { "id": 103, "petId": 3, "userId": 2, "phone": "8888-1234", "address": "Managua, Nicaragua", "reason": "Ya tuve un perro similar antes.", "status": "Rechazada", "date": "2026-08-10" },
+      { "id": 1724590800000, "petId": 1724418000000, "userId": 1724158800000, "phone": "8765 4321", "address": "Reparto San Juan, Managua", "reason": "Siempre quise una coneja y tengo un jardín cercado.", "status": "En revisión", "date": "2026-08-25" },
+      { "id": 1724677200000, "petId": 999, "userId": 2, "phone": "8888-1234", "address": "Managua, Nicaragua", "reason": "Solicitud de una mascota que ya fue eliminada.", "status": "En revisión", "date": "2026-08-26" },
+      { "id": 1724763600000, "petId": 4, "userId": 1724158800000, "phone": "88-12", "address": "Reparto San Juan, Managua", "reason": "Me encantan los gatos siameses.", "status": "En revisión", "date": "2026-08-26" },
+      { "id": 1724850000000, "petId": 5, "userId": 1724245200000, "phone": "8888-9999", "address": "Barrio Monseñor Lezcano, Managua", "reason": "Busco un perro tranquilo para mi familia.", "status": "Rechazada", "date": "2026-08-27" }
+    ],
+    "pc_notifications": [
+      { "id": 1, "userId": 2, "text": "Tu solicitud para Firulais está en revisión", "date": "Hace 2 horas" },
+      { "id": 2, "userId": 2, "text": "¡Tu solicitud para Michi fue aprobada!", "date": "Ayer" },
+      { "id": 3, "userId": 2, "text": "Nueva mascota disponible: Nina", "date": "Hace 2 días" },
+      { "id": 1724590800001, "userId": 1724158800000, "text": "Tu solicitud para Pelusa está en revisión", "date": "Hace un momento" },
+      { "id": 1724600000000, "userId": 1724331600000, "text": "Bienvenida a Patitas Conectadas", "date": "Hace 3 días" },
+      { "id": 1724700000000, "userId": 2, "text": "Recuerda completar tu perfil", "date": "fecha desconocida" }
+    ]
+  }
+}
