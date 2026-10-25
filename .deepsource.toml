@@ -1,0 +1,18 @@
+version = 1
+
+exclude_patterns = ["docs/**", "database/seed-fotos/**", "coverage/**"]
+
+[[analyzers]]
+name = "javascript"
+
+  [analyzers.meta]
+  environment = ["nodejs"]
+
+[[analyzers]]
+name = "secrets"
+
+[[analyzers]]
+name = "sql"
+
+[[analyzers]]
+name = "test-coverage"
