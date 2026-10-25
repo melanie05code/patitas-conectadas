@@ -28,54 +28,7 @@
   </div>
     <footer class="site-footer-mini">📍 Managua, Nicaragua &nbsp;·&nbsp; 📞 +505 8888-0000 &nbsp;·&nbsp; ✉ contacto@patitasconectadas.com<br><span style="opacity:0.7;">Patitas Conectadas — Proyecto Integrador UCN 2026</span></footer>
   <script src="js/comun.js"></script>
-  <script src="js/app.js"></script>
-  <script>
-    const s = requiereSesion("adoptante");
-    renderizarBarra("catalogo");
-
-    const params = new URLSearchParams(window.location.search);
-    const petId = parseInt(params.get("id"));
-    const pet = db.getPets().find(p => p.id === petId);
-
-    if (pet) {
-      document.getElementById("petBanner").innerHTML = `
-        <div class="row-flex" style="background:var(--orange-light); padding:12px 16px; border-radius:8px; margin-bottom:6px;">
-          <div class="avatar" style="background:#F4D9A8; color:var(--orange-text);">${petIcon(pet.type)}</div>
-          <div style="flex:1; font-weight:bold; color:var(--orange-text);">Adoptando a: ${escaparHtml(pet.name)}</div>
-        </div>
-      `;
-    }
-
-    document.getElementById("reqForm").addEventListener("submit", function(e){
-      e.preventDefault();
-      if (!pet) return;
-      const phone = document.getElementById("phone").value.trim();
-      const phonePattern = /^[0-9]{4}-[0-9]{4}$/;
-      if (!phonePattern.test(phone)) {
-        document.getElementById("alertBox").innerHTML = '<div class="alert error">El teléfono debe tener el formato 8888-1234.</div>';
-        return;
-      }
-      const requests = db.getRequests();
-      requests.push({
-        id: Date.now(),
-        petId: pet.id,
-        userId: s.id,
-        phone: phone,
-        address: document.getElementById("address").value,
-        reason: document.getElementById("reason").value,
-        status: "En revisión",
-        date: new Date().toISOString().slice(0,10),
-      });
-      db.saveRequests(requests);
-
-      // marcar mascota como "En proceso" para que no la soliciten dos veces
-      const pets = db.getPets();
-      const p = pets.find(p => p.id === pet.id);
-      if (p) p.status = "En proceso";
-      db.savePets(pets);
-
-      window.location.href = "mis-solicitudes.html";
-    });
-  </script>
+  <script src="js/api.js"></script>
+  <script src="js/paginas/solicitar.js"></script>
 </body>
 </html>

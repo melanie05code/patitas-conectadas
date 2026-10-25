@@ -75,4 +75,8 @@ async function actualizar(id, { nombre, tipoId, edad, raza, sexo, descripcion, e
   );
 }
 
-module.exports = { listar, buscarPorId, bloquearPorId, resumenSolicitudes, contarPorEstado, crear, actualizar };
+async function cambiarEstado(id, estado, conexion) {
+  await conexion.execute("UPDATE mascotas SET estado = ? WHERE id = ?", [estado, id]);
+}
+
+module.exports = { listar, buscarPorId, bloquearPorId, resumenSolicitudes, contarPorEstado, crear, actualizar, cambiarEstado };

@@ -1,7 +1,7 @@
 if (requiereSesion("admin")) {
   renderizarBarra("admin");
 
-  const estado = { tipos: [], mascotas: [], mascotaEditando: null, tipoEditando: null };
+  const estado = { tipos: [], mascotas: [], pendientes: [], mascotaEditando: null, tipoEditando: null };
 
   const formMascota = document.getElementById("formMascota");
   const alertaMascotas = document.getElementById("alertaMascotas");
@@ -99,6 +99,57 @@ if (requiereSesion("admin")) {
       </table>
     `;
   }
+
+  function tarjetaSolicitud(solicitud) {
+    return `
+      <div class="row-flex" style="padding:12px 0; border-bottom:1px solid #eee; align-items:flex-start;">
+        <div class="avatar">${iconoMascota(solicitud.mascota)}</div>
+        <div style="flex:1; min-width:200px;">
+          <div style="font-weight:bold;">${escaparHtml(solicitud.mascota.nombre)} <span style="color:var(--gray); font-weight:normal; font-size:0.85rem;">· Solicitud ${numeroSolicitud(solicitud.id)} · ${escaparHtml(formatearFecha(solicitud.fecha))}</span></div>
+          <div style="color:var(--gray); font-size:0.85rem;">Solicitante: ${escaparHtml(solicitud.usuario.nombre)} (${escaparHtml(solicitud.usuario.email)}) · Tel. ${escaparHtml(solicitud.telefono)}</div>
+          <div style="color:#555; font-size:0.88rem; margin-top:4px; overflow-wrap:anywhere;">“${escaparHtml(solicitud.motivo)}”</div>
+        </div>
+        <div class="acciones">
+          <button type="button" data-responder="${solicitud.id}" data-estado="Aprobada" style="background:var(--green);">✔ Aprobar</button>
+          <button type="button" data-responder="${solicitud.id}" data-estado="Rechazada" class="danger">✕ Rechazar</button>
+        </div>
+      </div>
+    `;
+  }
+
+  async function cargarSolicitudes() {
+    const contenedor = document.getElementById("pendingList");
+    try {
+      const pendientes = await api.get(`/admin/solicitudes?estado=${encodeURIComponent("En revisión")}`);
+      estado.pendientes = pendientes;
+      contenedor.innerHTML = pendientes.length
+        ? pendientes.map(tarjetaSolicitud).join("")
+        : '<div class="empty-state">No hay solicitudes pendientes.</div>';
+    } catch (error) {
+      mostrarAlerta(document.getElementById("alertaSolicitudes"), error.message);
+    }
+  }
+
+  document.getElementById("pendingList").addEventListener("click", async (evento) => {
+    const boton = evento.target.closest("[data-responder]");
+    if (!boton) return;
+    const alerta = document.getElementById("alertaSolicitudes");
+    const solicitud = estado.pendientes.find((s) => s.id === Number(boton.dataset.responder));
+    const respuesta = boton.dataset.estado;
+    const verbo = respuesta === "Aprobada" ? "aprobar" : "rechazar";
+    if (!window.confirm(`¿Seguro que quieres ${verbo} la solicitud de ${solicitud.usuario.nombre} para ${solicitud.mascota.nombre}?`)) return;
+    alerta.innerHTML = "";
+    boton.closest(".acciones").querySelectorAll("button").forEach((b) => { b.disabled = true; });
+    try {
+      await api.patch(`/admin/solicitudes/${solicitud.id}`, { estado: respuesta });
+      await Promise.all([cargarSolicitudes(), cargarMascotas()]);
+      const resultado = respuesta === "Aprobada" ? `${solicitud.mascota.nombre} ahora está Adoptada` : `${solicitud.mascota.nombre} vuelve a estar Disponible`;
+      mostrarAlerta(alerta, `Solicitud ${respuesta.toLowerCase()}: ${resultado} y se notificó a ${solicitud.usuario.nombre}.`, "success");
+    } catch (error) {
+      mostrarAlerta(alerta, error.message);
+      await cargarSolicitudes();
+    }
+  });
 
   async function cargarMascotas() {
     try {
@@ -205,6 +256,7 @@ if (requiereSesion("admin")) {
     guardarTipo(editando ? editando.id : null, datos, `El tipo ${datos.nombre} se guardó correctamente.`);
   });
 
+  cargarSolicitudes();
   cargarTipos();
   cargarMascotas();
 }
