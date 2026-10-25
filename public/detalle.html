@@ -13,16 +13,26 @@
     <footer class="site-footer-mini">📍 Managua, Nicaragua &nbsp;·&nbsp; 📞 +505 8888-0000 &nbsp;·&nbsp; ✉ contacto@patitasconectadas.com<br><span style="opacity:0.7;">Patitas Conectadas — Proyecto Integrador UCN 2026</span></footer>
   <script src="js/app.js"></script>
   <script>
-    requireAuth();
+    const s = session.get();
     renderTopbar("catalogo");
 
+    const catalogUrl = s ? "catalogo.html" : "catalogo-publico.html";
     const params = new URLSearchParams(window.location.search);
     const petId = parseInt(params.get("id"));
     const pet = db.getPets().find(p => p.id === petId);
     const card = document.getElementById("detailCard");
 
+    let action;
+    if (!pet || pet.status !== "Disponible") {
+      action = `<button class="full" disabled style="background:#ccc; margin-top:20px;">Ya no disponible</button>`;
+    } else if (s) {
+      action = `<a class="btn full" href="solicitar.html?id=${pet.id}" style="margin-top:20px; display:block;">🐾 Solicitar Adopción</a>`;
+    } else {
+      action = `<a class="btn full" href="login.html" style="margin-top:20px; display:block;">Inicia sesión para solicitar la adopción</a>`;
+    }
+
     if (!pet) {
-      card.innerHTML = '<div class="empty-state">Mascota no encontrada. <a href="catalogo.html">Volver al catálogo</a></div>';
+      card.innerHTML = `<div class="empty-state">Mascota no encontrada. <a href="${catalogUrl}">Volver al catálogo</a></div>`;
     } else {
       card.innerHTML = `
         <div class="detail-photo">
@@ -33,10 +43,8 @@
         <p class="subtitle">${pet.breed} · ${pet.age} · ${pet.sex}</p>
         <h2 style="margin-top:10px;">Sobre mí</h2>
         <p style="color:#555; line-height:1.5;">${pet.desc}</p>
-        ${pet.status === 'Disponible'
-          ? `<a class="btn full" href="solicitar.html?id=${pet.id}" style="margin-top:20px; display:block;">🐾 Solicitar Adopción</a>`
-          : `<button class="full" disabled style="background:#ccc; margin-top:20px;">Ya no disponible</button>`}
-        <a class="link-line" href="catalogo.html" style="display:block; margin-top:14px;">← Volver al catálogo</a>
+        ${action}
+        <a class="link-line" href="${catalogUrl}" style="display:block; margin-top:14px;">← Volver al catálogo</a>
       `;
     }
   </script>
