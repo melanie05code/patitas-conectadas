@@ -1,0 +1,13 @@
+{
+  "name": "patitas-conectadas",
+  "version": "2.0.0",
+  "description": "Sistema web de adopción de mascotas — Proyecto Integrador UCN 2026",
+  "private": true,
+  "license": "UNLICENSED",
+  "author": "Melanie Abigail Obando Rivera",
+  "main": "src/server.js",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {}
+}
