@@ -30,9 +30,9 @@ Cada funcionalidad se describe con la misma estructura: requisito, interfaz, ló
 |---|---|
 | **Requisito implementado** | RF-03, PB-16 |
 | **Interfaz** | `catalogo-publico.html` (visitantes) y `catalogo.html` (con sesión), ambos con [`public/js/paginas/catalogo.js`](../public/js/paginas/catalogo.js) |
-| **Lógica** | `GET /api/mascotas?tipoId=&q=&estado=` (público). Los filtros se generan con `GET /api/tipos-mascota?activos=1&conMascotas=1`, así que un tipo nuevo o desactivado se refleja sin cambiar código. La búsqueda se hace en el servidor y escapa los comodines `%` y `_` |
+| **Lógica** | `GET /api/mascotas?estado=Disponible,En proceso&tipoId=&q=` (público). Por defecto el catálogo muestra solo *Disponibles* y *En proceso* (estas al final); el filtro *Ver adoptadas* cambia a `estado=Adoptada` con el título "Mascotas adoptadas". Los filtros de tipo se generan con `GET /api/tipos-mascota?activos=1&conMascotas=1&estado=…`, contando solo las mascotas de la vista actual, así que un tipo nuevo o desactivado se refleja sin cambiar código. La búsqueda se hace en el servidor y escapa los comodines `%` y `_` |
 | **Datos** | `mascotas` ⋈ `tipos_mascota`, ordenadas por estado (Disponible primero) y nombre; índice `ix_mascotas_estado_tipo` |
-| **Resultado** | Tarjetas con foto real (o el ícono del tipo), edad, tipo y estado. Evidencia: PR-07, [`PR-07_catalogo_filtro_gato.png`](evidencias/PR-07_catalogo_filtro_gato.png), [`pantalla_catalogo_publico.png`](evidencias/pantalla_catalogo_publico.png) |
+| **Resultado** | Tarjetas con foto real (o el ícono del tipo), edad, tipo y estado. Evidencia: PR-07 y PR-28, [`PR-07_catalogo_filtro_gato.png`](evidencias/PR-07_catalogo_filtro_gato.png), [`PR-28_catalogo_sin_adoptadas.png`](evidencias/PR-28_catalogo_sin_adoptadas.png), [`PR-28_ver_adoptadas.png`](evidencias/PR-28_ver_adoptadas.png) |
 | **Manejo de errores** | Filtro de tipo o estado inválido → 400; sin resultados → "No se encontraron mascotas con ese criterio."; si la API no responde se muestra el mensaje de conexión |
 
 ## 3.4 Ficha de detalle
@@ -41,7 +41,7 @@ Cada funcionalidad se describe con la misma estructura: requisito, interfaz, ló
 |---|---|
 | **Requisito implementado** | RF-04 |
 | **Interfaz** | `detalle.html` + [`public/js/paginas/detalle.js`](../public/js/paginas/detalle.js) — ahora pública (antes exigía sesión aunque el catálogo público enlazaba a ella) |
-| **Lógica** | `GET /api/mascotas/:id`. El botón depende del estado y del rol: *Solicitar adopción* (adoptante y mascota disponible), *Inicia sesión para solicitar* (visitante), *Ya no disponible* (en proceso o adoptada), sin botón para el administrador |
+| **Lógica** | `GET /api/mascotas/:id`. El botón depende del estado y del rol: *Solicitar adopción* (adoptante y mascota disponible), *Inicia sesión para solicitar* (visitante), *En proceso de adopción* deshabilitado (en proceso), el aviso *"Esta mascota ya encontró un hogar"* sin botón (adoptada), y sin botón para el administrador |
 | **Datos** | `SELECT ... FROM mascotas m JOIN tipos_mascota t ... WHERE m.id = ?` |
 | **Resultado** | Foto, tipo, raza, edad, sexo, descripción y estado. Evidencia: PR-08, [`PR-08_detalle_mascota.png`](evidencias/PR-08_detalle_mascota.png), [`pantalla_movil_detalle.png`](evidencias/pantalla_movil_detalle.png) |
 | **Manejo de errores** | Id no numérico → 400; mascota inexistente → 404 "Mascota no encontrada." con enlace de regreso al catálogo |
