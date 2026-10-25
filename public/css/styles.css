@@ -371,3 +371,4 @@ button:disabled { opacity: 0.6; cursor: not-allowed; }
 @media (max-width: 600px) {
   .topbar nav a { margin-left: 0; margin-right: 14px; }
 }
+a.link-line { color: var(--teal-dark); font-weight: bold; text-decoration: none; }
