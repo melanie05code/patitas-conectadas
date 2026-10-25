@@ -197,3 +197,61 @@ COMMIT;
 - Las fotos de los datos semilla están versionadas en [`database/seed-fotos/`](../database/seed-fotos/); `npm run db:instalar` las copia a `uploads/mascotas/`. Antes de incluirlas se verificó que ninguna tuviera metadatos EXIF (ubicación GPS).
 - Las subidas nuevas reciben un nombre aleatorio (UUID). Se aceptan solo JPG, PNG o WEBP de hasta 2 MB, y se comprueba la firma binaria del archivo, no solo el tipo declarado por el navegador.
 - Si una petición falla después de subir la foto (datos inválidos, tipo inexistente, regla de estado), el archivo se borra antes de responder. Al reemplazar o quitar una foto, la anterior se borra solo después de confirmar la transacción.
+
+## 5.11 Operaciones de inserción, consulta y actualización
+
+Todas las operaciones están en los repositorios de cada módulo y usan **consultas parametrizadas** (`?`): los valores viajan separados del SQL, lo que impide la inyección SQL.
+
+### Insertar — registrar un adoptante ([`usuarios/repositorio.js`](../src/modules/usuarios/repositorio.js))
+
+```sql
+INSERT INTO usuarios (nombre, email, password_hash, rol) VALUES (?, ?, ?, ?);
+-- valores: 'Ana López', 'ana@correo.com', '$2b$10$…(hash bcrypt)…', 'adoptante'
+```
+
+```js
+const [resultado] = await pool.execute(
+  "INSERT INTO usuarios (nombre, email, password_hash, rol) VALUES (?, ?, ?, ?)",
+  [nombre, email, passwordHash, rol]
+);
+return resultado.insertId;
+```
+
+### Consultar — catálogo filtrado ([`mascotas/repositorio.js`](../src/modules/mascotas/repositorio.js))
+
+```sql
+SELECT m.id, m.nombre, m.edad, m.raza, m.sexo, m.descripcion, m.estado, m.foto_url AS fotoUrl,
+       t.id AS tipoId, t.nombre AS tipoNombre, t.icono AS tipoIcono
+FROM mascotas m
+INNER JOIN tipos_mascota t ON t.id = m.tipo_id
+WHERE m.tipo_id = ? AND m.estado IN (?, ?) AND m.nombre LIKE ?
+ORDER BY FIELD(m.estado, 'Disponible', 'En proceso', 'Adoptada'), m.nombre;
+-- valores: 2, 'Disponible', 'En proceso', '%calen%'
+```
+
+Otras consultas representativas:
+
+| Consulta | SQL (resumido) | Uso |
+|---|---|---|
+| Historial propio | `SELECT … FROM solicitudes s JOIN mascotas m … WHERE s.usuario_id = ? ORDER BY s.fecha DESC` | RF-10 |
+| Contador de no leídas | `SELECT COUNT(*) FROM notificaciones WHERE usuario_id = ? AND leida = 0` | RF-07 |
+| Estadísticas del inicio | `SELECT estado, COUNT(*) FROM mascotas GROUP BY estado` | Página de inicio |
+| Filtros del catálogo | `SELECT t.…, COUNT(m.id) FROM tipos_mascota t LEFT JOIN mascotas m ON m.tipo_id = t.id AND m.estado IN (…) WHERE t.activo = 1 GROUP BY t.id HAVING COUNT(m.id) > 0` | RF-03 |
+
+### Actualizar — editar una mascota ([`mascotas/repositorio.js`](../src/modules/mascotas/repositorio.js))
+
+```sql
+UPDATE mascotas
+SET nombre = ?, tipo_id = ?, edad = ?, raza = ?, sexo = ?, descripcion = ?, estado = ?, foto_url = ?
+WHERE id = ?;
+```
+
+Se ejecuta dentro de una transacción, después de `SELECT … FROM mascotas WHERE id = ? FOR UPDATE`, para verificar las reglas de estado (por ejemplo, que la mascota no tenga una solicitud *En revisión*). Otros ejemplos de actualización:
+
+| Operación | SQL | Uso |
+|---|---|---|
+| Marcar notificación como leída | `UPDATE notificaciones SET leida = 1 WHERE id = ?` | RF-07 |
+| Responder solicitud | `UPDATE solicitudes SET estado = ? WHERE id = ?` (dentro de la transacción de §5.8) | RF-08 |
+| Desactivar un tipo | `UPDATE tipos_mascota SET nombre = ?, icono = ?, activo = COALESCE(?, activo) WHERE id = ?` | RF-09 |
+
+No hay borrados físicos en la aplicación: los tipos se **desactivan** y las mascotas con historial no pueden eliminarse (`ON DELETE RESTRICT`), para conservar la trazabilidad de las adopciones.
