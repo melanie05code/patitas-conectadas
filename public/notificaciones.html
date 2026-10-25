@@ -13,10 +13,11 @@
     <div id="list"></div>
   </div>
     <footer class="site-footer-mini">📍 Managua, Nicaragua &nbsp;·&nbsp; 📞 +505 8888-0000 &nbsp;·&nbsp; ✉ contacto@patitasconectadas.com<br><span style="opacity:0.7;">Patitas Conectadas — Proyecto Integrador UCN 2026</span></footer>
+  <script src="js/comun.js"></script>
   <script src="js/app.js"></script>
   <script>
-    const s = requireAuth();
-    renderTopbar("notificaciones");
+    const s = requiereSesion("adoptante");
+    renderizarBarra("notificaciones");
 
     const myNotifs = db.getNotifications().filter(n => n.userId === s.id).sort((a,b) => b.id - a.id);
     const list = document.getElementById("list");
