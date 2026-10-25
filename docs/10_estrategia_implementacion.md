@@ -24,7 +24,7 @@
 
 | Entorno | Dónde | Base de datos | Archivos | Uso |
 |---|---|---|---|---|
-| **Desarrollo** | `localhost:3000` (`npm run dev` con nodemon) | MySQL 8.0 local (compatible con XAMPP/MariaDB), base `patitas_conectadas`, usuario `patitas_app` | `uploads/` | Programar y probar a mano con los datos semilla (`npm run db:instalar`) |
+| **Desarrollo** | `localhost:3000` (`npm run dev` con nodemon) | MySQL 8.0 local, base `patitas_conectadas`, usuario `patitas_app` | `uploads/` | Programar y probar a mano con los datos semilla (`npm run db:instalar`) |
 | **Pruebas** | La misma máquina (`npm test`, `npm run capturas`, migración de prueba) y, si se despliega, una **instancia separada** del servicio con su propia base | `patitas_test` (se reinstala antes de cada prueba) | `uploads-pruebas/` | Pruebas automáticas (28), evidencias y ensayo de la migración. Nunca toca los datos reales |
 | **Producción** | Target-host (ver 10.3) con HTTPS | MySQL administrado o en el mismo servidor, usuario de mínimo privilegio con contraseña fuerte | Volumen persistente para `uploads/` | Uso real del refugio y los adoptantes |
 
