@@ -1,43 +1,150 @@
-# Patitas Conectadas — Sistema de Gestión de Adopción de Mascotas
+# 🐾 Patitas Conectadas — Sistema de Gestión de Adopción de Mascotas
 
-Proyecto universitario: Avance 1 del Proyecto Integrador — análisis de requisitos y arquitectura inicial de un sistema de adopción de mascotas.
+Aplicación web que centraliza el proceso de adopción de un refugio de mascotas:
+- catálogo público con fotos reales;
+- solicitudes de adopción con seguimiento;
+- notificaciones al adoptante;
+- un panel para que el refugio gestione mascotas, tipos de mascota y solicitudes.
 
-## Estructura del repositorio
+Proyecto Final Integrador de la Universidad UCN (2026), **individual**, de Melanie Abigail Obando Rivera. Esta es la **primera versión implementada (Segundo Parcial)**. Evoluciona el prototipo del Hito 1, que guardaba todo en el `localStorage` del navegador, hacia una aplicación con backend, base de datos y autenticación reales.
+
+## Tecnologías
+
+| Capa | Tecnología |
+|---|---|
+| Backend | Node.js 20 o superior, Express 5 (API REST en capas `rutas → controlador → servicio → repositorio`) |
+| Base de datos | MySQL 8.0 con `mysql2/promise` (pool de conexiones y transacciones) |
+| Seguridad | bcrypt, JSON Web Tokens, Helmet (CSP estricta), express-rate-limit, consultas parametrizadas |
+| Archivos | multer (fotos JPG, PNG o WEBP de hasta 2 MB) |
+| Frontend | HTML + CSS + JavaScript (el prototipo del Hito 1 evolucionado), consumiendo la API con `fetch` |
+| Pruebas | Jest + Supertest (28 pruebas) y Playwright para las capturas de evidencia |
+
+## Requisitos previos
+
+- **Node.js 20 o superior** (probado con Node 24) y npm.
+- **MySQL 8.0** en ejecución. Todo se probó con MySQL 8.0; XAMPP/MariaDB 10.4+ debería funcionar, pero no se probó.
+- **Git**.
+- Para generar las capturas (`npm run capturas`): Microsoft Edge (viene con Windows) o Google Chrome.
+
+## Instalación paso a paso (Windows / PowerShell)
+
+1. **Clonar el repositorio e instalar dependencias**
+   ```powershell
+   git clone https://github.com/melanie05code/patitas-conectadas.git
+   cd patitas-conectadas
+   npm install
+   ```
+
+2. **Crear el usuario de base de datos de mínimo privilegio**: una sola vez, con un usuario administrador de MySQL. Cambia la contraseña por una propia.
+   ```sql
+   CREATE USER 'patitas_app'@'localhost' IDENTIFIED BY 'una-contraseña-segura';
+   GRANT ALL PRIVILEGES ON patitas_conectadas.* TO 'patitas_app'@'localhost';
+   GRANT ALL PRIVILEGES ON patitas_test.*       TO 'patitas_app'@'localhost';
+   GRANT PROCESS ON *.* TO 'patitas_app'@'localhost';
+   FLUSH PRIVILEGES;
+   ```
+
+3. **Crear el archivo `.env`** a partir del ejemplo y completarlo:
+   ```powershell
+   Copy-Item .env.example .env
+   notepad .env
+   ```
+   Completa `DB_PASSWORD` con la contraseña de `patitas_app` y `JWT_SECRET` con un texto largo y aleatorio. Para generar uno:
+   ```powershell
+   node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"
+   ```
+
+4. **Crear las tablas y cargar los datos semilla** (`database/01_schema.sql` y `database/02_seed.sql`):
+   ```powershell
+   npm run db:instalar        # base patitas_conectadas + fotos de las mascotas
+   npm run db:instalar:test   # base de pruebas patitas_test
+   ```
+   El comando ejecuta los dos scripts con las credenciales del `.env` y copia las fotos de `database/seed-fotos/` a `uploads/mascotas/`. **Ojo:** recrea las tablas, así que borra los datos y las fotos que se hayan cargado antes.
+
+   También se pueden ejecutar los scripts a mano con el cliente de MySQL. En ese caso hay que copiar después las fotos a `uploads/mascotas/`:
+   ```powershell
+   & "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u patitas_app -p --default-character-set=utf8mb4 -e "source database/01_schema.sql; source database/02_seed.sql"
+   New-Item -ItemType Directory -Force uploads\mascotas | Out-Null; Copy-Item database\seed-fotos\* uploads\mascotas\
+   ```
+
+## Cómo ejecutar
+
+```powershell
+npm run dev     # con recarga automática (nodemon)
+npm start       # sin recarga
+```
+
+Abre http://localhost:3000. Para comprobar la conexión con la base de datos: http://localhost:3000/api/salud.
+
+## Usuarios demo
+
+| Rol | Correo | Contraseña |
+|---|---|---|
+| Administrador del refugio | `admin@patitas.com` | `Admin2026` |
+| Adoptante (con 4 solicitudes de ejemplo) | `edwin.obando@correo.com` | `Edwin2026` |
+
+Las contraseñas se guardan con hash bcrypt. Son cuentas de demostración: **no deben existir en producción**.
+
+## Pruebas
+
+```powershell
+npm test
+```
+
+Ejecuta las 28 pruebas (Jest + Supertest) contra la base **`patitas_test`**, que se reinstala antes de cada prueba. Nunca tocan `patitas_conectadas`. Resultado y detalle en [`docs/06_pruebas.md`](docs/06_pruebas.md).
+
+## Otros comandos
+
+| Comando | Qué hace |
+|---|---|
+| `npm run db:seed` | Regenera `database/02_seed.sql` (hashes bcrypt incluidos) a partir de `database/datos-semilla.js` |
+| `npm run capturas` | Genera las capturas de evidencia en `docs/evidencias/`, usando `patitas_test` y Edge (o Chrome con `CAPTURAS_NAVEGADOR=chrome`) |
+| `npm run migrar` | Migra datos del `localStorage` del prototipo. Por defecto usa el respaldo de ejemplo contra `patitas_test`; opciones `--archivo`, `--simular`, `--max-descartes`, `--bd patitas_conectadas --confirmar-produccion`. Ver [`docs/08_migracion.md`](docs/08_migracion.md) |
+
+## Estructura de carpetas
 
 ```
-/proyecto
-   /docs
-      alcance-v1.md                     # Alcance del proyecto v1.0
-      requisitos-v1.md                  # Listado de requisitos funcionales
-      arquitectura-v1.png               # Diagrama de arquitectura inicial
-      componentes-v1.png                # Diagrama de componentes/módulos
-      trazabilidad-v1.xlsx              # Matriz de trazabilidad requisito-pantalla-módulo-datos
-      justificacion-arquitectura-v1.md  # Justificación de decisiones arquitectónicas
-   /prototipo
-      prototipo-v1.md                   # Descripción de pantallas del prototipo
-   README.md
+patitas-conectadas/
+├─ src/
+│  ├─ app.js               Express: seguridad, rutas, estáticos y errores
+│  ├─ server.js            Arranque del servidor
+│  ├─ config/              Variables de entorno, pool de MySQL y transacciones
+│  ├─ middlewares/         Autenticación, roles, validación, subida de fotos, errores
+│  ├─ modules/             usuarios, tipos, mascotas, solicitudes, notificaciones
+│  │                       (rutas, controlador, servicio, repositorio y validaciones)
+│  └─ utils/               ErrorApp, validadores, JWT, archivos
+├─ public/                 Páginas HTML, css/ y js/ (comun.js, api.js, paginas/)
+├─ database/
+│  ├─ 01_schema.sql        CREATE DATABASE/TABLE, PK, FK, UNIQUE, NOT NULL, CHECK, índices
+│  ├─ 02_seed.sql          Datos semilla (generado)
+│  ├─ datos-semilla.js     Fuente de los datos semilla
+│  ├─ seed-fotos/          Fotos reales de las 10 mascotas
+│  ├─ instalar.js          Instalador de la base de datos (npm run db:instalar)
+│  └─ migracion/           Exportador del localStorage y ETL (migrar.js)
+├─ tests/                  Pruebas automáticas (PR-01 a PR-28)
+├─ scripts/capturas.js     Capturas de evidencia con Playwright
+├─ docs/                   Documentación del Segundo Parcial (00 a 12), evidencias y docs/hito1/
+├─ .env.example            Plantilla de variables de entorno (el .env real no se sube)
+└─ package.json
 ```
 
-## Resumen del proyecto
-- **Frontend:** React (SPA)
-- **Backend:** Node.js + Express (API REST, arquitectura en capas: Controladores → Servicios → Repositorios)
-- **Base de datos:** MongoDB
-- **Arquitectura:** Cliente-servidor por capas + organización modular (Usuarios, Mascotas, Solicitudes, Seguimiento, Notificaciones)
+## Requisitos → API → pantallas
 
-## Módulos principales
-| Módulo | Responsabilidad |
-|---|---|
-| Usuarios | Registro y autenticación de adoptantes |
-| Mascotas | Catálogo, ficha de mascota, gestión desde administración |
-| Solicitudes | Crear solicitud de adopción, aprobar/rechazar, historial |
-| Seguimiento | Consultar y actualizar el estado de una solicitud |
-| Notificaciones | Alertas de cambio de estado (módulo transversal) |
+| RF | Descripción | Endpoint principal | Pantalla |
+|---|---|---|---|
+| RF-01 | Registro de adoptantes | `POST /api/auth/registro` | `registro.html` |
+| RF-02 | Inicio de sesión | `POST /api/auth/login` | `login.html` |
+| RF-03 | Catálogo de mascotas | `GET /api/mascotas?estado=Disponible,En proceso`, `GET /api/tipos-mascota` | `catalogo-publico.html`, `catalogo.html` |
+| RF-04 | Ficha de detalle | `GET /api/mascotas/:id` | `detalle.html` |
+| RF-05 | Seguimiento de solicitud | `GET /api/solicitudes/:id` | `seguimiento.html` |
+| RF-06 | Enviar solicitud | `POST /api/solicitudes` | `solicitar.html` |
+| RF-07 | Notificaciones | `GET /api/notificaciones`, `PATCH /api/notificaciones/:id/leida` | `notificaciones.html` |
+| RF-08 | Responder solicitudes (admin) | `GET`/`PATCH /api/admin/solicitudes` | `admin.html` |
+| RF-09 | Gestionar catálogo y tipos (admin) | `POST`/`PUT /api/mascotas`, `POST`/`PUT /api/tipos-mascota` | `admin.html` |
+| RF-10 | Historial propio | `GET /api/solicitudes/mias` | `mis-solicitudes.html` |
 
-## Actores
-| Rol | Descripción |
-|---|---|
-| Adoptante | Se registra, consulta mascotas y solicita adopción |
-| Administrador (refugio) | Gestiona mascotas y responde solicitudes |
+La matriz completa, con módulos, tablas y pruebas, está en [`docs/04_arquitectura.md`](docs/04_arquitectura.md).
 
-## Estado actual
-Versión 1.0 — Alcance, requisitos, arquitectura inicial y matriz de trazabilidad completos. Pendiente: prototipo de alta fidelidad (ver nota en `/prototipo/prototipo-v1.md`).
+## Documentación
+
+Empieza por la portada: [`docs/00_portada.md`](docs/00_portada.md). Tiene el índice de las 12 secciones, desde las correcciones hasta los enlaces y anexos. Los documentos originales del Hito 1 están en [`docs/hito1/`](docs/hito1/).
