@@ -5,8 +5,11 @@ const urlCatalogo = usuario ? "catalogo.html" : "catalogo-publico.html";
 const tarjeta = document.getElementById("detailCard");
 
 function botonDeAccion(mascota) {
+  if (mascota.estado === "Adoptada") {
+    return '<div class="alert success" style="margin-top:20px;">🏡 Esta mascota ya encontró un hogar.</div>';
+  }
   if (mascota.estado !== "Disponible") {
-    return '<button class="full" disabled style="background:#ccc;">Ya no disponible</button>';
+    return '<button class="full" disabled style="background:#ccc;">En proceso de adopción</button>';
   }
   if (!usuario) {
     return '<a class="btn full" href="login.html" style="margin-top:20px; display:block;">Inicia sesión para solicitar la adopción</a>';

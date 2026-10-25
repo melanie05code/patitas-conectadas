@@ -36,4 +36,9 @@ function validarMascota(cuerpo, { conEstado }) {
 const validarCreacion = (cuerpo) => validarMascota(cuerpo, { conEstado: false });
 const validarEdicion = (cuerpo) => validarMascota(cuerpo, { conEstado: true });
 
-module.exports = { validarCreacion, validarEdicion, ESTADOS };
+function leerFiltroEstados(valor) {
+  const estados = [...new Set(texto(valor).split(",").map((e) => e.trim()).filter(Boolean))];
+  return estados.every((e) => ESTADOS.includes(e)) ? estados : null;
+}
+
+module.exports = { validarCreacion, validarEdicion, leerFiltroEstados, ESTADOS };
