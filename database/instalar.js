@@ -5,12 +5,20 @@ const mysql = require("mysql2/promise");
 const usarPrueba = process.argv.includes("--test");
 if (usarPrueba) process.env.NODE_ENV = "test";
 const { db } = require("../src/config/entorno");
+const { asegurarDirectorioMascotas } = require("../src/utils/archivos");
 
 const BD_ORIGINAL = "patitas_conectadas";
+const FOTOS_SEMILLA = path.join(__dirname, "seed-fotos");
 
 function leerScript(nombre) {
   const sql = fs.readFileSync(path.join(__dirname, nombre), "utf8");
   return sql.replace(new RegExp(`\\b${BD_ORIGINAL}\\b`, "g"), db.database);
+}
+
+function copiarFotosSemilla() {
+  const destino = asegurarDirectorioMascotas();
+  for (const archivo of fs.readdirSync(destino)) fs.rmSync(path.join(destino, archivo), { force: true });
+  for (const archivo of fs.readdirSync(FOTOS_SEMILLA)) fs.copyFileSync(path.join(FOTOS_SEMILLA, archivo), path.join(destino, archivo));
 }
 
 async function instalarBaseDatos({ conSeed = true, silencioso = false } = {}) {
@@ -24,8 +32,11 @@ async function instalarBaseDatos({ conSeed = true, silencioso = false } = {}) {
   });
   try {
     await conexion.query(leerScript("01_schema.sql"));
-    if (conSeed) await conexion.query(leerScript("02_seed.sql"));
-    if (!silencioso) console.log(`Base de datos ${db.database} instalada${conSeed ? " con datos semilla" : ""}.`);
+    if (conSeed) {
+      await conexion.query(leerScript("02_seed.sql"));
+      copiarFotosSemilla();
+    }
+    if (!silencioso) console.log(`Base de datos ${db.database} instalada${conSeed ? " con datos semilla y fotos" : ""}.`);
   } finally {
     await conexion.end();
   }

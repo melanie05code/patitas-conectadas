@@ -23,8 +23,8 @@ async function generarSeed() {
     insertar("usuarios", ["id", "nombre", "email", "password_hash", "rol"], usuarios),
     insertar(
       "mascotas",
-      ["id", "nombre", "tipo_id", "edad", "raza", "sexo", "descripcion", "estado"],
-      datos.mascotas.map((m) => [m.id, m.nombre, m.tipoId, m.edad, m.raza, m.sexo, m.descripcion, m.estado])
+      ["id", "nombre", "tipo_id", "edad", "raza", "sexo", "descripcion", "estado", "foto_url"],
+      datos.mascotas.map((m) => [m.id, m.nombre, m.tipoId, m.edad, m.raza, m.sexo, m.descripcion, m.estado, `/uploads/mascotas/${m.foto}`])
     ),
     insertar(
       "solicitudes",
