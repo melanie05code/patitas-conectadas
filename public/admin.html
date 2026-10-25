@@ -61,8 +61,8 @@
           <div class="row-flex" style="padding:12px 0; border-bottom:1px solid #eee;">
             <div class="avatar">${petIcon(pet ? pet.type : "")}</div>
             <div style="flex:1;">
-              <div style="font-weight:bold;">${pet ? pet.name : "Mascota"}</div>
-              <div style="color:var(--gray); font-size:0.85rem;">Solicitante: ${user ? user.name : "Desconocido"}</div>
+              <div style="font-weight:bold;">${escaparHtml(pet ? pet.name : "Mascota")}</div>
+              <div style="color:var(--gray); font-size:0.85rem;">Solicitante: ${escaparHtml(user ? user.name : "Desconocido")}</div>
             </div>
             <button onclick="resolveRequest(${r.id}, 'Aprobada')" style="background:var(--green);">✔ Aprobar</button>
             <button onclick="resolveRequest(${r.id}, 'Rechazada')" class="danger">✕ Rechazar</button>
@@ -108,7 +108,7 @@
           <tr><th>Mascota</th><th>Tipo</th><th>Estado</th></tr>
           ${pets.map(p => {
             const badgeClass = p.status === "Disponible" ? "green" : p.status === "Adoptada" ? "gray" : "orange";
-            return `<tr><td>${p.name}</td><td>${p.type}</td><td><span class="badge ${badgeClass}">${p.status}</span></td></tr>`;
+            return `<tr><td>${escaparHtml(p.name)}</td><td>${escaparHtml(p.type)}</td><td><span class="badge ${badgeClass}">${escaparHtml(p.status)}</span></td></tr>`;
           }).join("")}
         </table>
       `;
