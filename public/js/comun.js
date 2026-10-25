@@ -109,3 +109,24 @@ function renderizarBarra(activa) {
 function mostrarAlerta(contenedor, mensaje, tipo = "error") {
   contenedor.innerHTML = `<div class="alert ${tipo}" role="alert">${escaparHtml(mensaje)}</div>`;
 }
+
+function claseEstado(estado) {
+  const clases = {
+    Disponible: "green",
+    "En proceso": "orange",
+    Adoptada: "gray",
+    "En revisión": "orange",
+    Aprobada: "green",
+    Rechazada: "red",
+  };
+  return clases[estado] || "gray";
+}
+
+function iconoMascota(mascota) {
+  return escaparHtml((mascota && mascota.tipo && mascota.tipo.icono) || "🐾");
+}
+
+function parametroId(nombre = "id") {
+  const valor = Number(new URLSearchParams(window.location.search).get(nombre));
+  return Number.isInteger(valor) && valor > 0 ? valor : null;
+}
