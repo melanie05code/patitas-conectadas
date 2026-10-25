@@ -12,16 +12,7 @@ const rutasNotificaciones = require("./modules/notificaciones/rutas");
 const app = express();
 
 app.disable("x-powered-by");
-app.use(
-  helmet({
-    contentSecurityPolicy: {
-      directives: {
-        scriptSrc: ["'self'", "'unsafe-inline'"],
-        scriptSrcAttr: ["'unsafe-inline'"],
-      },
-    },
-  })
-);
+app.use(helmet());
 app.use(express.json({ limit: "100kb" }));
 
 app.get("/api/salud", async (req, res) => {
