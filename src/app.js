@@ -2,6 +2,7 @@ const path = require("path");
 const express = require("express");
 const helmet = require("helmet");
 const { pool } = require("./config/db");
+const { subidas } = require("./config/entorno");
 const { rutaNoEncontrada, manejadorErrores } = require("./middlewares/errores");
 const rutasUsuarios = require("./modules/usuarios/rutas");
 const rutasTipos = require("./modules/tipos/rutas");
@@ -28,6 +29,7 @@ app.use("/api/admin/solicitudes", rutasAdminSolicitudes);
 app.use("/api/notificaciones", rutasNotificaciones);
 
 app.use("/api", rutaNoEncontrada);
+app.use(subidas.rutaPublica, express.static(subidas.directorio, { index: false, dotfiles: "deny", maxAge: "1d" }));
 app.use(express.static(path.join(__dirname, "..", "public")));
 app.use(rutaNoEncontrada);
 app.use(manejadorErrores);

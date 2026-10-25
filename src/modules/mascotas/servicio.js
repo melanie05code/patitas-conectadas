@@ -2,6 +2,7 @@ const repositorio = require("./repositorio");
 const repositorioTipos = require("../tipos/repositorio");
 const ErrorApp = require("../../utils/ErrorApp");
 const { enTransaccion } = require("../../config/db");
+const { eliminarFotoMascota } = require("../../utils/archivos");
 
 const MENSAJE_NO_ENCONTRADA = "Mascota no encontrada.";
 
@@ -52,14 +53,17 @@ async function crear(datos) {
   return repositorio.buscarPorId(id);
 }
 
-async function actualizar(id, datos) {
-  await enTransaccion(async (conexion) => {
+async function actualizar(id, { nuevaFotoUrl, quitarFoto, ...datos }) {
+  const fotoAnterior = await enTransaccion(async (conexion) => {
     const actual = await repositorio.bloquearPorId(id, conexion);
     if (!actual) throw new ErrorApp(404, MENSAJE_NO_ENCONTRADA);
     await verificarTipo(datos.tipoId, actual.tipoId, conexion);
     await verificarCambioDeEstado(actual, datos.estado, conexion);
-    await repositorio.actualizar(id, datos, conexion);
+    const fotoUrl = nuevaFotoUrl || (quitarFoto ? null : undefined);
+    await repositorio.actualizar(id, { ...datos, fotoUrl }, conexion);
+    return fotoUrl !== undefined ? actual.fotoUrl : null;
   });
+  await eliminarFotoMascota(fotoAnterior);
   return repositorio.buscarPorId(id);
 }
 
