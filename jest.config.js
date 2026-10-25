@@ -5,4 +5,7 @@ module.exports = {
   testTimeout: 30000,
   verbose: true,
   reporters: ["default"],
+  collectCoverageFrom: ["src/**/*.js", "database/**/*.js"],
+  coverageDirectory: "coverage",
+  coverageReporters: ["lcov", "text-summary"],
 };
