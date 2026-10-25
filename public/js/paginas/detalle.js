@@ -22,8 +22,8 @@ async function cargarDetalle() {
     const mascota = await api.get(`/mascotas/${id}`);
     document.title = `${mascota.nombre} — Patitas Conectadas`;
     tarjeta.innerHTML = `
-      <div class="detail-photo">
-        ${iconoMascota(mascota)}
+      <div class="detail-photo ${mascota.fotoUrl ? "con-foto" : ""}">
+        ${fotoMascota(mascota)}
         <span class="badge ${claseEstado(mascota.estado)}">${escaparHtml(mascota.estado)}</span>
       </div>
       <h1>${escaparHtml(mascota.nombre)}</h1>
