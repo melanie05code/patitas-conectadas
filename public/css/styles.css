@@ -372,3 +372,8 @@ button:disabled { opacity: 0.6; cursor: not-allowed; }
   .topbar nav a { margin-left: 0; margin-right: 14px; }
 }
 a.link-line { color: var(--teal-dark); font-weight: bold; text-decoration: none; }
+.contador { display: inline-block; min-width: 18px; margin-left: 5px; padding: 1px 6px; border-radius: 10px; background: var(--orange); color: white; font-size: 0.72rem; font-weight: bold; text-align: center; line-height: 1.4; }
+.notif { background: white; align-items: center; }
+.notif.no-leida { border-left: 4px solid var(--teal); }
+.notif.no-leida .texto-notif { font-weight: bold; }
+.notif .cuerpo-notif { flex: 1; min-width: 0; overflow-wrap: anywhere; }
