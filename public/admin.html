@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Panel de Administración — Patitas Conectadas</title>
 <link rel="stylesheet" href="css/styles.css">
 </head>
@@ -9,7 +10,7 @@
   <div id="topbar" class="topbar"></div>
   <div class="container">
     <h1>Panel de Administración</h1>
-    <p class="subtitle">Gestión de solicitudes y mascotas del refugio</p>
+    <p class="subtitle">Gestión de solicitudes, mascotas y tipos de mascota del refugio</p>
 
     <div class="card">
       <h2>Solicitudes pendientes</h2>
@@ -19,33 +20,76 @@
     <div class="card">
       <div class="row-flex">
         <h2 style="margin-bottom:0;">Gestión de mascotas</h2>
-        <button onclick="document.getElementById('newPetForm').style.display='block'; this.style.display='none';">+ Agregar mascota</button>
+        <button type="button" id="btnNuevaMascota">+ Agregar mascota</button>
       </div>
-      <form id="newPetForm" style="display:none; margin-top:14px; border-top:1px solid #eee; padding-top:14px;">
-        <label>Nombre</label>
-        <input type="text" id="np_name" required>
-        <label>Tipo</label>
-        <select id="np_type"><option>Perro</option><option>Gato</option></select>
-        <label>Edad</label>
-        <input type="text" id="np_age" required placeholder="Ej. 1 año">
-        <label>Raza</label>
-        <input type="text" id="np_breed" required>
-        <label>Sexo</label>
-        <select id="np_sex"><option>Macho</option><option>Hembra</option></select>
-        <label>Descripción</label>
-        <textarea id="np_desc" required></textarea>
-        <button type="submit" class="full">Guardar mascota</button>
+      <div id="alertaMascotas"></div>
+      <form id="formMascota" class="panel-form hidden" novalidate>
+        <h2 id="tituloFormMascota">Nueva mascota</h2>
+        <div class="form-grid">
+          <div>
+            <label for="m_nombre">Nombre</label>
+            <input type="text" id="m_nombre" required maxlength="60">
+          </div>
+          <div>
+            <label for="m_tipo">Tipo</label>
+            <select id="m_tipo" required></select>
+          </div>
+          <div>
+            <label for="m_edad">Edad</label>
+            <input type="text" id="m_edad" required maxlength="30" placeholder="Ej. 1 año">
+          </div>
+          <div>
+            <label for="m_raza">Raza</label>
+            <input type="text" id="m_raza" required maxlength="80">
+          </div>
+          <div>
+            <label for="m_sexo">Sexo</label>
+            <select id="m_sexo"><option>Macho</option><option>Hembra</option></select>
+          </div>
+          <div id="campoEstado" class="hidden">
+            <label for="m_estado">Estado</label>
+            <select id="m_estado"></select>
+          </div>
+          <div class="full-row">
+            <label for="m_descripcion">Descripción</label>
+            <textarea id="m_descripcion" required minlength="10" maxlength="2000"></textarea>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="secondary" id="btnCancelarMascota">Cancelar</button>
+          <button type="submit">Guardar mascota</button>
+        </div>
       </form>
-      <div id="petList" style="margin-top:14px;"></div>
+      <div id="petList" class="table-wrap" style="margin-top:14px;"></div>
+    </div>
+
+    <div class="card">
+      <h2>Tipos de mascota</h2>
+      <p class="subtitle" style="margin-bottom:8px;">Los tipos activos aparecen en el formulario de mascotas y en los filtros del catálogo.</p>
+      <div id="alertaTipos"></div>
+      <form id="formTipo" class="form-grid" novalidate>
+        <div>
+          <label for="t_nombre" id="etiquetaTipo">Nuevo tipo</label>
+          <input type="text" id="t_nombre" required maxlength="40" placeholder="Ej. Hurón">
+        </div>
+        <div>
+          <label for="t_icono">Ícono (emoji)</label>
+          <input type="text" id="t_icono" maxlength="8" placeholder="🐾">
+        </div>
+        <div class="form-actions full-row" style="margin-top:4px;">
+          <button type="button" class="secondary hidden" id="btnCancelarTipo">Cancelar</button>
+          <button type="submit" id="btnGuardarTipo">Agregar tipo</button>
+        </div>
+      </form>
+      <div id="listaTipos" class="table-wrap" style="margin-top:14px;"></div>
     </div>
   </div>
-    <footer class="site-footer-mini">📍 Managua, Nicaragua &nbsp;·&nbsp; 📞 +505 8888-0000 &nbsp;·&nbsp; ✉ contacto@patitasconectadas.com<br><span style="opacity:0.7;">Patitas Conectadas — Proyecto Integrador UCN 2026</span></footer>
+  <footer class="site-footer-mini">📍 Managua, Nicaragua &nbsp;·&nbsp; 📞 +505 8888-0000 &nbsp;·&nbsp; ✉ contacto@patitasconectadas.com<br><span style="opacity:0.7;">Patitas Conectadas — Proyecto Integrador UCN 2026</span></footer>
   <script src="js/comun.js"></script>
+  <script src="js/api.js"></script>
   <script src="js/app.js"></script>
+  <script src="js/paginas/admin.js"></script>
   <script>
-    requiereSesion("admin");
-    renderizarBarra("admin");
-
     function renderPending() {
       const requests = db.getRequests().filter(r => r.status === "En revisión");
       const pets = db.getPets();
@@ -76,14 +120,10 @@
       if (!req) return;
       req.status = newStatus;
       db.saveRequests(requests);
-
-      // Actualizar estado de la mascota
       const pets = db.getPets();
       const pet = pets.find(p => p.id === req.petId);
       if (pet) pet.status = newStatus === "Aprobada" ? "Adoptada" : "Disponible";
       db.savePets(pets);
-
-      // Crear notificación
       const notifs = db.getNotifications();
       notifs.push({
         id: Date.now(),
@@ -94,46 +134,10 @@
         date: "Hace un momento",
       });
       db.saveNotifications(notifs);
-
       renderPending();
-      renderPetList();
     }
 
-    function renderPetList() {
-      const pets = db.getPets();
-      const el = document.getElementById("petList");
-      el.innerHTML = `
-        <table>
-          <tr><th>Mascota</th><th>Tipo</th><th>Estado</th></tr>
-          ${pets.map(p => {
-            const badgeClass = p.status === "Disponible" ? "green" : p.status === "Adoptada" ? "gray" : "orange";
-            return `<tr><td>${escaparHtml(p.name)}</td><td>${escaparHtml(p.type)}</td><td><span class="badge ${badgeClass}">${escaparHtml(p.status)}</span></td></tr>`;
-          }).join("")}
-        </table>
-      `;
-    }
-
-    document.getElementById("newPetForm").addEventListener("submit", function(e){
-      e.preventDefault();
-      const pets = db.getPets();
-      pets.push({
-        id: Date.now(),
-        name: document.getElementById("np_name").value,
-        type: document.getElementById("np_type").value,
-        age: document.getElementById("np_age").value,
-        breed: document.getElementById("np_breed").value,
-        sex: document.getElementById("np_sex").value,
-        desc: document.getElementById("np_desc").value,
-        status: "Disponible",
-      });
-      db.savePets(pets);
-      this.reset();
-      this.style.display = "none";
-      renderPetList();
-    });
-
-    renderPending();
-    renderPetList();
+    if (sesion.obtener()) renderPending();
   </script>
 </body>
 </html>
