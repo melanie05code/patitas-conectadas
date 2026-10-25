@@ -4,6 +4,8 @@ const helmet = require("helmet");
 const { pool } = require("./config/db");
 const { rutaNoEncontrada, manejadorErrores } = require("./middlewares/errores");
 const rutasUsuarios = require("./modules/usuarios/rutas");
+const rutasTipos = require("./modules/tipos/rutas");
+const rutasMascotas = require("./modules/mascotas/rutas");
 
 const app = express();
 
@@ -26,6 +28,8 @@ app.get("/api/salud", async (req, res) => {
 });
 
 app.use("/api/auth", rutasUsuarios);
+app.use("/api/tipos-mascota", rutasTipos);
+app.use("/api/mascotas", rutasMascotas);
 
 app.use("/api", rutaNoEncontrada);
 app.use(express.static(path.join(__dirname, "..", "public")));
