@@ -28,8 +28,8 @@ async function verificarCambioDeEstado(mascota, nuevoEstado, conexion) {
   }
 }
 
-function listar({ tipoId, busqueda, estado }) {
-  return repositorio.listar({ tipoId, busqueda, estado });
+function listar({ tipoId, busqueda, estados }) {
+  return repositorio.listar({ tipoId, busqueda, estados });
 }
 
 async function obtener(id) {

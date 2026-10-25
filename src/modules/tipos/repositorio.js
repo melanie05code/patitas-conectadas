@@ -9,10 +9,14 @@ function convertir(fila) {
   return fila && { ...fila, activo: Boolean(fila.activo), totalMascotas: Number(fila.totalMascotas) };
 }
 
-async function listar({ soloActivos, soloConMascotas }) {
+async function listar({ soloActivos, soloConMascotas, estados = [] }) {
+  const filtroEstados = estados.length ? ` AND m.estado IN (${estados.map(() => "?").join(", ")})` : "";
   const condiciones = soloActivos ? "WHERE t.activo = 1" : "";
   const filtroMascotas = soloConMascotas ? "HAVING COUNT(m.id) > 0" : "";
-  const [filas] = await pool.query(`${SELECCION} ${condiciones} GROUP BY t.id ${filtroMascotas} ORDER BY t.id`);
+  const [filas] = await pool.query(
+    `${SELECCION}${filtroEstados} ${condiciones} GROUP BY t.id ${filtroMascotas} ORDER BY t.id`,
+    estados
+  );
   return filas.map(convertir);
 }
 
