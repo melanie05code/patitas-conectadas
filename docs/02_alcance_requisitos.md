@@ -47,7 +47,7 @@
 | RF-04 | El sistema debe mostrar la ficha detallada de una mascota | Detalle | **Implementado** (`GET /api/mascotas/:id`, público) |
 | RF-05 | El sistema debe permitir consultar el estado de una solicitud de adopción | Seguimiento | **Implementado** (`GET /api/solicitudes/:id`, solo dueño o admin) |
 | RF-06 | El sistema debe permitir enviar una solicitud de adopción | Solicitar adopción | **Implementado** (`POST /api/solicitudes`, transacción) |
-| RF-07 | El sistema debe notificar al adoptante cuando cambie el estado de su solicitud | Notificaciones | Prototipo (localStorage) |
+| RF-07 | El sistema debe notificar al adoptante cuando cambie el estado de su solicitud | Notificaciones | **Implementado** (notificaciones internas: `GET /api/notificaciones`, contador y `PATCH .../leida`) |
 | RF-08 | El sistema debe permitir al administrador revisar y responder solicitudes | Panel de Administración | **Implementado** (`GET`/`PATCH /api/admin/solicitudes`, transacción) |
 | RF-09 | El sistema debe permitir al administrador gestionar el catálogo de mascotas (agregar, editar, cambiar estado, gestionar tipos) | Panel de Administración | **Implementado** (`POST`/`PUT /api/mascotas`, `POST`/`PUT /api/tipos-mascota`) |
 | RF-10 | El sistema debe permitir consultar el historial de solicitudes propias | Mis Solicitudes | **Implementado** (`GET /api/solicitudes/mias`) |
@@ -70,10 +70,10 @@
 | PB-03 | Solicitud y seguimiento de adopción | Alta | **Completado** con backend y transacciones | `src/modules/solicitudes/`, `public/js/paginas/solicitar.js`, `public/js/paginas/seguimiento.js` |
 | PB-04 | Panel administrativo (aprobar/rechazar) | Alta | **Completado** con backend y transacciones | `src/modules/solicitudes/`, `public/js/paginas/admin.js` |
 | PB-05 | Conexión a base de datos real (**MySQL**; antes MongoDB) | Alta | **Completado** (esquema, seed y pool de conexiones) | `database/01_schema.sql`, `src/config/db.js` |
-| PB-06 | Backend real con Node.js + Express | Alta | En progreso: usuarios, tipos, mascotas y solicitudes listos; falta la consulta de notificaciones | `src/app.js`, `src/modules/` |
+| PB-06 | Backend real con Node.js + Express | Alta | **Completado**: módulos de usuarios, tipos, mascotas, solicitudes y notificaciones; el frontend ya no usa localStorage como base de datos | `src/app.js`, `src/modules/` |
 | PB-07 | Autenticación segura (hash bcrypt de contraseñas y JWT) | Alta | **Completado** | `src/modules/usuarios/servicio.js`, `src/middlewares/autenticacion.js` |
 | PB-08 | Validación de formato de teléfono | Media | **Completado** en el navegador, el servidor y la base de datos (hallazgo 5) | `public/js/paginas/solicitar.js`, `src/modules/solicitudes/validaciones.js` |
-| PB-09 | Notificaciones de cambio de estado (**internas en BD**; el correo queda fuera de alcance) | Media | Pendiente | — |
+| PB-09 | Notificaciones de cambio de estado (**internas en BD**; el correo queda fuera de alcance) | Media | **Completado** como notificaciones internas con contador de no leídas; el envío por correo queda como mejora futura | `src/modules/notificaciones/`, `public/js/paginas/notificaciones.js` |
 | PB-10 | Fotografías reales de las mascotas | Media | Pendiente | — |
 | PB-11 | Reportes de adopciones para el refugio | Baja | Pendiente (mejora futura) | — |
 | PB-12 | Agendar cita de entrevista presencial tras la solicitud | Media | Pendiente (mejora futura) | — |
@@ -94,6 +94,7 @@
 | 6 | *(nuevo)* La ficha de detalle exigía sesión aunque el catálogo público enlazaba a ella | — | **Corregido**: detalle público, con botón para iniciar sesión | `public/detalle.html` |
 | 7 | *(nuevo)* Datos de usuario insertados con `innerHTML` sin escapar (riesgo XSS) | — | **Corregido**: función `escaparHtml` | `public/js/comun.js` |
 | 8 | *(nuevo)* Las páginas no tenían la etiqueta `viewport`, por lo que en móviles se veían con ancho de escritorio | — | **Corregido** | Todas las páginas de `public/` |
+| 9 | *(nuevo)* Las notificaciones no indicaban cuáles eran nuevas ni se podían marcar como leídas | — | **Corregido**: contador en la barra, no leídas destacadas y opción de marcarlas | `public/js/paginas/notificaciones.js` |
 
 ## 2.6 Criterios de aceptación (RF-01 a RF-10)
 
