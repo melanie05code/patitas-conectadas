@@ -56,7 +56,7 @@
 
 | Código | Descripción | Estado |
 |---|---|---|
-| RNF-01 | El sistema debe responder las consultas de seguimiento en menos de 2 segundos | **Cumple** en la medición local (≈12 ms); se formaliza como prueba automática en la fase de pruebas |
+| RNF-01 | El sistema debe responder las consultas de seguimiento en menos de 2 segundos | **Cumple**: la prueba automática PR-21 verifica que responde en menos de 2 s (≈12 ms en la medición local) |
 | RNF-02 | Las contraseñas de usuario deben almacenarse cifradas (hash) | **Cumple**: hash bcrypt (10 rondas) en MySQL; el navegador solo guarda el token |
 | RNF-03 | La aplicación debe ser responsive (accesible desde móvil y escritorio) | **Cumple**: se agregó la etiqueta `viewport`, que faltaba en el prototipo (sin ella el CSS responsive no se aplicaba en móviles) |
 | RNF-04 | Solo un administrador autenticado puede modificar el catálogo o el estado de una solicitud | **Cumple**: `requiereAuth` + `requiereRol('admin')` protegen la gestión de mascotas, de tipos y la respuesta de solicitudes; un adoptante recibe 403 |
