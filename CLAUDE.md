@@ -41,4 +41,5 @@ Esta etapa evoluciona el prototipo del Hito 1 (localStorage) a una primera versi
 10. `docs/segundo-parcial` — documentos 00–12, README, evidencias con Playwright.
 
 ## Avance
-- [ ] Fase 1 — en curso
+- [x] Fase 1 — correcciones del Hito 1 (rama `fix/correcciones-hito1`)
+- [ ] Fase 2 — base de datos
