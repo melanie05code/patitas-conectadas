@@ -9,5 +9,24 @@
   "engines": {
     "node": ">=20"
   },
-  "scripts": {}
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "db:seed": "node database/generar-seed.js",
+    "db:instalar": "node database/instalar.js",
+    "db:instalar:test": "node database/instalar.js --test"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "dotenv": "^18.0.9",
+    "express": "^5.3.0",
+    "helmet": "^8.3.0",
+    "mysql2": "^3.24.6"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  },
+  "allowScripts": {
+    "bcrypt@6.0.0": true
+  }
 }
