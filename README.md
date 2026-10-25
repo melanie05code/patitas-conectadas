@@ -93,6 +93,22 @@ npm test
 
 Ejecuta las 28 pruebas (Jest + Supertest) contra la base **`patitas_test`**, que se reinstala antes de cada prueba. Nunca tocan `patitas_conectadas`. Resultado y detalle en [`docs/06_pruebas.md`](docs/06_pruebas.md).
 
+## Calidad y seguridad
+
+[![Calidad y seguridad](https://github.com/melanie05code/patitas-conectadas/actions/workflows/ci.yml/badge.svg)](https://github.com/melanie05code/patitas-conectadas/actions/workflows/ci.yml)
+[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=melanie05code_patitas-conectadas&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=melanie05code_patitas-conectadas)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=melanie05code_patitas-conectadas&metric=bugs)](https://sonarcloud.io/summary/new_code?id=melanie05code_patitas-conectadas)
+[![Vulnerabilidades](https://sonarcloud.io/api/project_badges/measure?project=melanie05code_patitas-conectadas&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=melanie05code_patitas-conectadas)
+[![Cobertura](https://sonarcloud.io/api/project_badges/measure?project=melanie05code_patitas-conectadas&metric=coverage)](https://sonarcloud.io/summary/new_code?id=melanie05code_patitas-conectadas)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=melanie05code_patitas-conectadas&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=melanie05code_patitas-conectadas)
+
+El pipeline de GitHub Actions ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) corre en cada push a `dev` y en cada Pull Request hacia `main`, en este orden:
+
+1. **Tests**: `npm test` con cobertura sobre MySQL 8.0, con credenciales generadas en el propio job.
+2. **SonarCloud**: análisis estático y cobertura (`sonar-project.properties`).
+3. **DeepSource**: envío de la cobertura (`.deepsource.toml`); el análisis de código lo hace la GitHub App de DeepSource sobre el PR.
+4. **Snyk**: `snyk test` (dependencias) y `snyk code test` (código), con los resultados SARIF como artifact.
+
 ## Otros comandos
 
 | Comando | Qué hace |
