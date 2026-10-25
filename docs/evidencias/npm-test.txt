@@ -1,42 +1,48 @@
 Patitas Conectadas — salida de npm test
-Fecha: 2026-10-25 02:33 | Node v24.20.0 | MySQL 8.0 (base de datos patitas_test)
-Commit: ec06786
+Fecha: 2026-10-25 02:48 | Node v24.20.0 | MySQL 8.0 (base de datos patitas_test)
+Commit: 2fc9873
 
-PASS tests/solicitudes.test.js (9.296 s)
+PASS tests/solicitudes.test.js (9.746 s)
   Solicitudes de adopción y transacciones (RF-05, RF-06, RF-08, RF-10)
-    √ PR-14 crear una solicitud válida la deja En revisión, pasa la mascota a En proceso y notifica (945 ms)
-    √ PR-15 una solicitud con teléfono inválido responde 400 y no se guarda (821 ms)
-    √ PR-16 solicitar una mascota que no está disponible responde 409 (925 ms)
-    √ PR-17 un adoptante que intenta entrar a una ruta de administración recibe 403 (RNF-04) (765 ms)
-    √ PR-18 aprobar una solicitud cambia la mascota a Adoptada y crea la notificación (819 ms)
-    √ PR-19 si falla la notificación, la transacción hace rollback y nada queda guardado (747 ms)
-    √ PR-20 dos solicitudes simultáneas por la misma mascota: solo una se guarda (1122 ms)
-    √ PR-21 el seguimiento responde en menos de 2 segundos y solo lo ve su dueño (RF-05, RNF-01) (1014 ms)
-PASS tests/catalogo.test.js (6.616 s)
+    √ PR-14 crear una solicitud válida la deja En revisión, pasa la mascota a En proceso y notifica (1248 ms)
+    √ PR-15 una solicitud con teléfono inválido responde 400 y no se guarda (749 ms)
+    √ PR-16 solicitar una mascota que no está disponible responde 409 (920 ms)
+    √ PR-17 un adoptante que intenta entrar a una ruta de administración recibe 403 (RNF-04) (782 ms)
+    √ PR-18 aprobar una solicitud cambia la mascota a Adoptada y crea la notificación (925 ms)
+    √ PR-19 si falla la notificación, la transacción hace rollback y nada queda guardado (863 ms)
+    √ PR-20 dos solicitudes simultáneas por la misma mascota: solo una se guarda (1166 ms)
+    √ PR-21 el seguimiento responde en menos de 2 segundos y solo lo ve su dueño (RF-05, RNF-01) (1144 ms)
+PASS tests/catalogo.test.js (6.368 s)
   Catálogo y tipos de mascota (RF-03, RF-04, RF-09, RNF-04, PB-10, PB-16)
-    √ PR-07 el catálogo público se filtra por tipo y búsqueda (966 ms)
-    √ PR-08 el detalle es público y una mascota inexistente responde 404 (1182 ms)
-    √ PR-09 crear un tipo de mascota duplicado responde 409 (715 ms)
-    √ PR-10 un adoptante no puede gestionar tipos ni mascotas (403) y sin sesión es 401 (749 ms)
-    √ PR-11 el administrador crea una mascota con foto válida (721 ms)
-    √ PR-12 una foto con formato no permitido o disfrazada responde 400 y no queda en el disco (951 ms)
-    √ PR-13 un tipo desactivado deja de ofrecerse y no se puede asignar (775 ms)
+    √ PR-07 el catálogo público se filtra por tipo y búsqueda (731 ms)
+    √ PR-08 el detalle es público y una mascota inexistente responde 404 (738 ms)
+    √ PR-09 crear un tipo de mascota duplicado responde 409 (781 ms)
+    √ PR-10 un adoptante no puede gestionar tipos ni mascotas (403) y sin sesión es 401 (893 ms)
+    √ PR-11 el administrador crea una mascota con foto válida (787 ms)
+    √ PR-12 una foto con formato no permitido o disfrazada responde 400 y no queda en el disco (717 ms)
+    √ PR-13 un tipo desactivado deja de ofrecerse y no se puede asignar (847 ms)
+PASS tests/migracion.test.js
+  Migración de datos desde el localStorage del prototipo
+    √ PR-24 las transformaciones normalizan correos, teléfonos y fechas relativas (1127 ms)
+    √ PR-25 la migración de prueba hace respaldo, carga, valida y se acepta (1295 ms)
+    √ PR-26 si una validación falla, la migración hace rollback y el destino no cambia (1080 ms)
+    √ PR-27 la migración se niega a correr contra producción sin confirmación expresa (755 ms)
 PASS tests/autenticacion.test.js
   Autenticación (RF-01, RF-02, RNF-02)
-    √ PR-01 registro exitoso guarda la contraseña con hash bcrypt (761 ms)
-    √ PR-02 registro con correo duplicado responde 409 (753 ms)
-    √ PR-03 registro con datos inválidos responde 400 aunque no pase por el navegador (645 ms)
-    √ PR-04 login válido devuelve un JWT con el rol del usuario (684 ms)
-    √ PR-05 login con contraseña incorrecta responde 401 con mensaje genérico (1021 ms)
+    √ PR-01 registro exitoso guarda la contraseña con hash bcrypt (855 ms)
+    √ PR-02 registro con correo duplicado responde 409 (780 ms)
+    √ PR-03 registro con datos inválidos responde 400 aunque no pase por el navegador (751 ms)
+    √ PR-04 login válido devuelve un JWT con el rol del usuario (831 ms)
+    √ PR-05 login con contraseña incorrecta responde 401 con mensaje genérico (866 ms)
 PASS tests/notificaciones.test.js
   Notificaciones internas (RF-07)
-    √ PR-22 marcar una notificación como leída baja el contador y solo lo puede hacer su dueño (1229 ms)
-    √ PR-23 las notificaciones exigen sesión (401) (955 ms)
+    √ PR-22 marcar una notificación como leída baja el contador y solo lo puede hacer su dueño (1113 ms)
+    √ PR-23 las notificaciones exigen sesión (401) (817 ms)
 PASS tests/limite-login.test.js
   Límite de intentos de inicio de sesión (RF-02)
-    √ PR-06 tras 5 intentos fallidos el login se bloquea con 429 (908 ms)
-Test Suites: 5 passed, 5 total
-Tests:       23 passed, 23 total
+    √ PR-06 tras 5 intentos fallidos el login se bloquea con 429 (605 ms)
+Test Suites: 6 passed, 6 total
+Tests:       27 passed, 27 total
 Snapshots:   0 total
-Time:        26.941 s
+Time:        30.691 s, estimated 40 s
 Ran all test suites.

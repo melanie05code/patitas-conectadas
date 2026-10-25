@@ -6,7 +6,7 @@
 - **Entorno seguro:** base de datos separada **`patitas_test`** (`DB_NAME_TEST` en `.env`) y carpeta de fotos separada (`uploads-pruebas/`). Las pruebas se niegan a ejecutarse si la base de datos configurada no es la de pruebas ([`tests/ayudantes.js`](../tests/ayudantes.js)).
 - **Datos limpios:** antes de cada prueba se reinstala `patitas_test` con `01_schema.sql`, `02_seed.sql` y las fotos semilla, así cada prueba es independiente.
 - **Ejecución:** `npm test` (en serie, `--runInBand`, porque todas comparten la misma base de datos).
-- **Resultado:** **23 pruebas, 23 aprobadas** (11 positivas y 12 negativas). Salida completa en [`docs/evidencias/npm-test.txt`](evidencias/npm-test.txt).
+- **Resultado:** **27 pruebas, 27 aprobadas** (13 positivas y 14 negativas). Salida completa en [`docs/evidencias/npm-test.txt`](evidencias/npm-test.txt).
 
 ## 6.2 Tabla de pruebas
 
@@ -35,9 +35,13 @@
 | PR-21 | RF-05, RNF-01 | Edwin consulta el seguimiento de su solicitud; Ana intenta ver la misma solicitud | Edwin: 200 en menos de 2 s; Ana: 403 | 200 en menos de 2 s (≈12 ms en la medición manual); 403 | Aprobada | Test `PR-21 el seguimiento responde en menos de 2 segundos y solo lo ve su dueño` |
 | PR-22 | RF-07 | Ana intenta marcar una notificación de Edwin; luego Edwin la marca como leída | Ana: 403 y el contador sigue en 3; Edwin: 200 y el contador baja a 2 | 403 / 3; 200 / 2 | Aprobada | Test `PR-22 marcar una notificación como leída baja el contador…` ([`tests/notificaciones.test.js`](../tests/notificaciones.test.js)) |
 | PR-23 | RF-07, RNF-04 | Consultar las notificaciones sin sesión | 401 "Debes iniciar sesión para continuar." | 401 con ese mensaje | Aprobada | Test `PR-23 las notificaciones exigen sesión (401)` |
+| PR-24 | Migración (transformación) | Normalizar `  Maria.Lopez@Correo.com `, `8765 4321`, `+505 8765-4321`, `88-12` y convertir "Hace 2 horas", "Ayer", "Hace 2 días" y `2026-08-20` con referencia 28/08/2026 16:00 | Correo en minúsculas, teléfonos `8765-4321`, `88-12` inválido, fechas `2026-08-28 14:00:00`, `2026-08-27 16:00:00`, `2026-08-26 16:00:00`, `2026-08-20 00:00:00` | Coincide; un correo y un texto de fecha ilegibles devuelven `null` | Aprobada | Test `PR-24 las transformaciones normalizan correos, teléfonos y fechas relativas` ([`tests/migracion.test.js`](../tests/migracion.test.js)) |
+| PR-25 | Migración (ETL completo) | Ejecutar la migración del respaldo de ejemplo contra `patitas_test` | Respaldo (JSON + `mysqldump`), conteos usuarios 5 = 2 + 2 + 1, mascotas 8 = 8, solicitudes 7 = 5 + 2, notificaciones 6 = 5 + 1, validaciones en OK, decisión ACEPTADA y contraseña de Juan verificable con bcrypt | Coincide | Aprobada | Test `PR-25 la migración de prueba hace respaldo, carga, valida y se acepta` · [`docs/evidencias/migracion.txt`](evidencias/migracion.txt) |
+| PR-26 | Migración (rollback) | Ejecutar la migración con `--max-descartes 0` | La validación del umbral falla, decisión RECHAZADA y los conteos del destino quedan idénticos | Coincide | Aprobada | Test `PR-26 si una validación falla, la migración hace rollback…` · [`docs/evidencias/migracion_rollback.txt`](evidencias/migracion_rollback.txt) |
+| PR-27 | Migración (entorno seguro) | Ejecutar la migración contra `patitas_conectadas` sin `--confirmar-produccion` y contra la base `mysql` | La migración se niega en ambos casos | Error "…agrega --confirmar-produccion…" y "Base de datos no permitida" | Aprobada | Test `PR-27 la migración se niega a correr contra producción sin confirmación expresa` |
 
-**Pruebas positivas (11):** PR-01, PR-04, PR-07, PR-08, PR-11, PR-13, PR-14, PR-18, PR-20, PR-21 y PR-22.
-**Pruebas negativas (12):** PR-02, PR-03, PR-05, PR-06, PR-09, PR-10, PR-12, PR-15, PR-16, PR-17, PR-19 y PR-23.
+**Pruebas positivas (13):** PR-01, PR-04, PR-07, PR-08, PR-11, PR-13, PR-14, PR-18, PR-20, PR-21, PR-22, PR-24 y PR-25.
+**Pruebas negativas (14):** PR-02, PR-03, PR-05, PR-06, PR-09, PR-10, PR-12, PR-15, PR-16, PR-17, PR-19, PR-23, PR-26 y PR-27.
 
 ## 6.3 ¿La prueba de rollback de verdad detecta errores?
 
