@@ -37,12 +37,12 @@
       card.innerHTML = `
         <div class="detail-photo">
           ${petIcon(pet.type)}
-          <span class="badge ${pet.status==='Disponible' ? 'green' : 'gray'}">${pet.status}</span>
+          <span class="badge ${pet.status==='Disponible' ? 'green' : 'gray'}">${escaparHtml(pet.status)}</span>
         </div>
-        <h1>${pet.name}</h1>
-        <p class="subtitle">${pet.breed} · ${pet.age} · ${pet.sex}</p>
+        <h1>${escaparHtml(pet.name)}</h1>
+        <p class="subtitle">${escaparHtml(pet.breed)} · ${escaparHtml(pet.age)} · ${escaparHtml(pet.sex)}</p>
         <h2 style="margin-top:10px;">Sobre mí</h2>
-        <p style="color:#555; line-height:1.5;">${pet.desc}</p>
+        <p style="color:#555; line-height:1.5;">${escaparHtml(pet.desc)}</p>
         ${action}
         <a class="link-line" href="${catalogUrl}" style="display:block; margin-top:14px;">← Volver al catálogo</a>
       `;

@@ -39,7 +39,7 @@
       document.getElementById("petBanner").innerHTML = `
         <div class="row-flex" style="background:var(--orange-light); padding:12px 16px; border-radius:8px; margin-bottom:6px;">
           <div class="avatar" style="background:#F4D9A8; color:var(--orange-text);">${petIcon(pet.type)}</div>
-          <div style="flex:1; font-weight:bold; color:var(--orange-text);">Adoptando a: ${pet.name}</div>
+          <div style="flex:1; font-weight:bold; color:var(--orange-text);">Adoptando a: ${escaparHtml(pet.name)}</div>
         </div>
       `;
     }
