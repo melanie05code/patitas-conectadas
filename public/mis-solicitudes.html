@@ -11,37 +11,12 @@
   <div class="container">
     <h1>Mis Solicitudes</h1>
     <p class="subtitle">Historial de tus solicitudes de adopción</p>
+    <div id="alertBox"></div>
     <div id="list"></div>
   </div>
     <footer class="site-footer-mini">📍 Managua, Nicaragua &nbsp;·&nbsp; 📞 +505 8888-0000 &nbsp;·&nbsp; ✉ contacto@patitasconectadas.com<br><span style="opacity:0.7;">Patitas Conectadas — Proyecto Integrador UCN 2026</span></footer>
   <script src="js/comun.js"></script>
-  <script src="js/app.js"></script>
-  <script>
-    const s = requiereSesion("adoptante");
-    renderizarBarra("solicitudes");
-
-    const pets = db.getPets();
-    const myRequests = db.getRequests().filter(r => r.userId === s.id).sort((a,b) => b.id - a.id);
-    const list = document.getElementById("list");
-
-    if (myRequests.length === 0) {
-      list.innerHTML = '<div class="empty-state">Aún no has enviado solicitudes. <a href="catalogo.html">Explora el catálogo</a></div>';
-    } else {
-      list.innerHTML = myRequests.map(r => {
-        const pet = pets.find(p => p.id === r.petId);
-        const badgeClass = r.status === "Aprobada" ? "green" : r.status === "Rechazada" ? "red" : "orange";
-        return `
-          <a class="card row-flex" href="seguimiento.html?id=${r.id}" style="text-decoration:none; color:inherit;">
-            <div class="avatar">${petIcon(pet ? pet.type : "")}</div>
-            <div style="flex:1;">
-              <div style="font-weight:bold;">${escaparHtml(pet ? pet.name : "Mascota eliminada")}</div>
-              <div style="color:var(--gray); font-size:0.85rem;">Solicitud #${String(r.id).slice(-3)} · ${escaparHtml(r.date)}</div>
-            </div>
-            <span class="badge ${badgeClass}">${escaparHtml(r.status)}</span>
-          </a>
-        `;
-      }).join("");
-    }
-  </script>
+  <script src="js/api.js"></script>
+  <script src="js/paginas/mis-solicitudes.js"></script>
 </body>
 </html>
