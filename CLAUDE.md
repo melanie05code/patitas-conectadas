@@ -25,8 +25,17 @@ Esta etapa evoluciona el prototipo del Hito 1 (localStorage) a una primera versi
 - Admin: `admin@patitas.com` / `Admin2026`
 - Adoptante: Edwin Obando, `edwin.obando@correo.com` / `Edwin2026`
 - Mascotas reales (fuente: `../fotos-mascotas/mascotas.txt`): Mechudo (En proceso), Encantador y Lara (Adoptadas), el resto Disponible.
-- Solicitudes de ejemplo: Mechudo En revisión, Encantador Aprobada, Princesa Sucia Rechazada. Lara está adoptada sin solicitud (anterior a la plataforma).
+- Solicitudes de ejemplo (todas de Edwin): Mechudo En revisión, Encantador Aprobada, Lara Aprobada, Princesa Sucia Rechazada. Toda mascota Adoptada tiene su solicitud Aprobada.
 - Tipos de mascota: tabla `tipos_mascota` (no ENUM), gestionable por el admin.
+- Fuente única de los datos semilla: `database/datos-semilla.js` → `npm run db:seed` regenera `02_seed.sql`.
+
+## Comandos
+- `npm run db:instalar` / `npm run db:instalar:test` — recrea las tablas y carga el seed (usa `.env`).
+- `npm run dev` — servidor con nodemon en http://localhost:3000; `GET /api/salud` comprueba la BD.
+
+## Pendientes técnicos
+- Helmet permite `'unsafe-inline'` en scripts mientras el prototipo tenga scripts inline; endurecer la CSP cuando todo esté en `public/js/` (fin de la Fase 6).
+- `docs/04_arquitectura.md` (Fase 10) debe repetir la sección de seguridad del usuario `patitas_app`.
 
 ## Plan por fases (ramas)
 1. `fix/correcciones-hito1` — docs v1 → `docs/hito1`, prototipo → `public/`, hallazgo 3, XSS, backlog y criterios de aceptación.
@@ -42,4 +51,5 @@ Esta etapa evoluciona el prototipo del Hito 1 (localStorage) a una primera versi
 
 ## Avance
 - [x] Fase 1 — correcciones del Hito 1 (rama `fix/correcciones-hito1`)
-- [ ] Fase 2 — base de datos
+- [x] Fase 1 fusionada en `main` (PR #1)
+- [ ] Fase 2 — base de datos (rama `feat/base-de-datos`)
