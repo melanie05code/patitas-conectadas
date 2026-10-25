@@ -135,3 +135,57 @@ FLUSH PRIVILEGES;
 - Si la aplicación se viera comprometida, el atacante no podría leer ni modificar otras bases de datos del servidor, ni crear usuarios.
 - `PROCESS` es el único privilegio global, y lo necesita `mysqldump` para el respaldo previo a la migración. Además, `mysqldump` se ejecuta con `--no-tablespaces`, para no requerir privilegios adicionales.
 - Las credenciales viven solo en `.env` (excluido de Git). En el repositorio solo está `.env.example` con `DB_USER=patitas_app` y la contraseña vacía.
+
+## 5.8 Transacciones implementadas
+
+Ambas operaciones usan la función `enTransaccion` de [`src/config/db.js`](../src/config/db.js) (`beginTransaction` → trabajo → `commit`, o `rollback` ante cualquier error) y están en [`src/modules/solicitudes/servicio.js`](../src/modules/solicitudes/servicio.js).
+
+### Crear solicitud (RF-06) — `POST /api/solicitudes`
+
+```sql
+START TRANSACTION;
+SELECT id, estado FROM mascotas WHERE id = ? FOR UPDATE;
+SELECT 1 FROM solicitudes WHERE usuario_id = ? AND mascota_id = ? AND estado = 'En revisión';
+INSERT INTO solicitudes (mascota_id, usuario_id, telefono, direccion, motivo) VALUES (?, ?, ?, ?, ?);
+UPDATE mascotas SET estado = 'En proceso' WHERE id = ?;
+INSERT INTO notificaciones (usuario_id, solicitud_id, texto) VALUES (?, ?, ?);
+COMMIT;
+```
+
+- Si la mascota no está *Disponible* o el adoptante ya tiene una solicitud activa, se responde 409 y se hace `ROLLBACK`.
+- `SELECT ... FOR UPDATE` bloquea la fila de la mascota: si dos personas la solicitan al mismo tiempo, la segunda **espera** a que termine la primera transacción; cuando continúa, ya ve la mascota *En proceso* y recibe 409. Si aun así coincidieran, el índice `UNIQUE (mascota_en_revision)` impide la segunda fila.
+
+### Responder solicitud (RF-08) — `PATCH /api/admin/solicitudes/:id`
+
+```sql
+START TRANSACTION;
+SELECT id, estado, mascota_id, usuario_id FROM solicitudes WHERE id = ? FOR UPDATE;
+SELECT id, estado FROM mascotas WHERE id = ? FOR UPDATE;
+UPDATE solicitudes SET estado = 'Aprobada' WHERE id = ?;
+UPDATE mascotas SET estado = 'Adoptada' WHERE id = ?;
+INSERT INTO notificaciones (usuario_id, solicitud_id, texto) VALUES (?, ?, ?);
+COMMIT;
+```
+
+- Al rechazar, la solicitud pasa a `'Rechazada'` y la mascota a `'Disponible'`.
+- Si la solicitud ya no está *En revisión* se responde 409. Si falla cualquier paso (por ejemplo, la notificación), se hace `ROLLBACK` y ni la solicitud ni la mascota cambian.
+
+### Verificación realizada (contra `patitas_test`)
+
+| Caso | Resultado |
+|---|---|
+| Dos adoptantes solicitan *El Hambriento* al mismo tiempo | Una solicitud 201 y la otra 409 "Esta mascota ya no está disponible para adopción." |
+| Aprobar con un fallo forzado al insertar la notificación | 500; los conteos de solicitudes y notificaciones y el estado de la mascota quedan **idénticos**, y la solicitud sigue *En revisión* (rollback) |
+| Responder dos veces la misma solicitud | 409 "Esta solicitud ya fue respondida (Aprobada)." |
+
+## 5.9 Manejo de duplicados e inválidos
+
+| Situación | Capa que lo detecta | Respuesta |
+|---|---|---|
+| Correo ya registrado | Servicio (consulta previa) y BD (`UNIQUE email`) | 409 "Ya existe una cuenta con ese correo." |
+| Tipo de mascota repetido | BD (`UNIQUE nombre`), traducido por el servicio | 409 "Ya existe un tipo de mascota con ese nombre." |
+| Segunda solicitud activa para la misma mascota | Servicio y BD (`UNIQUE mascota_en_revision`) | 409 |
+| Teléfono con otro formato | Navegador, servidor y BD (`CHECK`) | 400 "El teléfono debe tener el formato 8888-1234." |
+| Campos vacíos o demasiado largos | Servidor (validadores) y BD (`NOT NULL`, `CHECK`, longitudes) | 400 con el detalle de cada campo |
+| Mascota, tipo o solicitud inexistente | Servicio | 404 |
+| Cualquier otro error de MySQL | Middleware central de errores | Código coherente (400/409) o 500 genérico, nunca el detalle interno |

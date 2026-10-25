@@ -45,21 +45,21 @@
 | RF-02 | El sistema debe permitir el inicio de sesión de adoptantes registrados | Login | **Implementado** (`POST /api/auth/login`, JWT) |
 | RF-03 | El sistema debe mostrar el catálogo de mascotas disponibles | Catálogo | **Implementado** (`GET /api/mascotas`, filtros desde `GET /api/tipos-mascota`) |
 | RF-04 | El sistema debe mostrar la ficha detallada de una mascota | Detalle | **Implementado** (`GET /api/mascotas/:id`, público) |
-| RF-05 | El sistema debe permitir consultar el estado de una solicitud de adopción | Seguimiento | Prototipo (localStorage) |
-| RF-06 | El sistema debe permitir enviar una solicitud de adopción | Solicitar adopción | Prototipo (localStorage) |
+| RF-05 | El sistema debe permitir consultar el estado de una solicitud de adopción | Seguimiento | **Implementado** (`GET /api/solicitudes/:id`, solo dueño o admin) |
+| RF-06 | El sistema debe permitir enviar una solicitud de adopción | Solicitar adopción | **Implementado** (`POST /api/solicitudes`, transacción) |
 | RF-07 | El sistema debe notificar al adoptante cuando cambie el estado de su solicitud | Notificaciones | Prototipo (localStorage) |
-| RF-08 | El sistema debe permitir al administrador revisar y responder solicitudes | Panel de Administración | Prototipo (localStorage) |
+| RF-08 | El sistema debe permitir al administrador revisar y responder solicitudes | Panel de Administración | **Implementado** (`GET`/`PATCH /api/admin/solicitudes`, transacción) |
 | RF-09 | El sistema debe permitir al administrador gestionar el catálogo de mascotas (agregar, editar, cambiar estado, gestionar tipos) | Panel de Administración | **Implementado** (`POST`/`PUT /api/mascotas`, `POST`/`PUT /api/tipos-mascota`) |
-| RF-10 | El sistema debe permitir consultar el historial de solicitudes propias | Mis Solicitudes | Prototipo (localStorage) |
+| RF-10 | El sistema debe permitir consultar el historial de solicitudes propias | Mis Solicitudes | **Implementado** (`GET /api/solicitudes/mias`) |
 
 ## 2.3 Requisitos no funcionales
 
 | Código | Descripción | Estado |
 |---|---|---|
-| RNF-01 | El sistema debe responder las consultas de seguimiento en menos de 2 segundos | Pendiente de medir con backend |
+| RNF-01 | El sistema debe responder las consultas de seguimiento en menos de 2 segundos | **Cumple** en la medición local (≈12 ms); se formaliza como prueba automática en la fase de pruebas |
 | RNF-02 | Las contraseñas de usuario deben almacenarse cifradas (hash) | **Cumple**: hash bcrypt (10 rondas) en MySQL; el navegador solo guarda el token |
 | RNF-03 | La aplicación debe ser responsive (accesible desde móvil y escritorio) | **Cumple**: se agregó la etiqueta `viewport`, que faltaba en el prototipo (sin ella el CSS responsive no se aplicaba en móviles) |
-| RNF-04 | Solo un administrador autenticado puede modificar el catálogo o el estado de una solicitud | Parcial: `requiereAuth` + `requiereRol('admin')` protegen la gestión de mascotas y tipos (403 para adoptantes); las solicitudes se protegen en la fase 5 |
+| RNF-04 | Solo un administrador autenticado puede modificar el catálogo o el estado de una solicitud | **Cumple**: `requiereAuth` + `requiereRol('admin')` protegen la gestión de mascotas, de tipos y la respuesta de solicitudes; un adoptante recibe 403 |
 
 ## 2.4 Backlog priorizado actualizado
 
@@ -67,12 +67,12 @@
 |---|---|---|---|---|
 | PB-01 | Registro y autenticación de adoptantes | Alta | **Completado** con backend | `src/modules/usuarios/`, `public/js/paginas/login.js`, `public/js/paginas/registro.js` |
 | PB-02 | Catálogo de mascotas con filtros | Alta | **Completado** con backend | `src/modules/mascotas/`, `public/js/paginas/catalogo.js` |
-| PB-03 | Solicitud y seguimiento de adopción | Alta | Completado en prototipo | `public/solicitar.html`, `public/seguimiento.html` |
-| PB-04 | Panel administrativo (aprobar/rechazar) | Alta | Completado en prototipo | `public/admin.html` |
+| PB-03 | Solicitud y seguimiento de adopción | Alta | **Completado** con backend y transacciones | `src/modules/solicitudes/`, `public/js/paginas/solicitar.js`, `public/js/paginas/seguimiento.js` |
+| PB-04 | Panel administrativo (aprobar/rechazar) | Alta | **Completado** con backend y transacciones | `src/modules/solicitudes/`, `public/js/paginas/admin.js` |
 | PB-05 | Conexión a base de datos real (**MySQL**; antes MongoDB) | Alta | **Completado** (esquema, seed y pool de conexiones) | `database/01_schema.sql`, `src/config/db.js` |
-| PB-06 | Backend real con Node.js + Express | Alta | En progreso: módulos de usuarios, tipos y mascotas listos | `src/app.js`, `src/modules/` |
+| PB-06 | Backend real con Node.js + Express | Alta | En progreso: usuarios, tipos, mascotas y solicitudes listos; falta la consulta de notificaciones | `src/app.js`, `src/modules/` |
 | PB-07 | Autenticación segura (hash bcrypt de contraseñas y JWT) | Alta | **Completado** | `src/modules/usuarios/servicio.js`, `src/middlewares/autenticacion.js` |
-| PB-08 | Validación de formato de teléfono | Media | **Completado** en el navegador (hallazgo 5); la validación en el servidor se agrega con PB-06 | `public/solicitar.html` |
+| PB-08 | Validación de formato de teléfono | Media | **Completado** en el navegador, el servidor y la base de datos (hallazgo 5) | `public/js/paginas/solicitar.js`, `src/modules/solicitudes/validaciones.js` |
 | PB-09 | Notificaciones de cambio de estado (**internas en BD**; el correo queda fuera de alcance) | Media | Pendiente | — |
 | PB-10 | Fotografías reales de las mascotas | Media | Pendiente | — |
 | PB-11 | Reportes de adopciones para el refugio | Baja | Pendiente (mejora futura) | — |
@@ -90,7 +90,7 @@
 | 2 | Estado de la mascota desincronizado con la solicitud | Corregido | Corregido | `public/admin.html` |
 | 3 | Menú autenticado visible en Registro/Login con sesión iniciada | Pendiente | **Corregido**: con sesión se redirige al catálogo o al panel; sin sesión solo se ve el menú público | `public/login.html`, `public/registro.html`, `public/js/app.js` |
 | 4 | Fotos de mascotas como ícono, no imágenes reales | Parcial | Parcial (se cierra con PB-10) | — |
-| 5 | Teléfono sin validación de formato | Corregido | Corregido (navegador) | `public/solicitar.html` |
+| 5 | Teléfono sin validación de formato | Corregido | Corregido en el navegador, en el servidor (400) y en la BD (`CHECK`) | `public/js/paginas/solicitar.js`, `src/modules/solicitudes/validaciones.js`, `database/01_schema.sql` |
 | 6 | *(nuevo)* La ficha de detalle exigía sesión aunque el catálogo público enlazaba a ella | — | **Corregido**: detalle público, con botón para iniciar sesión | `public/detalle.html` |
 | 7 | *(nuevo)* Datos de usuario insertados con `innerHTML` sin escapar (riesgo XSS) | — | **Corregido**: función `escaparHtml` | `public/js/comun.js` |
 | 8 | *(nuevo)* Las páginas no tenían la etiqueta `viewport`, por lo que en móviles se veían con ancho de escritorio | — | **Corregido** | Todas las páginas de `public/` |
