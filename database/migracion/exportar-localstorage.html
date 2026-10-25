@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exportar datos del prototipo — Patitas Conectadas</title>
+<style>
+  body { font-family: "Segoe UI", Arial, sans-serif; background: #F2F2F2; color: #2B2B2B; margin: 0; padding: 24px 16px; }
+  main { max-width: 640px; margin: 0 auto; background: white; border-radius: 12px; padding: 24px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+  h1 { font-size: 1.4rem; margin-top: 0; color: #2C6B75; }
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  th, td { text-align: left; padding: 8px; border-bottom: 1px solid #eee; font-size: 0.9rem; }
+  button { background: #3D8A96; color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; font-size: 0.95rem; cursor: pointer; width: 100%; }
+  button:disabled { opacity: 0.6; cursor: not-allowed; }
+  .aviso { background: #FCE8C8; color: #8A5A15; padding: 12px 14px; border-radius: 8px; font-size: 0.88rem; line-height: 1.5; }
+  .ok { background: #DCF0E2; color: #2C6B3F; padding: 12px 14px; border-radius: 8px; margin-top: 14px; }
+  code { background: #F2F2F2; padding: 1px 5px; border-radius: 4px; }
+</style>
+</head>
+<body>
+  <main>
+    <h1>🐾 Exportar datos del prototipo (localStorage)</h1>
+    <p class="aviso">
+      Abre esta página <strong>en el mismo navegador y de la misma forma</strong> en que usaste el prototipo del Hito 1
+      (por ejemplo, con doble clic desde el explorador de archivos o en el mismo puerto de Live Server).
+      El localStorage es distinto para cada origen, así que solo así podrá leer los datos guardados.
+    </p>
+    <table>
+      <thead><tr><th>Clave</th><th>Registros encontrados</th></tr></thead>
+      <tbody id="resumen"></tbody>
+    </table>
+    <button type="button" id="descargar">Descargar respaldo_localstorage.json</button>
+    <div id="resultado"></div>
+  </main>
+  <script>
+    const CLAVES = ["pc_users", "pc_pets", "pc_requests", "pc_notifications"];
+
+    function leerClave(clave) {
+      try {
+        const valor = JSON.parse(localStorage.getItem(clave) || "[]");
+        return Array.isArray(valor) ? valor : [];
+      } catch (error) {
+        return [];
+      }
+    }
+
+    const datos = Object.fromEntries(CLAVES.map((clave) => [clave, leerClave(clave)]));
+    const total = CLAVES.reduce((suma, clave) => suma + datos[clave].length, 0);
+    const resumen = document.getElementById("resumen");
+    CLAVES.forEach((clave) => {
+      const fila = document.createElement("tr");
+      const celdaClave = document.createElement("td");
+      const celdaTotal = document.createElement("td");
+      celdaClave.textContent = clave;
+      celdaTotal.textContent = datos[clave].length;
+      fila.append(celdaClave, celdaTotal);
+      resumen.append(fila);
+    });
+
+    const boton = document.getElementById("descargar");
+    if (total === 0) {
+      boton.disabled = true;
+      document.getElementById("resultado").innerHTML = '<p class="aviso" style="margin-top:14px;">No se encontraron datos del prototipo en este origen. Revisa que estés abriendo la página igual que el prototipo.</p>';
+    }
+
+    boton.addEventListener("click", () => {
+      const respaldo = {
+        origen: `Prototipo Hito 1 (localStorage de ${location.origin === "null" ? "file://" : location.origin})`,
+        exportadoEn: new Date().toISOString(),
+        claves: CLAVES,
+        datos,
+      };
+      const archivo = new Blob([JSON.stringify(respaldo, null, 2)], { type: "application/json" });
+      const enlace = document.createElement("a");
+      enlace.href = URL.createObjectURL(archivo);
+      enlace.download = "respaldo_localstorage.json";
+      enlace.click();
+      URL.revokeObjectURL(enlace.href);
+      const ok = document.createElement("p");
+      ok.className = "ok";
+      ok.textContent = `Se descargó respaldo_localstorage.json con ${total} registros. Cópialo a database/migracion/ y ejecuta la migración primero contra patitas_test.`;
+      document.getElementById("resultado").replaceChildren(ok);
+    });
+  </script>
+</body>
+</html>
