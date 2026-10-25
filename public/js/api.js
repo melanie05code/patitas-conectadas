@@ -1,7 +1,8 @@
 async function llamarApi(metodo, ruta, cuerpo) {
   const actual = sesion.obtener();
+  const esFormulario = cuerpo instanceof FormData;
   const cabeceras = { Accept: "application/json" };
-  if (cuerpo !== undefined) cabeceras["Content-Type"] = "application/json";
+  if (cuerpo !== undefined && !esFormulario) cabeceras["Content-Type"] = "application/json";
   if (actual) cabeceras.Authorization = `Bearer ${actual.token}`;
 
   let respuesta;
@@ -9,7 +10,7 @@ async function llamarApi(metodo, ruta, cuerpo) {
     respuesta = await fetch(`/api${ruta}`, {
       method: metodo,
       headers: cabeceras,
-      body: cuerpo === undefined ? undefined : JSON.stringify(cuerpo),
+      body: cuerpo === undefined || esFormulario ? cuerpo : JSON.stringify(cuerpo),
     });
   } catch {
     throw new Error("No se pudo conectar con el servidor. Revisa tu conexión e inténtalo de nuevo.");

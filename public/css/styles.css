@@ -377,3 +377,16 @@ a.link-line { color: var(--teal-dark); font-weight: bold; text-decoration: none;
 .notif.no-leida { border-left: 4px solid var(--teal); }
 .notif.no-leida .texto-notif { font-weight: bold; }
 .notif .cuerpo-notif { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.pet-photo { height: 180px; overflow: hidden; }
+.pet-photo img, .detail-photo img { width: 100%; height: 100%; object-fit: cover; object-position: center 35%; display: block; }
+.detail-photo { overflow: hidden; }
+.detail-photo.con-foto { height: 340px; }
+.avatar { overflow: hidden; }
+.avatar img { width: 100%; height: 100%; object-fit: cover; }
+.miniatura { display: inline-flex; width: 34px; height: 34px; border-radius: 8px; overflow: hidden; vertical-align: middle; margin-right: 8px; background: var(--green-light); align-items: center; justify-content: center; }
+.miniatura img { width: 100%; height: 100%; object-fit: cover; }
+.vista-previa { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
+.vista-previa img { width: 72px; height: 72px; border-radius: 10px; object-fit: cover; }
+.campo-check { display: flex; align-items: center; gap: 8px; margin-top: 8px; font-weight: normal; }
+.campo-check input { width: auto; }
+.ayuda { display: block; color: var(--gray); font-size: 0.78rem; margin-top: 4px; }
