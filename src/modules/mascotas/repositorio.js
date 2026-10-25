@@ -13,16 +13,16 @@ function convertir(fila) {
   return { ...mascota, tipo: { id: tipoId, nombre: tipoNombre, icono: tipoIcono } };
 }
 
-async function listar({ tipoId, busqueda, estado }) {
+async function listar({ tipoId, busqueda, estados = [] }) {
   const condiciones = [];
   const parametros = [];
   if (tipoId) {
     condiciones.push("m.tipo_id = ?");
     parametros.push(tipoId);
   }
-  if (estado) {
-    condiciones.push("m.estado = ?");
-    parametros.push(estado);
+  if (estados.length) {
+    condiciones.push(`m.estado IN (${estados.map(() => "?").join(", ")})`);
+    parametros.push(...estados);
   }
   if (busqueda) {
     condiciones.push("m.nombre LIKE ?");

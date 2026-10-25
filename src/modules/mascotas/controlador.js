@@ -1,16 +1,16 @@
 const servicio = require("./servicio");
 const ErrorApp = require("../../utils/ErrorApp");
 const { texto, enteroPositivo } = require("../../utils/validadores");
-const { ESTADOS } = require("./validaciones");
+const { leerFiltroEstados } = require("./validaciones");
 const { urlFotoMascota } = require("../../utils/archivos");
 
 async function listar(req, res) {
   const tipoId = req.query.tipoId ? enteroPositivo(req.query.tipoId) : null;
   if (req.query.tipoId && !tipoId) throw new ErrorApp(400, "El filtro de tipo no es válido.");
-  const estado = texto(req.query.estado);
-  if (estado && !ESTADOS.includes(estado)) throw new ErrorApp(400, "El filtro de estado no es válido.");
+  const estados = leerFiltroEstados(req.query.estado);
+  if (!estados) throw new ErrorApp(400, "El filtro de estado no es válido.");
   const busqueda = texto(req.query.q).slice(0, 60);
-  res.json(await servicio.listar({ tipoId, busqueda, estado }));
+  res.json(await servicio.listar({ tipoId, busqueda, estados }));
 }
 
 async function obtener(req, res) {
