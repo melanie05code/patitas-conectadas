@@ -78,7 +78,7 @@ patitas-conectadas/
 │  └─ utils/                 ErrorApp, validadores, token (JWT), archivos (fotos)
 ├─ public/                   Prototipo evolucionado: páginas HTML, css/, js/comun.js, js/api.js, js/paginas/
 ├─ database/                 01_schema.sql, 02_seed.sql, generar-seed.js, instalar.js, seed-fotos/, migracion/
-├─ tests/                    Jest + Supertest (PR-01 a PR-28)
+├─ tests/                    Jest + Supertest (PR-01 a PR-35)
 ├─ scripts/capturas.js       Evidencias con Playwright
 └─ docs/                     Documentación del Segundo Parcial, evidencias y documentos v1 (docs/hito1/)
 ```
