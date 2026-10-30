@@ -1,12 +1,15 @@
 version = 1
 
+test_patterns = ["tests/**"]
+
 exclude_patterns = ["docs/**", "database/seed-fotos/**", "coverage/**"]
 
 [[analyzers]]
 name = "javascript"
 
   [analyzers.meta]
-  environment = ["nodejs"]
+  environment = ["nodejs", "browser", "jest"]
+  module_system = "commonjs"
 
 [[analyzers]]
 name = "secrets"
