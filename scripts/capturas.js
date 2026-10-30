@@ -43,7 +43,7 @@ async function principal() {
     pagina.on("dialog", (dialogo) => dialogo.accept());
     const alerta = (selector = "#alertBox") => pagina.waitForSelector(`${selector} .alert`);
 
-    async function entrar(email, password, destino) {
+    const entrar = async (email, password, destino) => {
       await pagina.goto(`${base}/login.html`);
       await pagina.evaluate(() => sessionStorage.clear());
       await pagina.goto(`${base}/login.html`);
@@ -51,11 +51,11 @@ async function principal() {
       await pagina.fill("#password", password);
       await Promise.all([pagina.waitForURL(`**/${destino}`), pagina.click("button[type=submit]")]);
       await pagina.waitForLoadState("networkidle");
-    }
+    };
 
-    async function salir() {
+    const salir = async () => {
       await Promise.all([pagina.waitForURL("**/login.html"), pagina.click("#btnSalir")]);
-    }
+    };
 
     await pagina.goto(`${base}/index.html`);
     await pagina.waitForFunction(() => document.getElementById("statAvailable").textContent !== "--");

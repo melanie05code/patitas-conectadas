@@ -2,7 +2,7 @@
 
 const esPrivado = document.body.dataset.privado === "true";
 
-if (!esPrivado || requiereSesion()) {
+function iniciarPagina() {
   renderizarBarra("catalogo");
 
   const VISTAS = {
@@ -93,3 +93,5 @@ if (!esPrivado || requiereSesion()) {
 
   void cambiarVista();
 }
+
+if (!esPrivado || requiereSesion()) iniciarPagina();

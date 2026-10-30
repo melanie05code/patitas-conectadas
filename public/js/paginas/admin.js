@@ -1,6 +1,6 @@
 /* global api, claseEstado, escaparHtml, formatearFecha, fotoMascota, iconoMascota, mostrarAlerta, numeroSolicitud, renderizarBarra, requiereSesion */
 
-if (requiereSesion("admin")) {
+function iniciarPagina() {
   renderizarBarra("admin");
 
   const estado = { tipos: [], mascotas: [], pendientes: [], mascotaEditando: null, tipoEditando: null };
@@ -298,3 +298,5 @@ if (requiereSesion("admin")) {
   void cargarTipos();
   void cargarMascotas();
 }
+
+if (requiereSesion("admin")) iniciarPagina();

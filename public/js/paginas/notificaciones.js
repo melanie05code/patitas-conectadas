@@ -1,6 +1,6 @@
 /* global actualizarContadorNotificaciones, api, escaparHtml, fechaRelativa, formatearFecha, mostrarAlerta, renderizarBarra, requiereSesion */
 
-if (requiereSesion("adoptante")) {
+function iniciarPagina() {
   renderizarBarra("notificaciones");
 
   const lista = document.getElementById("list");
@@ -66,3 +66,5 @@ if (requiereSesion("adoptante")) {
 
   void cargar();
 }
+
+if (requiereSesion("adoptante")) iniciarPagina();
