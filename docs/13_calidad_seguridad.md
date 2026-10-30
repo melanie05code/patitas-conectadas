@@ -99,10 +99,10 @@ Con esto, el análisis inicial del PR #12 (ejecución [40223779979](https://gith
 | Coverage | sin dato · código nuevo del PR inicial 48,6 % | código nuevo 95,8 % · archivos del PR 78,7 % · Jest: 89,8 % de líneas |
 | Reliability / Security / Maintainability / Security Review | C / E / A / A | A / A / A / A |
 | **DeepSource** — ocurrencias | 405 (Bug risk 182, Anti-pattern 222, Secrets 1) | 192 resueltas y 48 marcadas en archivos modificados (21 TCV-001, 15 JS-0067, 12 JS-0098); total estimado 261 |
-| Checks de DeepSource en el PR | JavaScript ❌, Test coverage ❌, SQL ✅, Secrets ✅ | JavaScript ❌, Test coverage ❌, SQL ✅, Secrets ✅ (solo por los falsos positivos de arriba; Bug risk introducidos: 0) |
+| Checks de DeepSource en el PR | JavaScript Falla, Test coverage Falla, SQL Pasa, Secrets Pasa | JavaScript Falla, Test coverage Falla, SQL Pasa, Secrets Pasa (solo por los falsos positivos de arriba; Bug risk introducidos: 0) |
 | **Snyk Open Source** (High / Medium / Low) | `main` 0 / 0 / 0 · PR inicial 5 / 3 / 0 | 0 / 0 / 0 |
 | **Snyk Code** (High / Medium / Low) | `main` 3 / 6 / 18 · PR inicial 4 / 6 / 18 | 0 / 4 / 10 |
-| Check de Snyk en el PR | ❌ | ✅ (umbral `high`) |
+| Check de Snyk en el PR | Falla | Pasa (umbral `high`) |
 | Pruebas | 28 | 31 (PR-29 a PR-31) |
 
 SonarCloud no publica sin sesión las métricas de la rama `dev`, y el análisis de un PR solo cubre los archivos modificados. Los 38 issues de `main` estaban en archivos que este PR modifica, y en esos archivos el análisis final del PR da 0 bugs, 0 vulnerabilidades y 0 code smells. La cifra del proyecto completo se actualizará en el panel de `main` al fusionar.
