@@ -14,8 +14,8 @@ INSERT INTO tipos_mascota (id, nombre, icono) VALUES
   (9, 'Otro', '🐾');
 
 INSERT INTO usuarios (id, nombre, email, password_hash, rol) VALUES
-  (1, 'Administrador Refugio', 'admin@patitas.com', '$2b$10$bbDynpT25srx75q2VaP09uYh3jpvaVCDY052Zc8a/NRuoik0DlvaS', 'admin'),
-  (2, 'Edwin Obando', 'edwin.obando@correo.com', '$2b$10$LWV6/e9HpCNJjSKZbQpu2.InJptnvhq.PHKjc1fEbKZAmvpE0dD3a', 'adoptante');
+  (1, 'Administrador Refugio', 'admin@patitas.com', '@@SEED_ADMIN_PASSWORD@@', 'admin'),
+  (2, 'Edwin Obando', 'edwin.obando@correo.com', '@@SEED_ADOPTANTE_PASSWORD@@', 'adoptante');
 
 INSERT INTO mascotas (id, nombre, tipo_id, edad, raza, sexo, descripcion, estado, foto_url) VALUES
   (1, 'Mechudo', 1, '5 años', 'Yorkshire Terrier', 'Macho', 'Pequeño, cariñoso y muy apegado a las personas. Le encanta que lo carguen y usar su suéter en los días frescos. Ideal para apartamento.', 'En proceso', '/uploads/mascotas/mechudo.jpg'),

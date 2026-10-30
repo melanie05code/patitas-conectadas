@@ -1,3 +1,4 @@
+const { randomBytes } = require("crypto");
 const request = require("supertest");
 const app = require("../src/app");
 const { pool } = require("../src/config/db");
@@ -9,9 +10,13 @@ if (!esPrueba || db.database === "patitas_conectadas") {
 }
 
 const USUARIOS = {
-  admin: { email: "admin@patitas.com", password: "Admin2026" },
-  edwin: { email: "edwin.obando@correo.com", password: "Edwin2026" },
+  admin: { email: "admin@patitas.com", password: process.env.SEED_ADMIN_PASSWORD },
+  edwin: { email: "edwin.obando@correo.com", password: process.env.SEED_ADOPTANTE_PASSWORD },
 };
+
+function contrasenaAleatoria(largo = 16) {
+  return randomBytes(largo).toString("base64url").slice(0, largo);
+}
 
 const MASCOTAS = { mechudo: 1, cjotas: 2, elHambriento: 3, encantador: 4, lara: 10 };
 
@@ -26,7 +31,7 @@ async function iniciarSesion({ email, password }) {
 }
 
 async function registrarAdoptante(nombre, email) {
-  const respuesta = await request(app).post("/api/auth/registro").send({ nombre, email, password: "Segura2026" });
+  const respuesta = await request(app).post("/api/auth/registro").send({ nombre, email, password: contrasenaAleatoria() });
   if (respuesta.status !== 201) throw new Error(`No se pudo registrar a ${email}: ${respuesta.status}`);
   return respuesta.body.token;
 }
@@ -55,6 +60,7 @@ module.exports = {
   pool,
   USUARIOS,
   MASCOTAS,
+  contrasenaAleatoria,
   reiniciarBaseDatos,
   iniciarSesion,
   registrarAdoptante,

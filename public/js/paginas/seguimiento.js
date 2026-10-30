@@ -1,4 +1,6 @@
-if (requiereSesion("adoptante")) {
+/* global api, escaparHtml, formatearFecha, iconoMascota, numeroSolicitud, parametroId, renderizarBarra, requiereSesion */
+
+function iniciarPagina() {
   renderizarBarra("solicitudes");
 
   const contenido = document.getElementById("content");
@@ -47,5 +49,7 @@ if (requiereSesion("adoptante")) {
     }
   }
 
-  cargar();
+  void cargar();
 }
+
+if (requiereSesion("adoptante")) iniciarPagina();

@@ -11,8 +11,8 @@ const tipos = [
 ];
 
 const usuarios = [
-  { id: 1, nombre: "Administrador Refugio", email: "admin@patitas.com", password: "Admin2026", rol: "admin" },
-  { id: 2, nombre: "Edwin Obando", email: "edwin.obando@correo.com", password: "Edwin2026", rol: "adoptante" },
+  { id: 1, nombre: "Administrador Refugio", email: "admin@patitas.com", variableContrasena: "SEED_ADMIN_PASSWORD", rol: "admin" },
+  { id: 2, nombre: "Edwin Obando", email: "edwin.obando@correo.com", variableContrasena: "SEED_ADOPTANTE_PASSWORD", rol: "adoptante" },
 ];
 
 const mascotas = [
@@ -43,4 +43,8 @@ const notificaciones = [
   { id: 5, usuarioId: 2, solicitudId: null, texto: "Nueva mascota disponible: Cjotas", leida: 0, creadoEn: "2026-10-21 09:00:00" },
 ];
 
-module.exports = { tipos, usuarios, mascotas, solicitudes, notificaciones };
+function marcadorContrasena(variable) {
+  return `@@${variable}@@`;
+}
+
+module.exports = { tipos, usuarios, mascotas, solicitudes, notificaciones, marcadorContrasena };

@@ -17,7 +17,7 @@ Proyecto Final Integrador de la Universidad UCN (2026), **individual**, de Melan
 | Seguridad | bcrypt, JSON Web Tokens, Helmet (CSP estricta), express-rate-limit, consultas parametrizadas |
 | Archivos | multer (fotos JPG, PNG o WEBP de hasta 2 MB) |
 | Frontend | HTML + CSS + JavaScript (el prototipo del Hito 1 evolucionado), consumiendo la API con `fetch` |
-| Pruebas | Jest + Supertest (28 pruebas) y Playwright para las capturas de evidencia |
+| Pruebas | Jest + Supertest (31 pruebas, con cobertura) y Playwright para las capturas de evidencia |
 
 ## Requisitos previos
 
@@ -49,7 +49,7 @@ Proyecto Final Integrador de la Universidad UCN (2026), **individual**, de Melan
    Copy-Item .env.example .env
    notepad .env
    ```
-   Completa `DB_PASSWORD` con la contraseña de `patitas_app` y `JWT_SECRET` con un texto largo y aleatorio. Para generar uno:
+   Completa `DB_PASSWORD` con la contraseña de `patitas_app`, `JWT_SECRET` con un texto largo y aleatorio, y `SEED_ADMIN_PASSWORD` / `SEED_ADOPTANTE_PASSWORD` con las contraseñas que tendrán los usuarios demo (los valores `EJEMPLO_...` del ejemplo deben cambiarse). Para generar un valor aleatorio:
    ```powershell
    node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"
    ```
@@ -59,13 +59,9 @@ Proyecto Final Integrador de la Universidad UCN (2026), **individual**, de Melan
    npm run db:instalar        # base patitas_conectadas + fotos de las mascotas
    npm run db:instalar:test   # base de pruebas patitas_test
    ```
-   El comando ejecuta los dos scripts con las credenciales del `.env` y copia las fotos de `database/seed-fotos/` a `uploads/mascotas/`. **Ojo:** recrea las tablas, así que borra los datos y las fotos que se hayan cargado antes.
+   El comando ejecuta los dos scripts con las credenciales del `.env`, calcula en ese momento el hash bcrypt de las contraseñas demo a partir de `SEED_ADMIN_PASSWORD` y `SEED_ADOPTANTE_PASSWORD` y copia las fotos de `database/seed-fotos/` a `uploads/mascotas/`. **Ojo:** recrea las tablas, así que borra los datos y las fotos que se hayan cargado antes.
 
-   También se pueden ejecutar los scripts a mano con el cliente de MySQL. En ese caso hay que copiar después las fotos a `uploads/mascotas/`:
-   ```powershell
-   & "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u patitas_app -p --default-character-set=utf8mb4 -e "source database/01_schema.sql; source database/02_seed.sql"
-   New-Item -ItemType Directory -Force uploads\mascotas | Out-Null; Copy-Item database\seed-fotos\* uploads\mascotas\
-   ```
+   El repositorio no guarda contraseñas ni hashes: `02_seed.sql` solo tiene marcadores (`@@SEED_ADMIN_PASSWORD@@`), por eso el seed debe cargarse con `npm run db:instalar` y no ejecutando el archivo a mano.
 
 ## Cómo ejecutar
 
@@ -80,10 +76,10 @@ Abre http://localhost:3000. Para comprobar la conexión con la base de datos: ht
 
 | Rol | Correo | Contraseña |
 |---|---|---|
-| Administrador del refugio | `admin@patitas.com` | `Admin2026` |
-| Adoptante (con 4 solicitudes de ejemplo) | `edwin.obando@correo.com` | `Edwin2026` |
+| Administrador del refugio | `admin@patitas.com` | la de `SEED_ADMIN_PASSWORD` en tu `.env` |
+| Adoptante (con 4 solicitudes de ejemplo) | `edwin.obando@correo.com` | la de `SEED_ADOPTANTE_PASSWORD` en tu `.env` |
 
-Las contraseñas se guardan con hash bcrypt. Son cuentas de demostración: **no deben existir en producción**.
+Las contraseñas se guardan con hash bcrypt. Son cuentas de demostración: **no deben existir en producción**. Las pruebas automáticas generan contraseñas aleatorias en cada ejecución si esas variables no están definidas.
 
 ## Pruebas
 
@@ -91,7 +87,25 @@ Las contraseñas se guardan con hash bcrypt. Son cuentas de demostración: **no 
 npm test
 ```
 
-Ejecuta las 28 pruebas (Jest + Supertest) contra la base **`patitas_test`**, que se reinstala antes de cada prueba. Nunca tocan `patitas_conectadas`. Resultado y detalle en [`docs/06_pruebas.md`](docs/06_pruebas.md).
+Ejecuta las 31 pruebas (Jest + Supertest) con reporte de cobertura en `coverage/` contra la base **`patitas_test`**, que se reinstala antes de cada prueba. Nunca tocan `patitas_conectadas`. Resultado y detalle en [`docs/06_pruebas.md`](docs/06_pruebas.md).
+
+## Calidad y seguridad
+
+[![Calidad y seguridad](https://github.com/melanie05code/patitas-conectadas/actions/workflows/ci.yml/badge.svg)](https://github.com/melanie05code/patitas-conectadas/actions/workflows/ci.yml)
+[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=melanie05code_patitas-conectadas&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=melanie05code_patitas-conectadas)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=melanie05code_patitas-conectadas&metric=bugs)](https://sonarcloud.io/summary/new_code?id=melanie05code_patitas-conectadas)
+[![Vulnerabilidades](https://sonarcloud.io/api/project_badges/measure?project=melanie05code_patitas-conectadas&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=melanie05code_patitas-conectadas)
+[![Cobertura](https://sonarcloud.io/api/project_badges/measure?project=melanie05code_patitas-conectadas&metric=coverage)](https://sonarcloud.io/summary/new_code?id=melanie05code_patitas-conectadas)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=melanie05code_patitas-conectadas&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=melanie05code_patitas-conectadas)
+
+El pipeline de GitHub Actions ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) corre en cada push a `dev` y en cada Pull Request hacia `main`, en este orden:
+
+1. **Tests**: `npm test` con cobertura sobre MySQL 8.0, con credenciales generadas en el propio job.
+2. **SonarCloud**: análisis estático y cobertura (`sonar-project.properties`).
+3. **DeepSource**: envío de la cobertura (`.deepsource.toml`); el análisis de código lo hace la GitHub App de DeepSource sobre el PR.
+4. **Snyk**: `snyk test` (dependencias) y `snyk code test` (código) con umbral de severidad alta, y los resultados SARIF como artifact.
+
+El análisis completo, las correcciones y la comparación antes/después están en [`docs/13_calidad_seguridad.md`](docs/13_calidad_seguridad.md).
 
 ## Otros comandos
 
@@ -121,7 +135,7 @@ patitas-conectadas/
 │  ├─ seed-fotos/          Fotos reales de las 10 mascotas
 │  ├─ instalar.js          Instalador de la base de datos (npm run db:instalar)
 │  └─ migracion/           Exportador del localStorage y ETL (migrar.js)
-├─ tests/                  Pruebas automáticas (PR-01 a PR-28)
+├─ tests/                  Pruebas automáticas (PR-01 a PR-31)
 ├─ scripts/capturas.js     Capturas de evidencia con Playwright
 ├─ docs/                   Documentación del Segundo Parcial (00 a 12), evidencias y docs/hito1/
 ├─ .env.example            Plantilla de variables de entorno (el .env real no se sube)
@@ -147,4 +161,4 @@ La matriz completa, con módulos, tablas y pruebas, está en [`docs/04_arquitect
 
 ## Documentación
 
-Empieza por la portada: [`docs/00_portada.md`](docs/00_portada.md). Tiene el índice de las 12 secciones, desde las correcciones hasta los enlaces y anexos. Los documentos originales del Hito 1 están en [`docs/hito1/`](docs/hito1/).
+Empieza por la portada: [`docs/00_portada.md`](docs/00_portada.md). Tiene el índice de las 13 secciones, desde las correcciones hasta el análisis de calidad y seguridad del código ([`docs/13_calidad_seguridad.md`](docs/13_calidad_seguridad.md)). Los documentos originales del Hito 1 están en [`docs/hito1/`](docs/hito1/).

@@ -1,0 +1,143 @@
+name: Calidad y seguridad
+
+on:
+  push:
+    branches: [dev]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    name: Tests
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 --silent"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=30
+    env:
+      NODE_ENV: test
+      DB_HOST: 127.0.0.1
+      DB_PORT: 3306
+      DB_USER: patitas_app
+      DB_NAME_TEST: patitas_test
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Generar credenciales de prueba
+        run: |
+          root=$(docker logs "${{ job.services.mysql.id }}" 2>&1 | sed -n 's/.*GENERATED ROOT PASSWORD: //p' | tr -d '[:space:]')
+          app=$(openssl rand -hex 24)
+          jwt=$(openssl rand -hex 32)
+          echo "::add-mask::$root"
+          echo "::add-mask::$app"
+          echo "::add-mask::$jwt"
+          {
+            echo "MYSQL_ROOT_PWD=$root"
+            echo "DB_PASSWORD=$app"
+            echo "JWT_SECRET=$jwt"
+          } >> "$GITHUB_ENV"
+
+      - name: Crear base y usuario de pruebas
+        env:
+          MYSQL_PWD: ${{ env.MYSQL_ROOT_PWD }}
+        run: |
+          mysql -h 127.0.0.1 -u root <<SQL
+          CREATE DATABASE IF NOT EXISTS patitas_test CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+          CREATE USER 'patitas_app'@'%' IDENTIFIED BY '${DB_PASSWORD}';
+          GRANT ALL PRIVILEGES ON patitas_test.* TO 'patitas_app'@'%';
+          GRANT PROCESS ON *.* TO 'patitas_app'@'%';
+          SQL
+
+      - run: npm ci
+
+      - run: npm test
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: cobertura
+          path: coverage/lcov.info
+
+  sonarcloud:
+    name: SonarCloud
+    needs: tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: cobertura
+          path: coverage
+
+      - uses: SonarSource/sonarqube-scan-action@v8.3.0
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  deepsource:
+    name: DeepSource
+    needs: sonarcloud
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: cobertura
+          path: coverage
+
+      - name: Reportar cobertura a DeepSource
+        env:
+          DEEPSOURCE_DSN: ${{ secrets.DEEPSOURCE_DSN }}
+        run: |
+          curl -sSfL https://deepsource.io/cli | sh
+          ./bin/deepsource report --analyzer test-coverage --key javascript --value-file ./coverage/lcov.info
+
+  snyk:
+    name: Snyk
+    needs: deepsource
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Snyk Open Source (dependencias)
+        uses: snyk/actions/node@v1.0.0
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          command: test
+          args: --severity-threshold=high --sarif-file-output=snyk-dependencias.sarif
+
+      - name: Snyk Code (código)
+        if: ${{ !cancelled() }}
+        uses: snyk/actions/node@v1.0.0
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          command: code test
+          args: --severity-threshold=high --sarif-file-output=snyk-codigo.sarif
+
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: snyk-resultados
+          path: snyk-*.sarif

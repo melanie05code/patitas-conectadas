@@ -108,7 +108,7 @@ Las columnas generadas (`mascota_en_revision`, `mascota_aprobada`) valen el id d
 
 ## 5.6 Datos semilla
 
-Se generan con `npm run db:seed`, que lee [`database/datos-semilla.js`](../database/datos-semilla.js) y escribe `02_seed.sql` con las contraseñas **hasheadas con bcrypt** (10 rondas). Ningún archivo del repositorio contiene contraseñas en texto plano, salvo las contraseñas demo documentadas en el README.
+Se generan con `npm run db:seed`, que lee [`database/datos-semilla.js`](../database/datos-semilla.js) y escribe `02_seed.sql` con un marcador en lugar del hash de cada usuario demo (`@@SEED_ADMIN_PASSWORD@@`, `@@SEED_ADOPTANTE_PASSWORD@@`). Al instalar, `npm run db:instalar` calcula el hash **bcrypt** (10 rondas) de las contraseñas que se definen en las variables de entorno `SEED_ADMIN_PASSWORD` y `SEED_ADOPTANTE_PASSWORD` del `.env` y lo inserta en lugar del marcador. Ningún archivo del repositorio contiene contraseñas ni hashes de los usuarios demo; las pruebas generan contraseñas aleatorias en cada ejecución.
 
 | Tabla | Registros |
 |---|---|

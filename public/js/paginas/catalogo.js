@@ -1,6 +1,8 @@
+/* global api, claseEstado, escaparHtml, fotoMascota, renderizarBarra, requiereSesion */
+
 const esPrivado = document.body.dataset.privado === "true";
 
-if (!esPrivado || requiereSesion()) {
+function iniciarPagina() {
   renderizarBarra("catalogo");
 
   const VISTAS = {
@@ -56,7 +58,7 @@ if (!esPrivado || requiereSesion()) {
     contenedorFiltros.querySelectorAll(".filter-chip").forEach((c) => c.classList.remove("active"));
     chip.classList.add("active");
     tipoActual = chip.dataset.tipo ? Number(chip.dataset.tipo) : null;
-    cargarMascotas();
+    void cargarMascotas();
   }
 
   async function cargarFiltros() {
@@ -89,5 +91,7 @@ if (!esPrivado || requiereSesion()) {
   });
   casillaAdoptadas.addEventListener("change", cambiarVista);
 
-  cambiarVista();
+  void cambiarVista();
 }
+
+if (!esPrivado || requiereSesion()) iniciarPagina();
