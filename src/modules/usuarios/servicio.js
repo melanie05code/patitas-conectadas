@@ -1,3 +1,4 @@
+const crypto = require("crypto");
 const bcrypt = require("bcrypt");
 const repositorio = require("./repositorio");
 const ErrorApp = require("../../utils/ErrorApp");
@@ -6,7 +7,7 @@ const { generarToken } = require("../../utils/token");
 const RONDAS_BCRYPT = 10;
 const MENSAJE_CORREO_DUPLICADO = "Ya existe una cuenta con ese correo.";
 const MENSAJE_CREDENCIALES = "Correo o contraseña incorrectos.";
-const HASH_SIMULADO = bcrypt.hashSync("hash-para-igualar-tiempos", RONDAS_BCRYPT);
+const HASH_SIMULADO = bcrypt.hashSync(crypto.randomBytes(16).toString("hex"), RONDAS_BCRYPT);
 
 function respuestaDeSesion(usuario) {
   const { passwordHash, ...publico } = usuario;
