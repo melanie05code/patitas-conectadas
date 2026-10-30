@@ -121,21 +121,20 @@ jobs:
 
       - name: Snyk Open Source (dependencias)
         uses: snyk/actions/node@v1.0.0
-        continue-on-error: true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           command: test
-          args: --sarif-file-output=snyk-dependencias.sarif
+          args: --severity-threshold=high --sarif-file-output=snyk-dependencias.sarif
 
       - name: Snyk Code (código)
+        if: ${{ !cancelled() }}
         uses: snyk/actions/node@v1.0.0
-        continue-on-error: true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           command: code test
-          args: --sarif-file-output=snyk-codigo.sarif
+          args: --severity-threshold=high --sarif-file-output=snyk-codigo.sarif
 
       - uses: actions/upload-artifact@v7
         if: always()
