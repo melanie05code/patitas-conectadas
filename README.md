@@ -103,7 +103,9 @@ El pipeline de GitHub Actions ([`.github/workflows/ci.yml`](.github/workflows/ci
 1. **Tests**: `npm test` con cobertura sobre MySQL 8.0, con credenciales generadas en el propio job.
 2. **SonarCloud**: análisis estático y cobertura (`sonar-project.properties`).
 3. **DeepSource**: envío de la cobertura (`.deepsource.toml`); el análisis de código lo hace la GitHub App de DeepSource sobre el PR.
-4. **Snyk**: `snyk test` (dependencias) y `snyk code test` (código), con los resultados SARIF como artifact.
+4. **Snyk**: `snyk test` (dependencias) y `snyk code test` (código) con umbral de severidad alta, y los resultados SARIF como artifact.
+
+El análisis completo, las correcciones y la comparación antes/después están en [`docs/13_calidad_seguridad.md`](docs/13_calidad_seguridad.md).
 
 ## Otros comandos
 
@@ -159,4 +161,4 @@ La matriz completa, con módulos, tablas y pruebas, está en [`docs/04_arquitect
 
 ## Documentación
 
-Empieza por la portada: [`docs/00_portada.md`](docs/00_portada.md). Tiene el índice de las 12 secciones, desde las correcciones hasta los enlaces y anexos. Los documentos originales del Hito 1 están en [`docs/hito1/`](docs/hito1/).
+Empieza por la portada: [`docs/00_portada.md`](docs/00_portada.md). Tiene el índice de las 13 secciones, desde las correcciones hasta el análisis de calidad y seguridad del código ([`docs/13_calidad_seguridad.md`](docs/13_calidad_seguridad.md)). Los documentos originales del Hito 1 están en [`docs/hito1/`](docs/hito1/).
