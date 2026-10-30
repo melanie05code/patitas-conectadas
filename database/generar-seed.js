@@ -1,20 +1,15 @@
 const fs = require("fs");
 const path = require("path");
-const bcrypt = require("bcrypt");
 const { escape } = require("mysql2");
 const datos = require("./datos-semilla");
-
-const RONDAS_BCRYPT = 10;
 
 function insertar(tabla, columnas, filas) {
   const valores = filas.map((fila) => `  (${fila.map((v) => escape(v)).join(", ")})`).join(",\n");
   return `INSERT INTO ${tabla} (${columnas.join(", ")}) VALUES\n${valores};\n`;
 }
 
-async function generarSeed() {
-  const usuarios = await Promise.all(
-    datos.usuarios.map(async (u) => [u.id, u.nombre, u.email, await bcrypt.hash(u.password, RONDAS_BCRYPT), u.rol])
-  );
+function generarSeed() {
+  const usuarios = datos.usuarios.map((u) => [u.id, u.nombre, u.email, datos.marcadorContrasena(u.variableContrasena), u.rol]);
 
   const partes = [
     "USE patitas_conectadas;\n",
@@ -44,7 +39,4 @@ async function generarSeed() {
   console.log(`Seed generado en ${path.relative(process.cwd(), destino)}`);
 }
 
-generarSeed().catch((error) => {
-  console.error(error);
-  process.exit(1);
-});
+generarSeed();

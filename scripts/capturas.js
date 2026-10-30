@@ -1,5 +1,6 @@
 process.env.NODE_ENV = "test";
 
+const crypto = require("crypto");
 const fs = require("fs");
 const path = require("path");
 const { chromium, devices } = require("playwright-core");
@@ -10,6 +11,10 @@ const { pool } = require("../src/config/db");
 const DESTINO = path.join(__dirname, "..", "docs", "evidencias");
 const FOTOS = path.join(__dirname, "..", "database", "seed-fotos");
 const CANAL = process.env.CAPTURAS_NAVEGADOR || "msedge";
+const CONTRASENA_ADMIN = process.env.SEED_ADMIN_PASSWORD;
+const CONTRASENA_ADOPTANTE = process.env.SEED_ADOPTANTE_PASSWORD;
+const CONTRASENA_NUEVA = crypto.randomBytes(12).toString("base64url");
+const CONTRASENA_INCORRECTA = crypto.randomBytes(12).toString("base64url");
 
 async function principal() {
   fs.mkdirSync(DESTINO, { recursive: true });
@@ -80,8 +85,8 @@ async function principal() {
     await pagina.goto(`${base}/registro.html`);
     await pagina.fill("#name", "Ana López");
     await pagina.fill("#email", "edwin.obando@correo.com");
-    await pagina.fill("#password", "Segura2026");
-    await pagina.fill("#password2", "Segura2026");
+    await pagina.fill("#password", CONTRASENA_NUEVA);
+    await pagina.fill("#password2", CONTRASENA_NUEVA);
     await pagina.click("button[type=submit]");
     await alerta();
     await capturar(pagina, "PR-02_registro_correo_duplicado");
@@ -92,12 +97,12 @@ async function principal() {
     await salir();
 
     await pagina.fill("#email", "edwin.obando@correo.com");
-    await pagina.fill("#password", "incorrecta1");
+    await pagina.fill("#password", CONTRASENA_INCORRECTA);
     await pagina.click("button[type=submit]");
     await alerta();
     await capturar(pagina, "PR-05_login_error");
 
-    await entrar("edwin.obando@correo.com", "Edwin2026", "catalogo.html");
+    await entrar("edwin.obando@correo.com", CONTRASENA_ADOPTANTE, "catalogo.html");
     await pagina.waitForSelector("#contadorNotificaciones:not(.hidden)");
     await pagina.waitForFunction(() => [...document.querySelectorAll(".pet-photo img")].every((i) => i.complete));
     await capturar(pagina, "pantalla_catalogo_adoptante");
@@ -130,7 +135,7 @@ async function principal() {
     await capturar(pagina, "PR-22_notificaciones");
     await salir();
 
-    await entrar("admin@patitas.com", "Admin2026", "admin.html");
+    await entrar("admin@patitas.com", CONTRASENA_ADMIN, "admin.html");
     await pagina.waitForSelector("#pendingList [data-responder]");
     await pagina.waitForSelector("#petList .miniatura img");
     await capturar(pagina, "PR-04_login_valido_admin");
@@ -178,7 +183,7 @@ async function principal() {
     await capturar(pagina, "pantalla_panel_admin", { fullPage: true });
     await salir();
 
-    await entrar("edwin.obando@correo.com", "Edwin2026", "catalogo.html");
+    await entrar("edwin.obando@correo.com", CONTRASENA_ADOPTANTE, "catalogo.html");
     await pagina.goto(`${base}/seguimiento.html?id=${idCjotas}`);
     await pagina.waitForSelector(".step.current");
     await capturar(pagina, "PR-18_seguimiento_aprobada", { fullPage: true });
