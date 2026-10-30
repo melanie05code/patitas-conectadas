@@ -15,7 +15,7 @@ describe("Utilidades de seguridad", () => {
 
     await eliminarArchivo(externo);
     await eliminarArchivo(`${directorioMascotas}${path.sep}${path.relative(directorioMascotas, externo)}`);
-    await eliminarArchivo(undefined);
+    await eliminarArchivo("");
     await eliminarArchivo(interno);
 
     expect(fs.existsSync(externo)).toBe(true);
