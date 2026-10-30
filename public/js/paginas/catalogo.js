@@ -58,7 +58,7 @@ if (!esPrivado || requiereSesion()) {
     contenedorFiltros.querySelectorAll(".filter-chip").forEach((c) => c.classList.remove("active"));
     chip.classList.add("active");
     tipoActual = chip.dataset.tipo ? Number(chip.dataset.tipo) : null;
-    cargarMascotas();
+    void cargarMascotas();
   }
 
   async function cargarFiltros() {
@@ -91,5 +91,5 @@ if (!esPrivado || requiereSesion()) {
   });
   casillaAdoptadas.addEventListener("change", cambiarVista);
 
-  cambiarVista();
+  void cambiarVista();
 }

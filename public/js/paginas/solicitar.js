@@ -57,5 +57,5 @@ if (requiereSesion("adoptante")) {
     }
   });
 
-  cargarMascota();
+  void cargarMascota();
 }

@@ -43,4 +43,4 @@ async function cargarDetalle() {
   }
 }
 
-cargarDetalle();
+void cargarDetalle();

@@ -107,7 +107,7 @@ function renderizarBarra(activa) {
       cerrarSesion();
     });
   }
-  if (actual && actual.rol === "adoptante") actualizarContadorNotificaciones();
+  if (actual && actual.rol === "adoptante") void actualizarContadorNotificaciones();
 }
 
 async function actualizarContadorNotificaciones() {

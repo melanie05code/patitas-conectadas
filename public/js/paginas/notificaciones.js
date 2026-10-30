@@ -64,5 +64,5 @@ if (requiereSesion("adoptante")) {
     }
   });
 
-  cargar();
+  void cargar();
 }
