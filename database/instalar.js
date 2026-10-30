@@ -45,6 +45,7 @@ function copiarFotosSemilla() {
 }
 
 async function instalarBaseDatos({ conSeed = true, silencioso = false } = {}) {
+  const seed = conSeed ? await aplicarContrasenasSemilla(leerScript("02_seed.sql")) : null;
   const conexion = await mysql.createConnection({
     host: db.host,
     port: db.port,
@@ -55,8 +56,8 @@ async function instalarBaseDatos({ conSeed = true, silencioso = false } = {}) {
   });
   try {
     await conexion.query(leerScript("01_schema.sql"));
-    if (conSeed) {
-      await conexion.query(await aplicarContrasenasSemilla(leerScript("02_seed.sql")));
+    if (seed) {
+      await conexion.query(seed);
       copiarFotosSemilla();
     }
     if (!silencioso) console.log(`Base de datos ${db.database} instalada${conSeed ? " con datos semilla y fotos" : ""}.`);

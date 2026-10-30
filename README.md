@@ -17,7 +17,7 @@ Proyecto Final Integrador de la Universidad UCN (2026), **individual**, de Melan
 | Seguridad | bcrypt, JSON Web Tokens, Helmet (CSP estricta), express-rate-limit, consultas parametrizadas |
 | Archivos | multer (fotos JPG, PNG o WEBP de hasta 2 MB) |
 | Frontend | HTML + CSS + JavaScript (el prototipo del Hito 1 evolucionado), consumiendo la API con `fetch` |
-| Pruebas | Jest + Supertest (35 pruebas, con cobertura) y Playwright para las capturas de evidencia |
+| Pruebas | Jest + Supertest (31 pruebas, con cobertura) y Playwright para las capturas de evidencia |
 
 ## Requisitos previos
 
@@ -87,7 +87,7 @@ Las contraseñas se guardan con hash bcrypt. Son cuentas de demostración: **no 
 npm test
 ```
 
-Ejecuta las 35 pruebas (Jest + Supertest) con reporte de cobertura en `coverage/` contra la base **`patitas_test`**, que se reinstala antes de cada prueba. Nunca tocan `patitas_conectadas`. Resultado y detalle en [`docs/06_pruebas.md`](docs/06_pruebas.md).
+Ejecuta las 31 pruebas (Jest + Supertest) con reporte de cobertura en `coverage/` contra la base **`patitas_test`**, que se reinstala antes de cada prueba. Nunca tocan `patitas_conectadas`. Resultado y detalle en [`docs/06_pruebas.md`](docs/06_pruebas.md).
 
 ## Calidad y seguridad
 
@@ -133,7 +133,7 @@ patitas-conectadas/
 │  ├─ seed-fotos/          Fotos reales de las 10 mascotas
 │  ├─ instalar.js          Instalador de la base de datos (npm run db:instalar)
 │  └─ migracion/           Exportador del localStorage y ETL (migrar.js)
-├─ tests/                  Pruebas automáticas (PR-01 a PR-35)
+├─ tests/                  Pruebas automáticas (PR-01 a PR-31)
 ├─ scripts/capturas.js     Capturas de evidencia con Playwright
 ├─ docs/                   Documentación del Segundo Parcial (00 a 12), evidencias y docs/hito1/
 ├─ .env.example            Plantilla de variables de entorno (el .env real no se sube)
