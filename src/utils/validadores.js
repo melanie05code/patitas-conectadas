@@ -8,6 +8,13 @@ function texto(valor) {
   return typeof valor === "string" ? valor.trim() : "";
 }
 
+function campoTexto(cuerpo, campo, etiqueta, minimo, maximo, errores) {
+  const valor = texto(cuerpo[campo]);
+  if (valor.length < minimo) errores.push(`Completa el campo ${etiqueta}.`);
+  else if (valor.length > maximo) errores.push(`El campo ${etiqueta} no puede superar ${maximo} caracteres.`);
+  return valor;
+}
+
 function esEmail(valor) {
   if (typeof valor !== "string" || ESPACIO.test(valor)) return false;
   const partes = valor.split("@");
@@ -39,4 +46,4 @@ function enteroPositivo(valor) {
   return Number.isInteger(numero) && numero > 0 ? numero : null;
 }
 
-module.exports = { texto, esEmail, esTelefono, esHost, enteroPositivo };
+module.exports = { texto, campoTexto, esEmail, esTelefono, esHost, enteroPositivo };

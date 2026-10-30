@@ -1,11 +1,4 @@
-const { texto, esHost } = require("../../utils/validadores");
-
-function campoTexto(cuerpo, campo, etiqueta, minimo, maximo, errores) {
-  const valor = texto(cuerpo[campo]);
-  if (valor.length < minimo) errores.push(`Completa el campo ${etiqueta}.`);
-  else if (valor.length > maximo) errores.push(`El campo ${etiqueta} no puede superar ${maximo} caracteres.`);
-  return valor;
-}
+const { campoTexto, esHost } = require("../../utils/validadores");
 
 function validarDiagnostico(consulta) {
   const errores = [];
