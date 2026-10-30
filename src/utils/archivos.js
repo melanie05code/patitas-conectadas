@@ -21,7 +21,10 @@ async function eliminarFotoMascota(fotoUrl) {
 }
 
 async function eliminarArchivo(ruta) {
-  if (ruta) await fs.promises.rm(ruta, { force: true });
+  if (!ruta) return;
+  const archivo = path.join(directorioMascotas, path.basename(ruta));
+  if (path.resolve(ruta) !== archivo) return;
+  await fs.promises.rm(archivo, { force: true });
 }
 
 module.exports = { directorioMascotas, asegurarDirectorioMascotas, urlFotoMascota, eliminarFotoMascota, eliminarArchivo };
