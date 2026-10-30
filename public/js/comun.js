@@ -1,3 +1,6 @@
+/* global api */
+/* exported redirigirSiHaySesion, requiereSesion, renderizarBarra, mostrarAlerta, claseEstado, parametroId, numeroSolicitud, fechaRelativa, fotoMascota */
+
 const CLAVE_SESION = "pc_sesion";
 
 function leerExpiracion(token) {

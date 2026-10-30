@@ -1,3 +1,6 @@
+/* global sesion */
+/* exported api */
+
 async function llamarApi(metodo, ruta, cuerpo) {
   const actual = sesion.obtener();
   const esFormulario = cuerpo instanceof FormData;

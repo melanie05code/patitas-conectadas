@@ -1,3 +1,5 @@
+/* global api, claseEstado, escaparHtml, fotoMascota, renderizarBarra, requiereSesion */
+
 const esPrivado = document.body.dataset.privado === "true";
 
 if (!esPrivado || requiereSesion()) {

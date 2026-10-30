@@ -1,3 +1,5 @@
+/* global actualizarContadorNotificaciones, api, escaparHtml, fechaRelativa, formatearFecha, mostrarAlerta, renderizarBarra, requiereSesion */
+
 if (requiereSesion("adoptante")) {
   renderizarBarra("notificaciones");
 

@@ -1,3 +1,5 @@
+/* global api, claseEstado, escaparHtml, formatearFecha, fotoMascota, iconoMascota, mostrarAlerta, numeroSolicitud, renderizarBarra, requiereSesion */
+
 if (requiereSesion("admin")) {
   renderizarBarra("admin");
 

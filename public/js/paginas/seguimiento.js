@@ -1,3 +1,5 @@
+/* global api, escaparHtml, formatearFecha, iconoMascota, numeroSolicitud, parametroId, renderizarBarra, requiereSesion */
+
 if (requiereSesion("adoptante")) {
   renderizarBarra("solicitudes");
 

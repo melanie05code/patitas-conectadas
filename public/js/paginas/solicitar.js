@@ -1,3 +1,5 @@
+/* global api, escaparHtml, fotoMascota, mostrarAlerta, parametroId, renderizarBarra, requiereSesion */
+
 if (requiereSesion("adoptante")) {
   renderizarBarra("catalogo");
 

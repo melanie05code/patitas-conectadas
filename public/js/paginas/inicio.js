@@ -1,3 +1,5 @@
+/* global api, renderizarBarra */
+
 renderizarBarra();
 
 api.get("/mascotas/estadisticas")

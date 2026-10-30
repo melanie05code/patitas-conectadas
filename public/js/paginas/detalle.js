@@ -1,3 +1,5 @@
+/* global api, claseEstado, escaparHtml, fotoMascota, parametroId, renderizarBarra, sesion */
+
 renderizarBarra("catalogo");
 
 const usuario = sesion.obtener();
