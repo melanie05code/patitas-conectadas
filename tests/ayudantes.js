@@ -1,4 +1,4 @@
-const crypto = require("crypto");
+const { randomBytes } = require("crypto");
 const request = require("supertest");
 const app = require("../src/app");
 const { pool } = require("../src/config/db");
@@ -15,7 +15,7 @@ const USUARIOS = {
 };
 
 function contrasenaAleatoria(largo = 16) {
-  return crypto.randomBytes(largo).toString("base64url").slice(0, largo);
+  return randomBytes(largo).toString("base64url").slice(0, largo);
 }
 
 const MASCOTAS = { mechudo: 1, cjotas: 2, elHambriento: 3, encantador: 4, lara: 10 };

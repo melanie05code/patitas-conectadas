@@ -1,6 +1,6 @@
 process.env.NODE_ENV = "test";
 
-const crypto = require("crypto");
+const { randomBytes } = require("crypto");
 const fs = require("fs");
 const path = require("path");
 const { chromium, devices } = require("playwright-core");
@@ -13,8 +13,8 @@ const FOTOS = path.join(__dirname, "..", "database", "seed-fotos");
 const CANAL = process.env.CAPTURAS_NAVEGADOR || "msedge";
 const CONTRASENA_ADMIN = process.env.SEED_ADMIN_PASSWORD;
 const CONTRASENA_ADOPTANTE = process.env.SEED_ADOPTANTE_PASSWORD;
-const CONTRASENA_NUEVA = crypto.randomBytes(12).toString("base64url");
-const CONTRASENA_INCORRECTA = crypto.randomBytes(12).toString("base64url");
+const CONTRASENA_NUEVA = randomBytes(12).toString("base64url");
+const CONTRASENA_INCORRECTA = randomBytes(12).toString("base64url");
 
 async function principal() {
   fs.mkdirSync(DESTINO, { recursive: true });

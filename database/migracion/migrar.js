@@ -1,7 +1,7 @@
 const fs = require("fs");
 const os = require("os");
 const path = require("path");
-const crypto = require("crypto");
+const { randomUUID } = require("crypto");
 const { spawn } = require("child_process");
 const mysql = require("mysql2/promise");
 const bcrypt = require("bcrypt");
@@ -49,7 +49,7 @@ function marcaDeTiempo(fecha = new Date()) {
 
 function ejecutarMysqldump(bd, archivoSql) {
   const ejecutable = process.env.MYSQLDUMP_PATH || "mysqldump";
-  const credenciales = path.join(os.tmpdir(), `patitas-dump-${crypto.randomUUID()}.cnf`);
+  const credenciales = path.join(os.tmpdir(), `patitas-dump-${randomUUID()}.cnf`);
   fs.writeFileSync(credenciales, `[client]\nuser="${db.user}"\npassword="${db.password}"\nhost="${db.host}"\nport=${db.port}\n`, { mode: 0o600 });
   return new Promise((resolver, rechazar) => {
     const proceso = spawn(ejecutable, [

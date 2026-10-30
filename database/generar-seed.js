@@ -1,10 +1,10 @@
 const fs = require("fs");
 const path = require("path");
-const { escape } = require("mysql2");
+const mysql = require("mysql2");
 const datos = require("./datos-semilla");
 
 function insertar(tabla, columnas, filas) {
-  const valores = filas.map((fila) => `  (${fila.map((v) => escape(v)).join(", ")})`).join(",\n");
+  const valores = filas.map((fila) => `  (${fila.map((v) => mysql.escape(v)).join(", ")})`).join(",\n");
   return `INSERT INTO ${tabla} (${columnas.join(", ")}) VALUES\n${valores};\n`;
 }
 
