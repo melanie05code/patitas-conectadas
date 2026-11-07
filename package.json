@@ -19,7 +19,8 @@
     "migrar": "node database/migracion/migrar.js",
     "capturas": "node scripts/capturas.js",
     "db:migrar": "node database/migrar-esquema.js",
-    "db:migrar:test": "node database/migrar-esquema.js --test"
+    "db:migrar:test": "node database/migrar-esquema.js --test",
+    "recordatorios": "node scripts/recordatorios.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",

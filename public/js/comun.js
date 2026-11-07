@@ -201,7 +201,8 @@ function leerFechaLocal(valor) {
 function fechaLarga(valor) {
   const fecha = valor instanceof Date ? valor : leerFechaLocal(valor);
   if (!fecha) return valor || "";
-  return `${DIAS_SEMANA[fecha.getDay()]} ${fecha.getDate()} de ${MESES_LARGOS[fecha.getMonth()]}`;
+  const anio = fecha.getFullYear() === new Date().getFullYear() ? "" : ` de ${fecha.getFullYear()}`;
+  return `${DIAS_SEMANA[fecha.getDay()]} ${fecha.getDate()} de ${MESES_LARGOS[fecha.getMonth()]}${anio}`;
 }
 
 function horaCorta(valor) {

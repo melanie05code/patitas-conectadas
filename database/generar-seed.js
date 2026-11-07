@@ -37,6 +37,11 @@ function generarSeed() {
       datos.entrevistas.map((e) => [e.id, e.solicitudId, e.fechaHora, e.lugar, e.notasAdmin, e.realizadaEn, e.creadoEn])
     ),
     insertar(
+      "seguimientos",
+      ["id", "solicitud_id", "numero", "fecha_programada", "foto_url", "enviado_en", "estado", "comentario_admin", "revisado_en"],
+      datos.seguimientos.map((g) => [g.id, g.solicitudId, g.numero, g.fechaProgramada, g.fotoUrl, g.enviadoEn, g.estado, g.comentarioAdmin, g.revisadoEn])
+    ),
+    insertar(
       "notificaciones",
       ["id", "usuario_id", "solicitud_id", "texto", "leida", "creado_en"],
       datos.notificaciones.map((n) => [n.id, n.usuarioId, n.solicitudId, n.texto, n.leida, n.creadoEn])

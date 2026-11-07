@@ -2,6 +2,7 @@ const { randomBytes } = require("crypto");
 const bcrypt = require("bcrypt");
 const repositorio = require("./repositorio");
 const ErrorApp = require("../../utils/ErrorApp");
+const servicioSeguimientos = require("../seguimientos/servicio");
 const { generarToken } = require("../../utils/token");
 
 const RONDAS_BCRYPT = 10;
@@ -32,6 +33,7 @@ async function iniciarSesion({ email, password }) {
   const usuario = await repositorio.buscarPorEmailConHash(email);
   const coincide = await bcrypt.compare(password, usuario ? usuario.passwordHash : HASH_SIMULADO);
   if (!usuario || !coincide) throw new ErrorApp(401, MENSAJE_CREDENCIALES);
+  if (usuario.rol === "adoptante") await servicioSeguimientos.generarRecordatorios(usuario.id);
   return respuestaDeSesion(usuario);
 }
 

@@ -1,5 +1,6 @@
 const { Router } = require("express");
 const controlador = require("./controlador");
+const controladorSeguimientos = require("../seguimientos/controlador");
 const validar = require("../../middlewares/validar");
 const validarId = require("../../middlewares/validarId");
 const { requiereAuth, requiereRol } = require("../../middlewares/autenticacion");
@@ -10,6 +11,7 @@ rutas.use(requiereAuth);
 rutas.post("/", requiereRol("adoptante"), validar(validarSolicitud), controlador.crear);
 rutas.get("/mias", controlador.listarPropias);
 rutas.get("/:id", validarId, controlador.obtener);
+rutas.get("/:id/seguimientos", validarId, controladorSeguimientos.listarDeSolicitud);
 
 const rutasAdmin = Router();
 rutasAdmin.use(requiereAuth, requiereRol("admin"));
