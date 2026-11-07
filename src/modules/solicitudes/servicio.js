@@ -5,6 +5,7 @@ const repositorioEntrevistas = require("../entrevistas/repositorio");
 const repositorioPerfiles = require("../perfiles/repositorio");
 const servicioPerfiles = require("../perfiles/servicio");
 const servicioEntrevistas = require("../entrevistas/servicio");
+const servicioSeguimientos = require("../seguimientos/servicio");
 const ErrorApp = require("../../utils/ErrorApp");
 const { fechaEnTexto, horaEnTexto } = require("../../utils/fechas");
 const { enTransaccion } = require("../../config/db");
@@ -91,6 +92,7 @@ async function aprobar(solicitud, conexion) {
   }
   await repositorio.cambiarEstado(solicitud.id, "Aprobada", conexion);
   await repositorioMascotas.cambiarEstado(solicitud.mascotaId, "Adoptada", conexion);
+  await servicioSeguimientos.programar(solicitud.id, conexion);
   const { nombre } = await repositorioMascotas.buscarPorId(solicitud.mascotaId, conexion);
   return `Tu solicitud para ${nombre} fue aprobada. Revisa en tu seguimiento las fechas de los controles post-adopción.`;
 }
