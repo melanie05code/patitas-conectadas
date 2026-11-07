@@ -1,13 +1,13 @@
 const tipos = [
-  { id: 1, nombre: "Perro", icono: "🐶" },
-  { id: 2, nombre: "Gato", icono: "🐱" },
-  { id: 3, nombre: "Ave", icono: "🦜" },
-  { id: 4, nombre: "Conejo", icono: "🐰" },
-  { id: 5, nombre: "Cuyo", icono: "🐹" },
-  { id: 6, nombre: "Hámster", icono: "🐹" },
-  { id: 7, nombre: "Pez", icono: "🐟" },
-  { id: 8, nombre: "Tortuga", icono: "🐢" },
-  { id: 9, nombre: "Otro", icono: "🐾" },
+  { id: 1, nombre: "Perro" },
+  { id: 2, nombre: "Gato" },
+  { id: 3, nombre: "Ave" },
+  { id: 4, nombre: "Conejo" },
+  { id: 5, nombre: "Cuyo" },
+  { id: 6, nombre: "Hámster" },
+  { id: 7, nombre: "Pez" },
+  { id: 8, nombre: "Tortuga" },
+  { id: 9, nombre: "Otro" },
 ];
 
 const usuarios = [

@@ -166,7 +166,7 @@ async function principal() {
     await alerta("#alertaMascotas");
     await capturarFormulario("PR-12_foto_invalida");
     await pagina.fill("#m_nombre", "Tigrillo");
-    await pagina.selectOption("#m_tipo", { label: "🐱 Gato" });
+    await pagina.selectOption("#m_tipo", { label: "Gato" });
     await pagina.fill("#m_edad", "8 meses");
     await pagina.fill("#m_raza", "Común atigrado");
     await pagina.fill("#m_descripcion", "Gatito juguetón y curioso, rescatado de la calle.");

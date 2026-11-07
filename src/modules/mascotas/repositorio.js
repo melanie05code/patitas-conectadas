@@ -3,14 +3,14 @@ const { pool } = require("../../config/db");
 const SELECCION = `
   SELECT m.id, m.nombre, m.edad, m.raza, m.sexo, m.descripcion, m.estado, m.foto_url AS fotoUrl,
          m.creado_en AS creadoEn, m.actualizado_en AS actualizadoEn,
-         t.id AS tipoId, t.nombre AS tipoNombre, t.icono AS tipoIcono
+         t.id AS tipoId, t.nombre AS tipoNombre
   FROM mascotas m
   INNER JOIN tipos_mascota t ON t.id = m.tipo_id`;
 
 function convertir(fila) {
   if (!fila) return null;
   const { tipoId, tipoNombre, tipoIcono, ...mascota } = fila;
-  return { ...mascota, tipo: { id: tipoId, nombre: tipoNombre, icono: tipoIcono } };
+  return { ...mascota, tipo: { id: tipoId, nombre: tipoNombre } };
 }
 
 async function listar({ tipoId, busqueda, estados = [] }) {

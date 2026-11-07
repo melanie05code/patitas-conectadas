@@ -1,4 +1,4 @@
-/* global api, claseEstado, escaparHtml, fotoMascota, parametroId, renderizarBarra, sesion */
+/* global api, claseEstado, escaparHtml, fotoMascota, iconoSvg, parametroId, renderizarBarra, sesion */
 
 renderizarBarra("catalogo");
 
@@ -8,7 +8,7 @@ const tarjeta = document.getElementById("detailCard");
 
 function botonDeAccion(mascota) {
   if (mascota.estado === "Adoptada") {
-    return '<div class="alert success" style="margin-top:20px;">🏡 Esta mascota ya encontró un hogar.</div>';
+    return `<div class="alert success" style="margin-top:20px;">${iconoSvg("casa")} Esta mascota ya encontró un hogar.</div>`;
   }
   if (mascota.estado !== "Disponible") {
     return '<button class="full" disabled style="background:#ccc;">En proceso de adopción</button>';
@@ -17,7 +17,7 @@ function botonDeAccion(mascota) {
     return '<a class="btn full" href="login.html" style="margin-top:20px; display:block;">Inicia sesión para solicitar la adopción</a>';
   }
   if (usuario.rol !== "adoptante") return "";
-  return `<a class="btn full" href="solicitar.html?id=${mascota.id}" style="margin-top:20px; display:block;">🐾 Solicitar Adopción</a>`;
+  return `<a class="btn full" href="solicitar.html?id=${mascota.id}" style="margin-top:20px; display:block;">Solicitar adopción</a>`;
 }
 
 async function cargarDetalle() {
@@ -36,7 +36,7 @@ async function cargarDetalle() {
       <h2 style="margin-top:10px;">Sobre mí</h2>
       <p style="color:#555; line-height:1.5;">${escaparHtml(mascota.descripcion)}</p>
       ${botonDeAccion(mascota)}
-      <a class="link-line" href="${urlCatalogo}" style="display:block; margin-top:14px;">← Volver al catálogo</a>
+      <a class="link-line" href="${urlCatalogo}" style="display:block; margin-top:14px;">${iconoSvg("flecha")} Volver al catálogo</a>
     `;
   } catch (error) {
     tarjeta.innerHTML = `<div class="empty-state">${escaparHtml(error.message)} <a href="${urlCatalogo}">Volver al catálogo</a></div>`;

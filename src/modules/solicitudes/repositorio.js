@@ -3,7 +3,7 @@ const { pool } = require("../../config/db");
 const SELECCION = `
   SELECT s.id, s.estado, s.telefono, s.direccion, s.motivo, s.fecha, s.actualizado_en AS actualizadoEn,
          m.id AS mascotaId, m.nombre AS mascotaNombre, m.estado AS mascotaEstado, m.foto_url AS mascotaFotoUrl,
-         t.nombre AS tipoNombre, t.icono AS tipoIcono,
+         t.nombre AS tipoNombre,
          u.id AS usuarioId, u.nombre AS usuarioNombre, u.email AS usuarioEmail
   FROM solicitudes s
   INNER JOIN mascotas m ON m.id = s.mascota_id
@@ -25,7 +25,7 @@ function convertir(fila) {
       nombre: fila.mascotaNombre,
       estado: fila.mascotaEstado,
       fotoUrl: fila.mascotaFotoUrl,
-      tipo: { nombre: fila.tipoNombre, icono: fila.tipoIcono },
+      tipo: { nombre: fila.tipoNombre },
     },
     usuario: { id: fila.usuarioId, nombre: fila.usuarioNombre, email: fila.usuarioEmail },
   };

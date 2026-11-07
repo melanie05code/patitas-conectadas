@@ -1,4 +1,4 @@
-/* global api, escaparHtml, formatearFecha, iconoMascota, numeroSolicitud, parametroId, renderizarBarra, requiereSesion */
+/* global api, escaparHtml, formatearFecha, iconoMascota, iconoSvg, numeroSolicitud, parametroId, renderizarBarra, requiereSesion */
 
 function iniciarPagina() {
   renderizarBarra("solicitudes");
@@ -9,7 +9,7 @@ function iniciarPagina() {
     const final = estado === "En revisión" ? "Aprobada / Rechazada" : estado;
     const estados = estado === "En revisión" ? ["done", "current", "pending"] : ["done", "done", "current"];
     return ["Solicitada", "En revisión", final].map((etiqueta, i) => {
-      const icono = estados[i] === "done" ? "✔" : estados[i] === "current" ? "●" : "○";
+      const icono = iconoSvg(estados[i] === "done" ? "check" : estados[i] === "current" ? "punto" : "circulo");
       return `<div class="step ${estados[i]}"><div class="dot">${icono}</div><div style="font-weight:bold;">${escaparHtml(etiqueta)}</div></div>`;
     }).join("");
   }
@@ -42,7 +42,7 @@ function iniciarPagina() {
           ${dato("Dirección", solicitud.direccion)}
           ${dato("Motivo", solicitud.motivo)}
         </div>
-        <a class="link-line" href="mis-solicitudes.html" style="display:block; margin-top:14px;">← Volver a mis solicitudes</a>
+        <a class="link-line" href="mis-solicitudes.html" style="display:block; margin-top:14px;">${iconoSvg("flecha")} Volver a mis solicitudes</a>
       `;
     } catch (error) {
       contenido.innerHTML = `<div class="empty-state">${escaparHtml(error.message)} <a href="mis-solicitudes.html">Volver a mis solicitudes</a></div>`;
