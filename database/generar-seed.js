@@ -28,8 +28,13 @@ function generarSeed() {
     ),
     insertar(
       "solicitudes",
-      ["id", "mascota_id", "usuario_id", "telefono", "direccion", "motivo", "estado", "fecha", "actualizado_en"],
-      datos.solicitudes.map((s) => [s.id, s.mascotaId, s.usuarioId, s.telefono, s.direccion, s.motivo, s.estado, s.fecha, s.actualizadoEn])
+      ["id", "mascota_id", "usuario_id", "telefono", "direccion", "motivo", "estado", "fecha", "respondida_en", "actualizado_en"],
+      datos.solicitudes.map((s) => [s.id, s.mascotaId, s.usuarioId, s.telefono, s.direccion, s.motivo, s.estado, s.fecha, s.respondidaEn, s.actualizadoEn])
+    ),
+    insertar(
+      "entrevistas",
+      ["id", "solicitud_id", "fecha_hora", "lugar", "notas_admin", "realizada_en", "creado_en"],
+      datos.entrevistas.map((e) => [e.id, e.solicitudId, e.fechaHora, e.lugar, e.notasAdmin, e.realizadaEn, e.creadoEn])
     ),
     insertar(
       "notificaciones",
