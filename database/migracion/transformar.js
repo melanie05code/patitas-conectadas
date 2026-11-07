@@ -1,7 +1,8 @@
 const { esEmail } = require("../../src/utils/validadores");
 
 const ESTADOS_MASCOTA = ["Disponible", "En proceso", "Adoptada"];
-const ESTADOS_SOLICITUD = ["En revisión", "Aprobada", "Rechazada"];
+const ESTADOS_SOLICITUD = ["Solicitada", "Aprobada", "Rechazada"];
+const EQUIVALENCIAS_ESTADO = { "en revision": "Solicitada" };
 const UNIDADES = {
   minuto: 60 * 1000,
   hora: 60 * 60 * 1000,
@@ -26,6 +27,8 @@ function normalizarTelefono(valor) {
 
 function normalizarEstado(valor, permitidos) {
   const buscado = sinAcentos(valor);
+  const equivalente = EQUIVALENCIAS_ESTADO[buscado];
+  if (equivalente && permitidos.includes(equivalente)) return equivalente;
   return permitidos.find((estado) => sinAcentos(estado) === buscado) || null;
 }
 
