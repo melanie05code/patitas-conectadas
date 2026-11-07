@@ -99,7 +99,7 @@ describe("Catálogo y tipos de mascota (RF-03, RF-04, RF-09, RNF-04, PB-10, PB-1
     expect(porDefecto.status).toBe(200);
     expect(porDefecto.body).toHaveLength(8);
     expect(porDefecto.body.some((m) => m.estado === "Adoptada")).toBe(false);
-    expect(porDefecto.body.at(-1)).toMatchObject({ nombre: "Mechudo", estado: "En proceso" });
+    expect(porDefecto.body.filter((m) => m.estado === "En proceso").map((m) => m.nombre).sort()).toEqual(["Mechudo", "Vaquita"]);
     expect(adoptadas.body.map((m) => m.nombre)).toEqual(["Encantador", "Lara"]);
     expect(filtrosPorDefecto.body.map((t) => t.nombre)).toEqual(["Perro", "Gato"]);
     expect(filtrosAdoptadas.body.map((t) => t.nombre)).toEqual(["Gato", "Ave"]);

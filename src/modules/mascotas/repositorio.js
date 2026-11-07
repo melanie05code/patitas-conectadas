@@ -48,7 +48,7 @@ async function bloquearPorId(id, conexion) {
 
 async function resumenSolicitudes(mascotaId, conexion) {
   const [[fila]] = await conexion.execute(
-    `SELECT SUM(estado = 'En revisión') AS enRevision, SUM(estado = 'Aprobada') AS aprobadas
+    `SELECT SUM(mascota_activa IS NOT NULL) AS enRevision, SUM(estado = 'Aprobada') AS aprobadas
      FROM solicitudes WHERE mascota_id = ?`,
     [mascotaId]
   );

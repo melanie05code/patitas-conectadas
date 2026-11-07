@@ -192,7 +192,7 @@ async function cargarSolicitudes(conexion, origen, mapas, referencia, reporte) {
     "SELECT usuario_id AS u, mascota_id AS m, DATE_FORMAT(fecha, '%Y-%m-%d') AS f, estado FROM solicitudes"
   );
   const claves = new Set(existentes.map((s) => `${s.u}|${s.m}|${s.f}|${s.estado}`));
-  const enRevision = new Set(existentes.filter((s) => s.estado === "En revisión").map((s) => s.m));
+  const enRevision = new Set(existentes.filter((s) => ["Solicitada", "Entrevista programada", "Entrevistada"].includes(s.estado)).map((s) => s.m));
   const aprobadas = new Set(existentes.filter((s) => s.estado === "Aprobada").map((s) => s.m));
   for (const solicitud of origen) {
     reporte.conteos.solicitudes.origen++;
@@ -218,14 +218,14 @@ async function cargarSolicitudes(conexion, origen, mapas, referencia, reporte) {
     }
     const clave = `${usuarioId}|${mascotaId}|${fecha.fecha.slice(0, 10)}|${estado}`;
     if (claves.has(clave)) { reporte.descartar("solicitudes", solicitud.id, "duplicada: ya existe la misma solicitud en el destino"); continue; }
-    if (estado === "En revisión" && enRevision.has(mascotaId)) { reporte.descartar("solicitudes", solicitud.id, "la mascota ya tiene otra solicitud En revisión"); continue; }
+    if (estado === "Solicitada" && enRevision.has(mascotaId)) { reporte.descartar("solicitudes", solicitud.id, "la mascota ya tiene otra solicitud activa"); continue; }
     if (estado === "Aprobada" && aprobadas.has(mascotaId)) { reporte.descartar("solicitudes", solicitud.id, "la mascota ya tiene otra solicitud Aprobada"); continue; }
     const [resultado] = await conexion.execute(
-      "INSERT INTO solicitudes (mascota_id, usuario_id, telefono, direccion, motivo, estado, fecha, actualizado_en) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-      [mascotaId, usuarioId, telefono, direccion, motivo, estado, fecha.fecha, fecha.fecha]
+      "INSERT INTO solicitudes (mascota_id, usuario_id, telefono, direccion, motivo, estado, fecha, respondida_en, actualizado_en) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      [mascotaId, usuarioId, telefono, direccion, motivo, estado, fecha.fecha, estado === "Solicitada" ? null : fecha.fecha, fecha.fecha]
     );
     claves.add(clave);
-    if (estado === "En revisión") enRevision.add(mascotaId);
+    if (estado === "Solicitada") enRevision.add(mascotaId);
     if (estado === "Aprobada") aprobadas.add(mascotaId);
     reporte.insertar("solicitudes", resultado.insertId);
   }
@@ -298,7 +298,7 @@ async function validar(conexion, reporte, { maxDescartes }) {
     const [inconsistentes] = await conexion.query(
       `SELECT m.nombre, m.estado FROM mascotas m WHERE m.id IN (?) AND (
          (m.estado = 'Adoptada' AND NOT EXISTS (SELECT 1 FROM solicitudes s WHERE s.mascota_id = m.id AND s.estado = 'Aprobada')) OR
-         (m.estado = 'En proceso' AND NOT EXISTS (SELECT 1 FROM solicitudes s WHERE s.mascota_id = m.id AND s.estado = 'En revisión')))`,
+         (m.estado = 'En proceso' AND NOT EXISTS (SELECT 1 FROM solicitudes s WHERE s.mascota_id = m.id AND s.mascota_activa IS NOT NULL)))`,
       [reporte.insertados.mascotas]
     );
     for (const m of inconsistentes) reporte.avisos.push(`[mascotas] ${m.nombre} está "${m.estado}" sin la solicitud correspondiente en el origen`);

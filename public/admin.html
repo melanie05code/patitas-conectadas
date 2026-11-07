@@ -13,9 +13,16 @@
     <p class="subtitle">Gestión de solicitudes, mascotas y tipos de mascota del refugio</p>
 
     <div class="card">
-      <h2>Solicitudes pendientes</h2>
+      <h2>Solicitudes en curso</h2>
+      <p class="subtitle" style="margin-bottom:8px;">Solicitadas, con entrevista programada o entrevistadas. Abre el detalle para revisar el perfil, agendar la entrevista y decidir.</p>
       <div id="alertaSolicitudes"></div>
       <div id="pendingList"></div>
+    </div>
+
+    <div class="card">
+      <h2>Agenda de entrevistas</h2>
+      <div id="alertaAgenda"></div>
+      <div id="agenda"></div>
     </div>
 
     <div class="card">
@@ -89,6 +96,53 @@
         </div>
       </form>
       <div id="listaTipos" class="table-wrap" style="margin-top:14px;"></div>
+    </div>
+
+    <div class="card">
+      <h2>Configuración del refugio</h2>
+      <p class="subtitle" style="margin-bottom:8px;">La dirección se copia en cada entrevista al agendarla. El horario define los turnos del calendario.</p>
+      <div id="alertaRefugio"></div>
+      <form id="formRefugio" class="form-grid" novalidate>
+        <div>
+          <label for="r_nombre">Nombre</label>
+          <input type="text" id="r_nombre" required maxlength="100">
+        </div>
+        <div>
+          <label for="r_telefono">Teléfono</label>
+          <input type="text" id="r_telefono" required maxlength="20">
+        </div>
+        <div class="full-row">
+          <label for="r_direccion">Dirección</label>
+          <input type="text" id="r_direccion" required maxlength="255">
+        </div>
+        <div>
+          <label for="r_apertura">Hora de apertura</label>
+          <input type="time" id="r_apertura" required>
+        </div>
+        <div>
+          <label for="r_cierre">Hora de cierre</label>
+          <input type="time" id="r_cierre" required>
+        </div>
+        <div>
+          <label for="r_duracion">Duración de cada cita (minutos)</label>
+          <input type="number" id="r_duracion" min="15" max="240" step="5" required>
+        </div>
+        <fieldset class="pregunta full-row">
+          <legend>Días de atención</legend>
+          <div class="dias-atencion">
+            <label class="opcion"><input type="checkbox" name="r_dia" value="lunes"> Lunes</label>
+            <label class="opcion"><input type="checkbox" name="r_dia" value="martes"> Martes</label>
+            <label class="opcion"><input type="checkbox" name="r_dia" value="miercoles"> Miércoles</label>
+            <label class="opcion"><input type="checkbox" name="r_dia" value="jueves"> Jueves</label>
+            <label class="opcion"><input type="checkbox" name="r_dia" value="viernes"> Viernes</label>
+            <label class="opcion"><input type="checkbox" name="r_dia" value="sabado"> Sábado</label>
+            <label class="opcion"><input type="checkbox" name="r_dia" value="domingo"> Domingo</label>
+          </div>
+        </fieldset>
+        <div class="form-actions full-row" style="margin-top:8px;">
+          <button type="submit">Guardar configuración</button>
+        </div>
+      </form>
     </div>
   </div>
   <footer class="site-footer-mini">Managua, Nicaragua &nbsp;·&nbsp; Tel. +505 8888-0000 &nbsp;·&nbsp; contacto@patitasconectadas.com<br><span style="opacity:0.7;">Patitas Conectadas — Proyecto Integrador UCN 2026</span></footer>

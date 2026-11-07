@@ -1,9 +1,9 @@
-/* global api, claseEstado, escaparHtml, formatearFecha, fotoMascota, iconoSvg, mostrarAlerta, numeroSolicitud, renderizarBarra, requiereSesion */
+/* global api, claseEstado, escaparHtml, fechaLarga, formatearFecha, fotoMascota, horaCorta, mostrarAlerta, numeroSolicitud, renderizarBarra, requiereSesion */
 
 function iniciarPagina() {
   renderizarBarra("admin");
 
-  const estado = { tipos: [], mascotas: [], pendientes: [], mascotaEditando: null, tipoEditando: null };
+  const estado = { tipos: [], mascotas: [], mascotaEditando: null, tipoEditando: null };
 
   const formMascota = document.getElementById("formMascota");
   const alertaMascotas = document.getElementById("alertaMascotas");
@@ -133,54 +133,94 @@ function iniciarPagina() {
     `;
   }
 
-  function tarjetaSolicitud(solicitud) {
+  function filaSolicitud(solicitud) {
     return `
-      <div class="row-flex" style="padding:12px 0; border-bottom:1px solid #eee; align-items:flex-start;">
-        <div class="avatar">${fotoMascota(solicitud.mascota)}</div>
-        <div style="flex:1; min-width:200px;">
-          <div style="font-weight:bold;">${escaparHtml(solicitud.mascota.nombre)} <span style="color:var(--gray); font-weight:normal; font-size:0.85rem;">· Solicitud ${numeroSolicitud(solicitud.id)} · ${escaparHtml(formatearFecha(solicitud.fecha))}</span></div>
-          <div style="color:var(--gray); font-size:0.85rem;">Solicitante: ${escaparHtml(solicitud.usuario.nombre)} (${escaparHtml(solicitud.usuario.email)}) · Tel. ${escaparHtml(solicitud.telefono)}</div>
-          <div style="color:#555; font-size:0.88rem; margin-top:4px; overflow-wrap:anywhere;">“${escaparHtml(solicitud.motivo)}”</div>
-        </div>
-        <div class="acciones">
-          <button type="button" data-responder="${solicitud.id}" data-estado="Aprobada" style="background:var(--green);">${iconoSvg("check")} Aprobar</button>
-          <button type="button" data-responder="${solicitud.id}" data-estado="Rechazada" class="danger">${iconoSvg("equis")} Rechazar</button>
-        </div>
-      </div>
-    `;
+      <tr>
+        <td>${numeroSolicitud(solicitud.id)}</td>
+        <td><span class="miniatura">${fotoMascota(solicitud.mascota)}</span>${escaparHtml(solicitud.mascota.nombre)}</td>
+        <td>${escaparHtml(solicitud.usuario.nombre)}</td>
+        <td><span class="badge ${claseEstado(solicitud.estado)}">${escaparHtml(solicitud.estado)}</span></td>
+        <td>${escaparHtml(formatearFecha(solicitud.fecha))}</td>
+        <td><a class="btn small" href="admin-solicitud.html?id=${solicitud.id}">Ver detalle</a></td>
+      </tr>`;
   }
 
   async function cargarSolicitudes() {
     const contenedor = document.getElementById("pendingList");
     try {
-      const pendientes = await api.get(`/admin/solicitudes?estado=${encodeURIComponent("En revisión")}`);
-      estado.pendientes = pendientes;
-      contenedor.innerHTML = pendientes.length
-        ? pendientes.map(tarjetaSolicitud).join("")
-        : '<div class="empty-state">No hay solicitudes pendientes.</div>';
+      const activas = await api.get(`/admin/solicitudes?estado=${encodeURIComponent("Solicitada,Entrevista programada,Entrevistada")}`);
+      contenedor.innerHTML = activas.length
+        ? `<div class="table-wrap"><table><tr><th>N.º</th><th>Mascota</th><th>Adoptante</th><th>Etapa</th><th>Fecha</th><th></th></tr>${activas.map(filaSolicitud).join("")}</table></div>`
+        : '<div class="empty-state">No hay solicitudes en curso.</div>';
     } catch (error) {
       mostrarAlerta(document.getElementById("alertaSolicitudes"), error.message);
     }
   }
 
-  document.getElementById("pendingList").addEventListener("click", async (evento) => {
-    const boton = evento.target.closest("[data-responder]");
-    if (!boton) return;
-    const alerta = document.getElementById("alertaSolicitudes");
-    const solicitud = estado.pendientes.find((s) => s.id === Number(boton.dataset.responder));
-    const respuesta = boton.dataset.estado;
-    const verbo = respuesta === "Aprobada" ? "aprobar" : "rechazar";
-    if (!window.confirm(`¿Seguro que quieres ${verbo} la solicitud de ${solicitud.usuario.nombre} para ${solicitud.mascota.nombre}?`)) return;
-    alerta.innerHTML = "";
-    boton.closest(".acciones").querySelectorAll("button").forEach((b) => { b.disabled = true; });
+  async function cargarAgenda() {
+    const contenedor = document.getElementById("agenda");
     try {
-      await api.patch(`/admin/solicitudes/${solicitud.id}`, { estado: respuesta });
-      await Promise.all([cargarSolicitudes(), cargarMascotas()]);
-      const resultado = respuesta === "Aprobada" ? `${solicitud.mascota.nombre} ahora está Adoptada` : `${solicitud.mascota.nombre} vuelve a estar Disponible`;
-      mostrarAlerta(alerta, `Solicitud ${respuesta.toLowerCase()}: ${resultado} y se notificó a ${solicitud.usuario.nombre}.`, "success");
+      const { desde, hasta, entrevistas } = await api.get("/admin/entrevistas");
+      const porDia = new Map();
+      for (const entrevista of entrevistas) {
+        const dia = entrevista.fechaHora.slice(0, 10);
+        if (!porDia.has(dia)) porDia.set(dia, []);
+        porDia.get(dia).push(entrevista);
+      }
+      const rango = `<p class="subtitle">Del ${escaparHtml(fechaLarga(desde))} al ${escaparHtml(fechaLarga(hasta))}</p>`;
+      contenedor.innerHTML = rango + (porDia.size
+        ? [...porDia.entries()].map(([dia, citas]) => `
+          <div class="agenda-dia">
+            <h3>${escaparHtml(fechaLarga(dia))}</h3>
+            ${citas.map((c) => `
+              <div class="agenda-cita">
+                <span class="hora">${escaparHtml(horaCorta(c.fechaHora))}</span>
+                <span style="flex:1;">${escaparHtml(c.mascotaNombre)} · ${escaparHtml(c.adoptanteNombre)}</span>
+                <span class="badge ${claseEstado(c.estadoSolicitud)}">${escaparHtml(c.estadoSolicitud)}</span>
+                <a class="link-line" href="admin-solicitud.html?id=${c.solicitudId}">Ver solicitud</a>
+              </div>`).join("")}
+          </div>`).join("")
+        : '<div class="empty-state">No hay entrevistas agendadas esta semana.</div>');
     } catch (error) {
-      mostrarAlerta(alerta, error.message);
-      await cargarSolicitudes();
+      mostrarAlerta(document.getElementById("alertaAgenda"), error.message);
+    }
+  }
+
+  const formRefugio = document.getElementById("formRefugio");
+  const alertaRefugio = document.getElementById("alertaRefugio");
+
+  async function cargarRefugio() {
+    try {
+      const configuracion = await api.get("/admin/configuracion-refugio");
+      document.getElementById("r_nombre").value = configuracion.nombre;
+      document.getElementById("r_direccion").value = configuracion.direccion;
+      document.getElementById("r_telefono").value = configuracion.telefono;
+      document.getElementById("r_apertura").value = configuracion.horaApertura;
+      document.getElementById("r_cierre").value = configuracion.horaCierre;
+      document.getElementById("r_duracion").value = configuracion.duracionCitaMin;
+      formRefugio.querySelectorAll("input[name=r_dia]").forEach((casilla) => { casilla.checked = configuracion.diasAtencion.includes(casilla.value); });
+    } catch (error) {
+      mostrarAlerta(alertaRefugio, error.message);
+    }
+  }
+
+  formRefugio.addEventListener("submit", async (evento) => {
+    evento.preventDefault();
+    alertaRefugio.innerHTML = "";
+    const datos = {
+      nombre: document.getElementById("r_nombre").value.trim(),
+      direccion: document.getElementById("r_direccion").value.trim(),
+      telefono: document.getElementById("r_telefono").value.trim(),
+      horaApertura: document.getElementById("r_apertura").value,
+      horaCierre: document.getElementById("r_cierre").value,
+      duracionCitaMin: Number(document.getElementById("r_duracion").value),
+      diasAtencion: [...formRefugio.querySelectorAll("input[name=r_dia]:checked")].map((casilla) => casilla.value),
+    };
+    try {
+      await api.put("/admin/configuracion-refugio", datos);
+      mostrarAlerta(alertaRefugio, "La configuración del refugio se guardó. Las próximas entrevistas usarán estos datos.", "success");
+    } catch (error) {
+      mostrarAlerta(alertaRefugio, error.message);
     }
   });
 
@@ -292,6 +332,8 @@ function iniciarPagina() {
   });
 
   void cargarSolicitudes();
+  void cargarAgenda();
+  void cargarRefugio();
   void cargarTipos();
   void cargarMascotas();
 }

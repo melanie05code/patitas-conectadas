@@ -21,7 +21,7 @@ async function verificarCambioDeEstado(mascota, nuevoEstado, conexion) {
   }
   const { enRevision, aprobadas } = await repositorio.resumenSolicitudes(mascota.id, conexion);
   if (enRevision > 0) {
-    throw new ErrorApp(409, "La mascota tiene una solicitud en revisión. Apruébala o recházala desde el panel.");
+    throw new ErrorApp(409, "La mascota tiene una solicitud de adopción activa. Apruébala o recházala desde el panel.");
   }
   if (aprobadas > 0) {
     throw new ErrorApp(409, "La mascota fue adoptada mediante una solicitud aprobada y su estado ya no puede cambiarse.");

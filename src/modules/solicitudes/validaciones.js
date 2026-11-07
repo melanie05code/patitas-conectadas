@@ -1,6 +1,7 @@
 const { texto, esTelefono, enteroPositivo } = require("../../utils/validadores");
 
-const ESTADOS = ["En revisión", "Aprobada", "Rechazada"];
+const ESTADOS = ["Solicitada", "Entrevista programada", "Entrevistada", "Aprobada", "Rechazada"];
+const ESTADOS_ACTIVOS = ["Solicitada", "Entrevista programada", "Entrevistada"];
 const RESPUESTAS = ["Aprobada", "Rechazada"];
 
 function validarSolicitud(cuerpo) {
@@ -28,10 +29,32 @@ function validarSolicitud(cuerpo) {
   return { errores, datos };
 }
 
+function notaOpcional(cuerpo, campo, etiqueta, errores) {
+  const valor = texto(cuerpo[campo]);
+  if (valor.length > 1000) errores.push(`${etiqueta} no puede superar 1000 caracteres.`);
+  return valor || null;
+}
+
 function validarRespuesta(cuerpo) {
   const estado = texto(cuerpo.estado);
   const errores = RESPUESTAS.includes(estado) ? [] : ["La respuesta debe ser Aprobada o Rechazada."];
-  return { errores, datos: { estado } };
+  const motivo = notaOpcional(cuerpo, "motivo", "El motivo", errores);
+  return { errores, datos: { estado, motivo } };
 }
 
-module.exports = { validarSolicitud, validarRespuesta, ESTADOS };
+function validarAgenda(cuerpo) {
+  const fechaHora = texto(cuerpo.fechaHora);
+  return { errores: fechaHora ? [] : ["Elige el día y la hora de la entrevista."], datos: { fechaHora } };
+}
+
+function validarEntrevistada(cuerpo) {
+  const errores = [];
+  return { errores, datos: { notas: notaOpcional(cuerpo, "notas", "Las notas de la entrevista", errores) } };
+}
+
+function leerFiltroEstados(valor) {
+  const lista = texto(valor).split(",").map((estado) => estado.trim()).filter(Boolean);
+  return lista.every((estado) => ESTADOS.includes(estado)) ? lista : null;
+}
+
+module.exports = { validarSolicitud, validarRespuesta, validarAgenda, validarEntrevistada, leerFiltroEstados, ESTADOS, ESTADOS_ACTIVOS };

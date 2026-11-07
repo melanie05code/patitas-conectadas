@@ -1,7 +1,7 @@
 const { pool } = require("../../config/db");
 
 const SELECCION = `
-  SELECT s.id, s.estado, s.telefono, s.direccion, s.motivo, s.fecha, s.actualizado_en AS actualizadoEn,
+  SELECT s.id, s.estado, s.telefono, s.direccion, s.motivo, s.fecha, s.respondida_en AS respondidaEn, s.actualizado_en AS actualizadoEn,
          m.id AS mascotaId, m.nombre AS mascotaNombre, m.estado AS mascotaEstado, m.foto_url AS mascotaFotoUrl,
          t.nombre AS tipoNombre,
          u.id AS usuarioId, u.nombre AS usuarioNombre, u.email AS usuarioEmail
@@ -19,6 +19,7 @@ function convertir(fila) {
     direccion: fila.direccion,
     motivo: fila.motivo,
     fecha: fila.fecha,
+    respondidaEn: fila.respondidaEn,
     actualizadoEn: fila.actualizadoEn,
     mascota: {
       id: fila.mascotaId,
@@ -41,15 +42,15 @@ async function listarPorUsuario(usuarioId) {
   return filas.map(convertir);
 }
 
-async function listar({ estado }) {
-  const donde = estado ? "WHERE s.estado = ?" : "";
-  const [filas] = await pool.execute(`${SELECCION} ${donde} ORDER BY s.fecha ASC, s.id ASC`, estado ? [estado] : []);
+async function listar({ estados = [] }) {
+  const donde = estados.length ? `WHERE s.estado IN (${estados.map(() => "?").join(", ")})` : "";
+  const [filas] = await pool.execute(`${SELECCION} ${donde} ORDER BY s.fecha ASC, s.id ASC`, estados);
   return filas.map(convertir);
 }
 
 async function existeActiva(usuarioId, mascotaId, conexion) {
   const [filas] = await conexion.execute(
-    "SELECT 1 FROM solicitudes WHERE usuario_id = ? AND mascota_id = ? AND estado = 'En revisión'",
+    "SELECT 1 FROM solicitudes WHERE usuario_id = ? AND mascota_id = ? AND mascota_activa IS NOT NULL",
     [usuarioId, mascotaId]
   );
   return filas.length > 0;
@@ -72,7 +73,10 @@ async function crear({ mascotaId, usuarioId, telefono, direccion, motivo }, cone
 }
 
 async function cambiarEstado(id, estado, conexion) {
-  await conexion.execute("UPDATE solicitudes SET estado = ? WHERE id = ?", [estado, id]);
+  await conexion.execute(
+    "UPDATE solicitudes SET estado = ?, respondida_en = IF(? IN ('Aprobada', 'Rechazada'), NOW(), respondida_en) WHERE id = ?",
+    [estado, estado, id]
+  );
 }
 
 module.exports = { buscarPorId, listarPorUsuario, listar, existeActiva, bloquearPorId, crear, cambiarEstado };

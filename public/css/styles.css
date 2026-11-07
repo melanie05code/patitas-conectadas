@@ -401,3 +401,62 @@ fieldset.pregunta { border: 1px solid #e3e3e3; border-radius: 8px; padding: 6px 
 fieldset.pregunta legend { font-weight: bold; font-size: 0.9rem; color: #555; padding: 0 4px; }
 .opcion { display: inline-flex; align-items: center; gap: 6px; margin: 6px 18px 0 0; font-weight: normal; cursor: pointer; }
 .opcion input { width: auto; margin: 0; }
+
+.badge.teal { background: #D6EEF1; color: var(--teal-dark); }
+
+.linea-tiempo { display: flex; list-style: none; margin: 18px 0 8px; padding: 0; }
+.etapa { flex: 1; position: relative; text-align: center; padding: 0 4px; }
+.etapa::before { content: ""; position: absolute; top: 17px; left: -50%; width: 100%; height: 3px; background: #ddd; z-index: 0; }
+.etapa:first-child::before { display: none; }
+.etapa .marca { position: relative; z-index: 1; width: 36px; height: 36px; margin: 0 auto 8px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: white; border: 3px solid #ccc; color: #bbb; }
+.etapa .marca .icono { width: 18px; height: 18px; }
+.etapa .nombre-etapa { font-weight: bold; font-size: 0.85rem; color: #999; }
+.etapa .fecha-etapa { font-size: 0.75rem; color: var(--gray); margin-top: 2px; min-height: 1em; }
+.etapa.completada::before, .etapa.actual::before, .etapa.rechazada::before { background: var(--green); }
+.etapa.completada .marca { background: var(--green); border-color: var(--green); color: white; }
+.etapa.completada .nombre-etapa { color: var(--green-text); }
+.etapa.actual .marca { border-color: var(--orange); color: var(--orange); box-shadow: 0 0 0 5px var(--orange-light); }
+.etapa.actual .nombre-etapa { color: var(--orange-text); }
+.etapa.rechazada .marca { background: var(--red); border-color: var(--red); color: white; }
+.etapa.rechazada .nombre-etapa { color: var(--red-text); }
+
+.tarjeta-entrevista { border-left: 5px solid var(--teal); background: #EEF7F8; border-radius: 10px; padding: 16px 18px; margin-top: 16px; }
+.tarjeta-entrevista h2 { margin-bottom: 10px; color: var(--teal-dark); }
+.dato-entrevista { display: flex; gap: 10px; align-items: flex-start; margin-top: 8px; }
+.dato-entrevista .icono { color: var(--teal); width: 20px; height: 20px; margin-top: 2px; }
+.dato-entrevista strong { display: block; }
+
+.calendario { max-width: 360px; }
+.calendario-cabecera { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.calendario-cabecera strong { text-transform: capitalize; }
+.calendario-cabecera button { padding: 4px 10px; }
+.calendario-dias { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; }
+.calendario-dias .nombre-dia { font-size: 0.72rem; color: var(--gray); font-weight: bold; padding: 4px 0; }
+.calendario-dias button { padding: 8px 0; border-radius: 8px; background: white; color: var(--dark); border: 1px solid #ddd; font-weight: normal; }
+.calendario-dias button:disabled { background: var(--gray-light); color: #bbb; border-color: transparent; cursor: not-allowed; }
+.calendario-dias button.seleccionado { background: var(--teal); color: white; border-color: var(--teal); }
+.calendario-dias button.con-cita:not(.seleccionado) { border-color: var(--orange); }
+.horarios { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.horarios button { padding: 8px 12px; background: white; color: var(--teal-dark); border: 1px solid var(--teal); font-weight: bold; }
+.horarios button.seleccionado { background: var(--teal); color: white; }
+.horarios button:disabled { background: var(--gray-light); color: #aaa; border-color: #ddd; text-decoration: line-through; cursor: not-allowed; }
+.agenda-calendario { display: grid; grid-template-columns: minmax(260px, 360px) 1fr; gap: 20px; align-items: start; }
+
+.agenda-dia { border-bottom: 1px solid #eee; padding: 10px 0; }
+.agenda-dia h3 { font-size: 0.95rem; text-transform: capitalize; color: var(--teal-dark); margin-bottom: 6px; }
+.agenda-cita { display: flex; gap: 12px; align-items: center; padding: 4px 0; font-size: 0.9rem; }
+.agenda-cita .hora { font-weight: bold; min-width: 76px; }
+
+.perfil-lista { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 20px; margin-top: 8px; }
+.perfil-lista div { font-size: 0.9rem; }
+.perfil-lista strong { display: block; font-size: 0.78rem; color: var(--gray); text-transform: uppercase; }
+.acciones-etapa { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+.dias-atencion { display: flex; flex-wrap: wrap; gap: 4px 14px; }
+
+@media (max-width: 640px) {
+  .linea-tiempo { flex-direction: column; gap: 0; }
+  .etapa { display: flex; align-items: center; gap: 12px; text-align: left; padding: 0 0 18px; }
+  .etapa::before { top: -18px; left: 16px; width: 3px; height: 100%; }
+  .etapa .marca { margin: 0; flex-shrink: 0; }
+  .agenda-calendario, .perfil-lista { grid-template-columns: 1fr; }
+}
