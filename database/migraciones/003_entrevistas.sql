@@ -14,7 +14,7 @@ ALTER TABLE solicitudes
     GENERATED ALWAYS AS (IF(estado IN ('Solicitada', 'Entrevista programada', 'Entrevistada'), mascota_id, NULL)) STORED,
   ADD CONSTRAINT uq_solicitudes_una_activa UNIQUE (mascota_activa);
 
-UPDATE solicitudes SET respondida_en = actualizado_en, actualizado_en = actualizado_en WHERE estado IN ('Aprobada', 'Rechazada');
+UPDATE solicitudes SET respondida_en = actualizado_en, actualizado_en = respondida_en WHERE estado IN ('Aprobada', 'Rechazada');
 
 CREATE TABLE configuracion_refugio (
   id TINYINT UNSIGNED NOT NULL DEFAULT 1,
