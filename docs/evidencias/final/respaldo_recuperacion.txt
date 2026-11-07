@@ -1,0 +1,60 @@
+== Respaldo y recuperación — 2026-11-07 17:49:05 -0600 — base patitas_test, usuario patitas_app
+Base de datos patitas_test instalada con datos semilla y fotos.
+1 recordatorio(s) nuevo(s) de seguimiento en patitas_test.
+
+== 1. Estado antes del respaldo
++----------+----------+----------+-------------+-------------+--------------+----------------+-------------+
+| usuarios | perfiles | mascotas | solicitudes | entrevistas | seguimientos | notificaciones | migraciones |
++----------+----------+----------+-------------+-------------+--------------+----------------+-------------+
+|        3 |        2 |       10 |           5 |           4 |            8 |             12 |           4 |
++----------+----------+----------+-------------+-------------+--------------+----------------+-------------+
+
+== 2. Respaldo
+mysqldump --no-tablespaces --single-transaction --routines --triggers --default-character-set=utf8mb4 -u patitas_app patitas_test > respaldo_patitas_test.sql
+código de salida: 0
+tamaño: 25436 bytes
+sha256: 8e729e4aac5dab9e752082f45688c1fa77356c00ec8f685cded850933dd4b9ca
+tablas en el respaldo: 10
+-- Dump completed on 2026-11-07 17:49:12
+
+== 3. Simulación de pérdida: se borran todas las tablas
+tablas restantes: 0
+
+== 4. Restauración
+mysql -u patitas_app patitas_test < respaldo_patitas_test.sql
+código de salida: 0
+
+== 5. Verificación
++----------+----------+----------+-------------+-------------+--------------+----------------+-------------+
+| usuarios | perfiles | mascotas | solicitudes | entrevistas | seguimientos | notificaciones | migraciones |
++----------+----------+----------+-------------+-------------+--------------+----------------+-------------+
+|        3 |        2 |       10 |           5 |           4 |            8 |             12 |           4 |
++----------+----------+----------+-------------+-------------+--------------+----------------+-------------+
++----+------------+------------+
+| id | nombre     | estado     |
++----+------------+------------+
+|  1 | Mechudo    | En proceso |
+|  4 | Encantador | Adoptada   |
+|  6 | Vaquita    | En proceso |
+| 10 | Lara       | Adoptada   |
++----+------------+------------+
++--------------+
+| fk_huerfanas |
++--------------+
+|            0 |
++--------------+
++---------------------------+-------+----------+----------+
+| Table                     | Op    | Msg_type | Msg_text |
++---------------------------+-------+----------+----------+
+| patitas_test.solicitudes  | check | status   | OK       |
+| patitas_test.entrevistas  | check | status   | OK       |
+| patitas_test.seguimientos | check | status   | OK       |
++---------------------------+-------+----------+----------+
+
+== 6. Caso de falla: respaldo truncado (archivo dañado a la mitad)
+sha256 del truncado: 49530af411acf1a3f3bbf61592130d52af5fd2e395a168be182427d24153a705 (no coincide con el original)
+líneas "Dump completed" en el truncado: 0
+código de salida: 0
+Acción: se descarta el archivo dañado y se restaura de nuevo desde el respaldo íntegro (sha256 verificado).
+código de salida: 0
+solicitudes=5

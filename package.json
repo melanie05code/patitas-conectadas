@@ -21,7 +21,8 @@
     "db:migrar": "node database/migrar-esquema.js",
     "db:migrar:test": "node database/migrar-esquema.js --test",
     "recordatorios": "node scripts/recordatorios.js",
-    "test:e2e": "node tests/e2e/adopcion.e2e.js"
+    "test:e2e": "node tests/e2e/adopcion.e2e.js",
+    "medir:tiempos": "node scripts/medir-tiempos.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",

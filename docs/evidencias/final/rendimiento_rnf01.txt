@@ -1,0 +1,14 @@
+Medición de tiempos de respuesta (RNF-01: menos de 2 s)
+Fecha: 2026-11-07T23:49:58.740Z | Node v24.20.0 | 50 peticiones secuenciales por ruta | servidor y MySQL 8.0 en el mismo equipo (localhost), base patitas_test con los datos semilla
+
+Ruta | mín (ms) | mediana (ms) | p95 (ms) | máx (ms) | cumple
+Catálogo público | 3.6 | 15.5 | 23.1 | 26.4 | Sí
+Detalle de mascota | 3.9 | 11.2 | 23.3 | 26.7 | Sí
+Página catalogo.html | 3.9 | 12.4 | 21.9 | 86.7 | Sí
+Solicitudes en curso (admin) | 4.0 | 15.9 | 23.3 | 37.0 | Sí
+Detalle de solicitud (admin) | 3.9 | 15.4 | 21.4 | 33.2 | Sí
+Disponibilidad de horarios | 2.9 | 14.4 | 19.6 | 20.5 | Sí
+Seguimientos de una solicitud | 3.6 | 14.3 | 23.9 | 26.8 | Sí
+
+Resultado: todas las rutas medidas responden en menos de 2 s.
+Limitación: medición local sin concurrencia ni red real; no demuestra el rendimiento con muchos usuarios simultáneos ni en un servidor de producción.
