@@ -1,4 +1,4 @@
-/* global api, escaparHtml, fechaLarga, formatearFecha, horaCorta, iconoSvg, numeroSolicitud, parametroId, renderizarBarra, requiereSesion */
+/* global api, escaparHtml, fechaLarga, formatearFecha, horaCorta, iconoSvg, mostrarAlerta, numeroSolicitud, parametroId, renderizarBarra, requiereSesion */
 
 const ETAPAS = ["Solicitada", "Entrevista programada", "Entrevistada", "Aprobada"];
 
@@ -63,6 +63,51 @@ function mensajeDeEstado(solicitud) {
   return mensajes[solicitud.estado] || "";
 }
 
+const TAMANO_MAXIMO = 2 * 1024 * 1024;
+
+function estadoVisual(control) {
+  if (control.estado === "Pendiente") return control.habilitado ? ["Pendiente", "orange"] : ["Próximamente", "gray"];
+  if (control.estado === "Enviado") return ["En revisión", "teal"];
+  return [control.estado, control.estado === "Todo bien" ? "green" : "orange"];
+}
+
+function cuerpoControl(control) {
+  const comentario = control.comentarioAdmin
+    ? `<p class="comentario-control"><strong>Comentario del refugio:</strong> ${escaparHtml(control.comentarioAdmin)}</p>`
+    : "";
+  const foto = control.fotoUrl ? `<img src="${escaparHtml(control.fotoUrl)}" alt="Foto del control ${control.numero}" class="miniatura-control" loading="lazy">` : "";
+  if (control.estado === "Todo bien") return `${foto}${comentario}`;
+  if (control.estado === "Requiere atención") return `${comentario}${foto}`;
+  if (control.estado === "Enviado") return `${foto}<p class="subtitle">Recibimos tu foto. El refugio la revisará pronto.</p>`;
+  if (!control.habilitado) return '<p class="subtitle">Podrás subir la foto cuando llegue la fecha del control.</p>';
+  return `
+    <div id="alerta-${control.id}"></div>
+    <label for="foto-${control.id}">Foto de tu mascota (JPG, PNG o WEBP, máximo 2 MB)</label>
+    <input type="file" id="foto-${control.id}" accept="image/jpeg,image/png,image/webp" data-control="${control.id}">
+    <div id="vista-${control.id}"></div>
+    <button type="button" data-enviar="${control.id}" disabled style="margin-top:8px;">${iconoSvg("camara")} Subir foto</button>`;
+}
+
+function seccionSeguimientos(controles) {
+  if (!controles.length) return "";
+  return `
+    <section class="seccion-controles" id="seguimientos" aria-label="Seguimiento de tu adopción">
+      <h2>Seguimiento de tu adopción</h2>
+      <p class="subtitle">En cada control, sube una foto de tu mascota para que el refugio sepa cómo está.</p>
+      ${controles.map((control) => {
+        const [etiqueta, color] = estadoVisual(control);
+        return `
+          <article class="control control-${color}">
+            <div class="row-flex">
+              <strong>Control ${control.numero} · ${escaparHtml(fechaLarga(control.fechaProgramada))}</strong>
+              <span class="badge ${color}">${escaparHtml(etiqueta)}</span>
+            </div>
+            ${cuerpoControl(control)}
+          </article>`;
+      }).join("")}
+    </section>`;
+}
+
 function dato(titulo, valor) {
   return `
     <div style="margin-top:10px;">
@@ -80,6 +125,7 @@ function iniciarPagina() {
     try {
       if (!id) throw new Error("Solicitud no encontrada.");
       const solicitud = await api.get(`/solicitudes/${id}`);
+      const controles = solicitud.estado === "Aprobada" ? await api.get(`/solicitudes/${id}/seguimientos`) : [];
       contenido.innerHTML = `
         <div style="background:var(--orange-light); padding:14px 16px; border-radius:8px; margin-bottom:6px;">
           <div style="font-size:0.85rem; color:var(--orange-text);">Solicitud ${numeroSolicitud(solicitud.id)}</div>
@@ -88,6 +134,7 @@ function iniciarPagina() {
         ${lineaDeTiempo(solicitud)}
         <p style="color:#555; margin-top:6px;">${escaparHtml(mensajeDeEstado(solicitud))}</p>
         ${tarjetaEntrevista(solicitud.entrevista)}
+        ${seccionSeguimientos(controles)}
         <div class="card" style="background:var(--gray-light); box-shadow:none; margin-top:16px;">
           ${dato("Fecha de la solicitud", formatearFecha(solicitud.fecha, true))}
           ${solicitud.respondidaEn ? dato("Fecha de la respuesta", formatearFecha(solicitud.respondidaEn, true)) : ""}
@@ -101,6 +148,46 @@ function iniciarPagina() {
       contenido.innerHTML = `<div class="empty-state">${escaparHtml(error.message)} <a href="mis-solicitudes.html">Volver a mis solicitudes</a></div>`;
     }
   }
+
+  contenido.addEventListener("change", (evento) => {
+    const campo = evento.target.closest("input[type=file][data-control]");
+    if (!campo) return;
+    const vista = document.getElementById(`vista-${campo.dataset.control}`);
+    const boton = contenido.querySelector(`[data-enviar="${campo.dataset.control}"]`);
+    const archivo = campo.files[0];
+    vista.innerHTML = "";
+    boton.disabled = !archivo;
+    if (!archivo) return;
+    if (archivo.size > TAMANO_MAXIMO) {
+      vista.innerHTML = '<div class="alert error">La foto no puede superar 2 MB.</div>';
+      boton.disabled = true;
+      return;
+    }
+    const lector = new FileReader();
+    lector.addEventListener("load", () => {
+      vista.innerHTML = `<img src="${escaparHtml(String(lector.result))}" alt="Vista previa de la foto" class="miniatura-control">`;
+    });
+    lector.readAsDataURL(archivo);
+  });
+
+  contenido.addEventListener("click", async (evento) => {
+    const boton = evento.target.closest("[data-enviar]");
+    if (!boton) return;
+    const id = boton.dataset.enviar;
+    const campo = contenido.querySelector(`input[data-control="${id}"]`);
+    const alerta = document.getElementById(`alerta-${id}`);
+    if (!campo.files[0]) return;
+    const datos = new FormData();
+    datos.append("foto", campo.files[0]);
+    boton.disabled = true;
+    try {
+      await api.post(`/seguimientos/${id}/foto`, datos);
+      await cargar();
+    } catch (error) {
+      mostrarAlerta(alerta, error.message);
+      boton.disabled = false;
+    }
+  });
 
   void cargar();
 }

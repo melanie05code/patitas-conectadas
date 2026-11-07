@@ -186,6 +186,51 @@ function iniciarPagina() {
     }
   }
 
+  const listaSeguimientos = document.getElementById("listaSeguimientos");
+  const alertaSeguimientos = document.getElementById("alertaSeguimientos");
+
+  async function cargarSeguimientos() {
+    try {
+      const enviados = await api.get(`/admin/seguimientos?estado=${encodeURIComponent("Enviado")}`);
+      listaSeguimientos.innerHTML = enviados.length
+        ? enviados.map((c) => `
+          <div class="revision-control">
+            <img src="${escaparHtml(c.fotoUrl)}" alt="Foto del control ${c.numero} de ${escaparHtml(c.mascotaNombre)}" loading="lazy">
+            <div>
+              <div style="font-weight:bold;">${escaparHtml(c.mascotaNombre)} · Control ${c.numero}</div>
+              <div class="subtitle">Adoptante: ${escaparHtml(c.adoptanteNombre)} · Programado: ${escaparHtml(formatearFecha(c.fechaProgramada))} · Enviado: ${escaparHtml(formatearFecha(c.enviadoEn, true))}</div>
+              <label for="comentario-${c.id}">Comentario para el adoptante</label>
+              <textarea id="comentario-${c.id}" maxlength="500" placeholder="Ej. Se ve sana y bien cuidada"></textarea>
+              <div class="acciones-etapa">
+                <button type="button" data-revisar="${c.id}" data-resultado="Todo bien" style="background:var(--green);">Todo bien</button>
+                <button type="button" data-revisar="${c.id}" data-resultado="Requiere atención" style="background:var(--orange);">Requiere atención</button>
+                <a class="link-line" href="admin-solicitud.html?id=${c.solicitudId}">Ver solicitud</a>
+              </div>
+            </div>
+          </div>`).join("")
+        : '<div class="empty-state">No hay controles pendientes de revisión.</div>';
+    } catch (error) {
+      mostrarAlerta(alertaSeguimientos, error.message);
+    }
+  }
+
+  listaSeguimientos.addEventListener("click", async (evento) => {
+    const boton = evento.target.closest("[data-revisar]");
+    if (!boton) return;
+    const id = boton.dataset.revisar;
+    const comentario = document.getElementById(`comentario-${id}`).value.trim();
+    alertaSeguimientos.innerHTML = "";
+    boton.disabled = true;
+    try {
+      await api.patch(`/admin/seguimientos/${id}`, { estado: boton.dataset.resultado, comentario });
+      mostrarAlerta(alertaSeguimientos, `Control revisado como "${boton.dataset.resultado}". Se notificó al adoptante.`, "success");
+      await cargarSeguimientos();
+    } catch (error) {
+      mostrarAlerta(alertaSeguimientos, error.message);
+      boton.disabled = false;
+    }
+  });
+
   const formRefugio = document.getElementById("formRefugio");
   const alertaRefugio = document.getElementById("alertaRefugio");
 
@@ -333,6 +378,7 @@ function iniciarPagina() {
 
   void cargarSolicitudes();
   void cargarAgenda();
+  void cargarSeguimientos();
   void cargarRefugio();
   void cargarTipos();
   void cargarMascotas();
