@@ -5,7 +5,6 @@ const mysql = require("mysql2/promise");
 const usarPrueba = process.argv.includes("--test");
 if (usarPrueba) process.env.NODE_ENV = "test";
 const { db } = require("../src/config/entorno");
-
 const CARPETA = path.join(__dirname, "migraciones");
 
 function listarMigraciones() {
@@ -57,4 +56,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { aplicarMigraciones, listarMigraciones };
+module.exports = { aplicarMigraciones, listarMigraciones, migrar };
