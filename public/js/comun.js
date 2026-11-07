@@ -1,5 +1,5 @@
 /* global api */
-/* exported redirigirSiHaySesion, requiereSesion, renderizarBarra, mostrarAlerta, claseEstado, parametroId, numeroSolicitud, fechaRelativa, fotoMascota, iconoSvg, iconoMascota */
+/* exported redirigirSiHaySesion, requiereSesion, renderizarBarra, mostrarAlerta, claseEstado, parametroId, numeroSolicitud, fechaRelativa, fotoMascota, iconoSvg, iconoMascota, fechaLarga, horaCorta, leerFechaLocal, MESES_LARGOS */
 
 const CLAVE_SESION = "pc_sesion";
 
@@ -133,7 +133,13 @@ function claseEstado(estado) {
     Disponible: "green",
     "En proceso": "orange",
     Adoptada: "gray",
-    "En revisión": "orange",
+    Solicitada: "orange",
+    "Entrevista programada": "teal",
+    Entrevistada: "teal",
+    Pendiente: "orange",
+    Enviado: "teal",
+    "Todo bien": "green",
+    "Requiere atención": "red",
     Aprobada: "green",
     Rechazada: "red",
   };
@@ -180,6 +186,30 @@ function formatearFecha(valor, conHora = false) {
   const [, anio, mes, dia, hora, minuto] = partes;
   const fecha = `${Number(dia)} ${MESES[Number(mes) - 1]} ${anio}`;
   return conHora && hora ? `${fecha}, ${hora}:${minuto}` : fecha;
+}
+
+const DIAS_SEMANA = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
+const MESES_LARGOS = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+
+function leerFechaLocal(valor) {
+  const partes = /^(\d{4})-(\d{2})-(\d{2})(?:[ T](\d{2}):(\d{2}))?/.exec(valor || "");
+  if (!partes) return null;
+  const [, anio, mes, dia, hora, minuto] = partes.map(Number);
+  return new Date(anio, mes - 1, dia, hora || 0, minuto || 0);
+}
+
+function fechaLarga(valor) {
+  const fecha = valor instanceof Date ? valor : leerFechaLocal(valor);
+  if (!fecha) return valor || "";
+  return `${DIAS_SEMANA[fecha.getDay()]} ${fecha.getDate()} de ${MESES_LARGOS[fecha.getMonth()]}`;
+}
+
+function horaCorta(valor) {
+  const fecha = valor instanceof Date ? valor : leerFechaLocal(valor);
+  if (!fecha) return "";
+  const horas = fecha.getHours();
+  const hora12 = horas % 12 === 0 ? 12 : horas % 12;
+  return `${hora12}:${String(fecha.getMinutes()).padStart(2, "0")} ${horas < 12 ? "a. m." : "p. m."}`;
 }
 
 function numeroSolicitud(id) {
