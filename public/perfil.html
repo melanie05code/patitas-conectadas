@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mi perfil — Patitas Conectadas</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div id="topbar" class="topbar"></div>
+  <div class="container narrow">
+    <div class="card">
+      <h1>Mi perfil de adoptante</h1>
+      <p class="subtitle">El refugio revisa estas condiciones antes de agendar tu entrevista. Debes completarlo para poder solicitar una adopción.</p>
+      <div id="alertBox"></div>
+      <form id="formPerfil" class="form-grid" novalidate>
+        <div>
+          <label for="p_vivienda">Tipo de vivienda</label>
+          <select id="p_vivienda" required>
+            <option value="">Elige una opción</option>
+            <option value="Casa">Casa</option>
+            <option value="Apartamento">Apartamento</option>
+            <option value="Cuarto">Cuarto</option>
+            <option value="Otro">Otro</option>
+          </select>
+        </div>
+        <div>
+          <label for="p_personas">Personas que viven en el hogar</label>
+          <input type="number" id="p_personas" min="1" max="20" step="1" required placeholder="1 a 20">
+        </div>
+        <fieldset class="pregunta">
+          <legend>¿Tienes patio?</legend>
+          <label class="opcion"><input type="radio" name="p_patio" value="si"> Sí</label>
+          <label class="opcion"><input type="radio" name="p_patio" value="no"> No</label>
+        </fieldset>
+        <fieldset class="pregunta">
+          <legend>¿Tienes ingresos estables?</legend>
+          <label class="opcion"><input type="radio" name="p_ingresos" value="si"> Sí</label>
+          <label class="opcion"><input type="radio" name="p_ingresos" value="no"> No</label>
+        </fieldset>
+        <fieldset class="pregunta">
+          <legend>¿Tienes otras mascotas?</legend>
+          <label class="opcion"><input type="radio" name="p_otras" value="si"> Sí</label>
+          <label class="opcion"><input type="radio" name="p_otras" value="no"> No</label>
+        </fieldset>
+        <fieldset class="pregunta">
+          <legend>¿Tienes experiencia cuidando mascotas?</legend>
+          <label class="opcion"><input type="radio" name="p_experiencia" value="si"> Sí</label>
+          <label class="opcion"><input type="radio" name="p_experiencia" value="no"> No</label>
+        </fieldset>
+        <div class="full-row hidden" id="bloqueOtras">
+          <label for="p_otras_detalle">¿Qué mascotas tienes?</label>
+          <input type="text" id="p_otras_detalle" maxlength="200" placeholder="Ej. Una gata adulta esterilizada">
+        </div>
+        <div class="full-row hidden" id="bloqueExperiencia">
+          <label for="p_experiencia_detalle">Cuéntanos tu experiencia</label>
+          <textarea id="p_experiencia_detalle" maxlength="300" placeholder="Ej. Tuve perros durante diez años"></textarea>
+        </div>
+        <div class="form-actions full-row" style="margin-top:8px;">
+          <button type="submit" id="btnGuardarPerfil">Guardar perfil</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <footer class="site-footer-mini">Managua, Nicaragua &nbsp;·&nbsp; Tel. +505 8888-0000 &nbsp;·&nbsp; contacto@patitasconectadas.com<br><span style="opacity:0.7;">Patitas Conectadas — Proyecto Integrador UCN 2026</span></footer>
+  <script src="js/comun.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/paginas/perfil.js"></script>
+</body>
+</html>
