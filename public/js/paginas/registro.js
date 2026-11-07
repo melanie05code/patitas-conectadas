@@ -1,3 +1,5 @@
+/* global api, mostrarAlerta, paginaInicio, redirigirSiHaySesion, renderizarBarra, sesion */
+
 if (!redirigirSiHaySesion()) {
   renderizarBarra();
 

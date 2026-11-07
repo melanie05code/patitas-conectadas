@@ -1,4 +1,6 @@
-if (requiereSesion("admin")) {
+/* global api, claseEstado, escaparHtml, formatearFecha, fotoMascota, iconoMascota, mostrarAlerta, numeroSolicitud, renderizarBarra, requiereSesion */
+
+function iniciarPagina() {
   renderizarBarra("admin");
 
   const estado = { tipos: [], mascotas: [], pendientes: [], mascotaEditando: null, tipoEditando: null };
@@ -279,7 +281,7 @@ if (requiereSesion("admin")) {
     if (alternar) {
       const tipo = estado.tipos.find((t) => t.id === Number(alternar.dataset.alternarTipo));
       const activo = !tipo.activo;
-      guardarTipo(tipo.id, { nombre: tipo.nombre, icono: tipo.icono, activo }, `El tipo ${tipo.nombre} se ${activo ? "activó" : "desactivó"}.`);
+      void guardarTipo(tipo.id, { nombre: tipo.nombre, icono: tipo.icono, activo }, `El tipo ${tipo.nombre} se ${activo ? "activó" : "desactivó"}.`);
     }
   });
 
@@ -289,10 +291,12 @@ if (requiereSesion("admin")) {
     evento.preventDefault();
     const datos = { nombre: nombreTipo.value.trim(), icono: iconoTipo.value.trim() };
     const editando = estado.tipoEditando;
-    guardarTipo(editando ? editando.id : null, datos, `El tipo ${datos.nombre} se guardó correctamente.`);
+    void guardarTipo(editando ? editando.id : null, datos, `El tipo ${datos.nombre} se guardó correctamente.`);
   });
 
-  cargarSolicitudes();
-  cargarTipos();
-  cargarMascotas();
+  void cargarSolicitudes();
+  void cargarTipos();
+  void cargarMascotas();
 }
+
+if (requiereSesion("admin")) iniciarPagina();

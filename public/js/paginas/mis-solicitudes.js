@@ -1,4 +1,6 @@
-if (requiereSesion("adoptante")) {
+/* global api, claseEstado, escaparHtml, formatearFecha, fotoMascota, mostrarAlerta, numeroSolicitud, renderizarBarra, requiereSesion */
+
+function iniciarPagina() {
   renderizarBarra("solicitudes");
 
   const lista = document.getElementById("list");
@@ -30,3 +32,5 @@ if (requiereSesion("adoptante")) {
       lista.innerHTML = `<div class="empty-state">${escaparHtml(error.message)}</div>`;
     });
 }
+
+if (requiereSesion("adoptante")) iniciarPagina();

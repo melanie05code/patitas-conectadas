@@ -14,12 +14,12 @@
       <div id="petBanner"></div>
       <div id="alertBox"></div>
       <form id="reqForm">
-        <label>Teléfono de contacto</label>
+        <label for="phone">Teléfono de contacto</label>
         <input type="tel" id="phone" required placeholder="8888-1234" pattern="[0-9]{4}-[0-9]{4}" title="Formato: 8888-1234">
         <small id="phoneHint" style="display:block; color:var(--gray); font-size:0.78rem; margin-top:4px;">Formato: 8888-1234</small>
-        <label>Dirección</label>
+        <label for="address">Dirección</label>
         <input type="text" id="address" required placeholder="Tu dirección">
-        <label>¿Por qué quieres adoptar a esta mascota?</label>
+        <label for="reason">¿Por qué quieres adoptar a esta mascota?</label>
         <textarea id="reason" required placeholder="Cuéntanos un poco..."></textarea>
         <button type="submit" class="full">Enviar solicitud</button>
       </form>

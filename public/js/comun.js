@@ -1,3 +1,6 @@
+/* global api */
+/* exported redirigirSiHaySesion, requiereSesion, renderizarBarra, mostrarAlerta, claseEstado, parametroId, numeroSolicitud, fechaRelativa, fotoMascota */
+
 const CLAVE_SESION = "pc_sesion";
 
 function leerExpiracion(token) {
@@ -104,7 +107,7 @@ function renderizarBarra(activa) {
       cerrarSesion();
     });
   }
-  if (actual && actual.rol === "adoptante") actualizarContadorNotificaciones();
+  if (actual && actual.rol === "adoptante") void actualizarContadorNotificaciones();
 }
 
 async function actualizarContadorNotificaciones() {

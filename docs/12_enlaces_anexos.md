@@ -15,8 +15,8 @@ Se crean con `npm run db:instalar`. Las contraseñas se guardan con hash bcrypt;
 
 | Rol | Correo | Contraseña | Qué puede hacer |
 |---|---|---|---|
-| Administrador del refugio | `admin@patitas.com` | `Admin2026` | Panel: responder solicitudes, gestionar mascotas, fotos y tipos |
-| Adoptante | `edwin.obando@correo.com` | `Edwin2026` | Solicitar adopciones, seguimiento, historial y notificaciones (tiene 4 solicitudes de ejemplo) |
+| Administrador del refugio | `admin@patitas.com` | `SEED_ADMIN_PASSWORD` del `.env` | Panel: responder solicitudes, gestionar mascotas, fotos y tipos |
+| Adoptante | `edwin.obando@correo.com` | `SEED_ADOPTANTE_PASSWORD` del `.env` | Solicitar adopciones, seguimiento, historial y notificaciones (tiene 4 solicitudes de ejemplo) |
 
 También se puede crear una cuenta nueva de adoptante desde *Registrarse*.
 
@@ -26,7 +26,7 @@ También se puede crear una cuenta nueva de adoptante desde *Registrarse*.
 |---|---|
 | Documentos del Hito 1 (alcance, requisitos, arquitectura, componentes, trazabilidad y prototipo v1) | [`docs/hito1/`](hito1/) |
 | Script de la base de datos (`CREATE TABLE`, PK, FK, UNIQUE, CHECK, índices) | [`database/01_schema.sql`](../database/01_schema.sql) |
-| Datos semilla (con contraseñas hasheadas) y su generador | [`database/02_seed.sql`](../database/02_seed.sql), [`database/generar-seed.js`](../database/generar-seed.js) |
+| Datos semilla (sin contraseñas ni hashes; se calculan al instalar) y su generador | [`database/02_seed.sql`](../database/02_seed.sql), [`database/generar-seed.js`](../database/generar-seed.js) |
 | Fotos reales de las mascotas | [`database/seed-fotos/`](../database/seed-fotos/) |
 | Migración de datos (exportador, ETL y respaldo de ejemplo) | [`database/migracion/`](../database/migracion/) |
 | Pruebas automáticas (Jest + Supertest) | [`tests/`](../tests/) |

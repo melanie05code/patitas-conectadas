@@ -1,5 +1,5 @@
 const fs = require("fs");
-const crypto = require("crypto");
+const { randomUUID } = require("crypto");
 const multer = require("multer");
 const ErrorApp = require("../utils/ErrorApp");
 const { subidas } = require("../config/entorno");
@@ -15,7 +15,7 @@ const MENSAJE_FORMATO = "La foto debe ser una imagen JPG, PNG o WEBP.";
 const cargador = multer({
   storage: multer.diskStorage({
     destination: (req, archivo, listo) => listo(null, asegurarDirectorioMascotas()),
-    filename: (req, archivo, listo) => listo(null, `${crypto.randomUUID()}${FORMATOS[archivo.mimetype].extension}`),
+    filename: (req, archivo, listo) => listo(null, `${randomUUID()}${FORMATOS[archivo.mimetype].extension}`),
   }),
   limits: { fileSize: subidas.tamanoMaximo, files: 1 },
   fileFilter: (req, archivo, listo) => {

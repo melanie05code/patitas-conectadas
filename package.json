@@ -15,7 +15,7 @@
     "db:seed": "node database/generar-seed.js",
     "db:instalar": "node database/instalar.js",
     "db:instalar:test": "node database/instalar.js --test",
-    "test": "cross-env NODE_ENV=test jest --runInBand",
+    "test": "cross-env NODE_ENV=test jest --runInBand --coverage",
     "migrar": "node database/migracion/migrar.js",
     "capturas": "node scripts/capturas.js"
   },

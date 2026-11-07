@@ -1,4 +1,5 @@
-const PATRON_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const { esEmail } = require("../../src/utils/validadores");
+
 const ESTADOS_MASCOTA = ["Disponible", "En proceso", "Adoptada"];
 const ESTADOS_SOLICITUD = ["En revisión", "Aprobada", "Rechazada"];
 const UNIDADES = {
@@ -14,7 +15,7 @@ function sinAcentos(texto) {
 
 function normalizarEmail(valor) {
   const email = String(valor ?? "").trim().toLowerCase();
-  return PATRON_EMAIL.test(email) ? email : null;
+  return esEmail(email) ? email : null;
 }
 
 function normalizarTelefono(valor) {

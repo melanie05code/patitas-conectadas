@@ -1,14 +1,7 @@
-const { texto, enteroPositivo } = require("../../utils/validadores");
+const { texto, campoTexto, enteroPositivo } = require("../../utils/validadores");
 
 const SEXOS = ["Macho", "Hembra"];
 const ESTADOS = ["Disponible", "En proceso", "Adoptada"];
-
-function campoTexto(cuerpo, campo, etiqueta, minimo, maximo, errores) {
-  const valor = texto(cuerpo[campo]);
-  if (valor.length < minimo) errores.push(`Completa el campo ${etiqueta}.`);
-  else if (valor.length > maximo) errores.push(`El campo ${etiqueta} no puede superar ${maximo} caracteres.`);
-  return valor;
-}
 
 function validarMascota(cuerpo, { conEstado }) {
   const errores = [];

@@ -1,4 +1,6 @@
-if (requiereSesion("adoptante")) {
+/* global api, escaparHtml, fotoMascota, mostrarAlerta, parametroId, renderizarBarra, requiereSesion */
+
+function iniciarPagina() {
   renderizarBarra("catalogo");
 
   const formulario = document.getElementById("reqForm");
@@ -55,5 +57,7 @@ if (requiereSesion("adoptante")) {
     }
   });
 
-  cargarMascota();
+  void cargarMascota();
 }
+
+if (requiereSesion("adoptante")) iniciarPagina();

@@ -32,6 +32,7 @@
 | 10 | Estrategia de implementación | [`10_estrategia_implementacion.md`](10_estrategia_implementacion.md) |
 | 11 | Conclusiones | [`11_conclusiones.md`](11_conclusiones.md) |
 | 12 | Enlaces y anexos | [`12_enlaces_anexos.md`](12_enlaces_anexos.md) |
+| 13 | Calidad y seguridad del código (SonarCloud, DeepSource, Snyk) | [`13_calidad_seguridad.md`](13_calidad_seguridad.md) |
 
 ## Resumen
 

@@ -1,13 +1,14 @@
-const { app, request, USUARIOS, reiniciarBaseDatos, consultarUna, cerrarConexiones } = require("./ayudantes");
+const { app, request, USUARIOS, contrasenaAleatoria, reiniciarBaseDatos, consultarUna, cerrarConexiones } = require("./ayudantes");
 
 beforeEach(reiniciarBaseDatos);
 afterAll(cerrarConexiones);
 
 describe("Autenticación (RF-01, RF-02, RNF-02)", () => {
   test("PR-01 registro exitoso guarda la contraseña con hash bcrypt", async () => {
+    const contrasena = contrasenaAleatoria();
     const respuesta = await request(app)
       .post("/api/auth/registro")
-      .send({ nombre: "  Ana López ", email: "ANA@Correo.com", password: "Segura2026", confirmacion: "Segura2026" });
+      .send({ nombre: "  Ana López ", email: "ANA@Correo.com", password: contrasena, confirmacion: contrasena });
 
     expect(respuesta.status).toBe(201);
     expect(respuesta.body.token).toEqual(expect.any(String));
@@ -16,13 +17,13 @@ describe("Autenticación (RF-01, RF-02, RNF-02)", () => {
 
     const fila = await consultarUna("SELECT password_hash FROM usuarios WHERE email = ?", ["ana@correo.com"]);
     expect(fila.password_hash).toMatch(/^\$2b\$10\$/);
-    expect(fila.password_hash).not.toContain("Segura2026");
+    expect(fila.password_hash).not.toContain(contrasena);
   });
 
   test("PR-02 registro con correo duplicado responde 409", async () => {
     const respuesta = await request(app)
       .post("/api/auth/registro")
-      .send({ nombre: "Otro Edwin", email: "EDWIN.OBANDO@correo.com", password: "Segura2026" });
+      .send({ nombre: "Otro Edwin", email: "EDWIN.OBANDO@correo.com", password: contrasenaAleatoria() });
 
     expect(respuesta.status).toBe(409);
     expect(respuesta.body).toEqual({ error: "Ya existe una cuenta con ese correo." });
@@ -31,7 +32,7 @@ describe("Autenticación (RF-01, RF-02, RNF-02)", () => {
   });
 
   test("PR-03 registro con datos inválidos responde 400 aunque no pase por el navegador", async () => {
-    const respuesta = await request(app).post("/api/auth/registro").send({ nombre: "A", email: "no-es-correo", password: "123" });
+    const respuesta = await request(app).post("/api/auth/registro").send({ nombre: "A", email: "no-es-correo", password: contrasenaAleatoria(3) });
 
     expect(respuesta.status).toBe(400);
     expect(respuesta.body.error).toContain("El nombre debe tener al menos 2 caracteres.");
@@ -50,8 +51,9 @@ describe("Autenticación (RF-01, RF-02, RNF-02)", () => {
   });
 
   test("PR-05 login con contraseña incorrecta responde 401 con mensaje genérico", async () => {
-    const incorrecta = await request(app).post("/api/auth/login").send({ email: USUARIOS.edwin.email, password: "incorrecta1" });
-    const inexistente = await request(app).post("/api/auth/login").send({ email: "nadie@correo.com", password: "incorrecta1" });
+    const contrasenaIncorrecta = contrasenaAleatoria();
+    const incorrecta = await request(app).post("/api/auth/login").send({ email: USUARIOS.edwin.email, password: contrasenaIncorrecta });
+    const inexistente = await request(app).post("/api/auth/login").send({ email: "nadie@correo.com", password: contrasenaIncorrecta });
 
     expect(incorrecta.status).toBe(401);
     expect(incorrecta.body).toEqual({ error: "Correo o contraseña incorrectos." });
