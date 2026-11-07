@@ -59,6 +59,11 @@ function fechaEnTexto(fecha) {
   return `${DIAS_TEXTO[fecha.getDay()]} ${fecha.getDate()} de ${MESES[fecha.getMonth()]}`;
 }
 
+function formatearFechaCorta(textoFecha) {
+  const fecha = leerFecha(textoFecha);
+  return fecha ? `${dosDigitos(fecha.getDate())}/${dosDigitos(fecha.getMonth() + 1)}/${fecha.getFullYear()}` : textoFecha;
+}
+
 function sumarDias(fecha, dias) {
   const copia = new Date(fecha.getFullYear(), fecha.getMonth(), fecha.getDate());
   copia.setDate(copia.getDate() + dias);
@@ -76,5 +81,6 @@ module.exports = {
   nombreDia,
   horaEnTexto,
   fechaEnTexto,
+  formatearFechaCorta,
   sumarDias,
 };

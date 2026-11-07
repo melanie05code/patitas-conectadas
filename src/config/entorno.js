@@ -12,8 +12,22 @@ function requerida(nombre) {
   return valor;
 }
 
+function enteroEnRango(nombre, porDefecto, minimo, maximo) {
+  const texto = process.env[nombre];
+  if (texto === undefined || texto === "") return porDefecto;
+  const valor = Number(texto);
+  if (!Number.isInteger(valor) || valor < minimo || valor > maximo) {
+    throw new Error(`La variable de entorno ${nombre} debe ser un número entero entre ${minimo} y ${maximo}.`);
+  }
+  return valor;
+}
+
 module.exports = {
   esPrueba,
+  seguimientos: {
+    intervaloDias: enteroEnRango("SEGUIMIENTO_INTERVALO_DIAS", 90, 1, 365),
+    cantidad: enteroEnRango("SEGUIMIENTO_CANTIDAD", 4, 1, 24),
+  },
   puerto: Number(process.env.PORT) || 3000,
   subidas: {
     directorio: path.join(raizProyecto, esPrueba ? "uploads-pruebas" : "uploads"),

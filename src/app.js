@@ -12,6 +12,7 @@ const rutasNotificaciones = require("./modules/notificaciones/rutas");
 const rutasPerfiles = require("./modules/perfiles/rutas");
 const rutasEntrevistas = require("./modules/entrevistas/rutas");
 const rutasConfiguracion = require("./modules/configuracion/rutas");
+const { rutas: rutasSeguimientos, rutasAdmin: rutasAdminSeguimientos } = require("./modules/seguimientos/rutas");
 
 const app = express();
 
@@ -33,6 +34,8 @@ app.use("/api/notificaciones", rutasNotificaciones);
 app.use("/api/perfil-adoptante", rutasPerfiles);
 app.use("/api/admin/entrevistas", rutasEntrevistas);
 app.use("/api/admin/configuracion-refugio", rutasConfiguracion);
+app.use("/api/seguimientos", rutasSeguimientos);
+app.use("/api/admin/seguimientos", rutasAdminSeguimientos);
 
 app.use("/api", rutaNoEncontrada);
 app.use(subidas.rutaPublica, express.static(subidas.directorio, { index: false, dotfiles: "deny", maxAge: "1d" }));
