@@ -1,11 +1,14 @@
 const repositorio = require("./repositorio");
+const servicioSeguimientos = require("../seguimientos/servicio");
 const ErrorApp = require("../../utils/ErrorApp");
 
-function listar(usuarioId) {
+async function listar(usuarioId) {
+  await servicioSeguimientos.generarRecordatorios(usuarioId);
   return repositorio.listarPorUsuario(usuarioId);
 }
 
 async function totalNoLeidas(usuarioId) {
+  await servicioSeguimientos.generarRecordatorios(usuarioId);
   return { total: await repositorio.contarNoLeidas(usuarioId) };
 }
 
