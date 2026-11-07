@@ -390,3 +390,9 @@ a.link-line { color: var(--teal-dark); font-weight: bold; text-decoration: none;
 .campo-check { display: flex; align-items: center; gap: 8px; margin-top: 8px; font-weight: normal; }
 .campo-check input { width: auto; }
 .ayuda { display: block; color: var(--gray); font-size: 0.78rem; margin-top: 4px; }
+
+.icono { display: inline-block; vertical-align: -0.15em; flex-shrink: 0; }
+.icono-mascota { width: 60%; height: 60%; color: var(--orange); opacity: 0.8; }
+.hero-paw .icono, .logo-block .paw .icono { color: var(--orange); }
+.avatar .icono { width: 55%; height: 55%; color: var(--orange); }
+.step .dot .icono { width: 14px; height: 14px; }

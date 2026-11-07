@@ -1,4 +1,4 @@
-/* global actualizarContadorNotificaciones, api, escaparHtml, fechaRelativa, formatearFecha, mostrarAlerta, renderizarBarra, requiereSesion */
+/* global actualizarContadorNotificaciones, api, escaparHtml, iconoSvg, fechaRelativa, formatearFecha, mostrarAlerta, renderizarBarra, requiereSesion */
 
 function iniciarPagina() {
   renderizarBarra("notificaciones");
@@ -16,7 +16,7 @@ function iniciarPagina() {
       : `<button type="button" class="small secondary" data-leer="${notificacion.id}">Marcar como leída</button>`;
     return `
       <div class="notif card ${notificacion.leida ? "" : "no-leida"}">
-        <div class="avatar">🔔</div>
+        <div class="avatar">${iconoSvg("campana")}</div>
         <div class="cuerpo-notif">
           <div class="texto-notif">${escaparHtml(notificacion.texto)}</div>
           <small title="${escaparHtml(formatearFecha(notificacion.creadoEn, true))}">${escaparHtml(fechaRelativa(notificacion.creadoEn))}</small>

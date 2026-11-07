@@ -71,7 +71,7 @@ function iniciarPagina() {
     }
     if (tipoActual && !tipos.some((t) => t.id === tipoActual)) tipoActual = null;
     contenedorFiltros.innerHTML = `<div class="filter-chip ${tipoActual ? "" : "active"}" data-tipo="">Todos</div>`
-      + tipos.map((t) => `<div class="filter-chip ${t.id === tipoActual ? "active" : ""}" data-tipo="${t.id}">${escaparHtml(t.icono)} ${escaparHtml(t.nombre)}</div>`).join("");
+      + tipos.map((t) => `<div class="filter-chip ${t.id === tipoActual ? "active" : ""}" data-tipo="${t.id}">${escaparHtml(t.nombre)}</div>`).join("");
     contenedorFiltros.querySelectorAll(".filter-chip").forEach((chip) => {
       chip.addEventListener("click", () => seleccionarFiltro(chip));
     });

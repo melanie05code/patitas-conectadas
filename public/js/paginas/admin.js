@@ -1,4 +1,4 @@
-/* global api, claseEstado, escaparHtml, formatearFecha, fotoMascota, iconoMascota, mostrarAlerta, numeroSolicitud, renderizarBarra, requiereSesion */
+/* global api, claseEstado, escaparHtml, formatearFecha, fotoMascota, iconoSvg, mostrarAlerta, numeroSolicitud, renderizarBarra, requiereSesion */
 
 function iniciarPagina() {
   renderizarBarra("admin");
@@ -51,12 +51,11 @@ function iniciarPagina() {
   const formTipo = document.getElementById("formTipo");
   const alertaTipos = document.getElementById("alertaTipos");
   const nombreTipo = document.getElementById("t_nombre");
-  const iconoTipo = document.getElementById("t_icono");
 
   function opcionesDeTipo(tipoActualId) {
     return estado.tipos
       .filter((t) => t.activo || t.id === tipoActualId)
-      .map((t) => `<option value="${t.id}">${escaparHtml(t.icono)} ${escaparHtml(t.nombre)}${t.activo ? "" : " (desactivado)"}</option>`)
+      .map((t) => `<option value="${t.id}">${escaparHtml(t.nombre)}${t.activo ? "" : " (desactivado)"}</option>`)
       .join("");
   }
 
@@ -107,7 +106,7 @@ function iniciarPagina() {
         ${estado.mascotas.map((m) => `
           <tr>
             <td><span class="miniatura">${fotoMascota(m)}</span>${escaparHtml(m.nombre)}</td>
-            <td>${iconoMascota(m)} ${escaparHtml(m.tipo.nombre)}</td>
+            <td>${escaparHtml(m.tipo.nombre)}</td>
             <td><span class="badge ${claseEstado(m.estado)}">${escaparHtml(m.estado)}</span></td>
             <td><button type="button" class="small" data-editar-mascota="${m.id}">Editar</button></td>
           </tr>`).join("")}
@@ -119,10 +118,9 @@ function iniciarPagina() {
     const contenedor = document.getElementById("listaTipos");
     contenedor.innerHTML = `
       <table>
-        <tr><th>Ícono</th><th>Nombre</th><th>Mascotas</th><th>Estado</th><th></th></tr>
+        <tr><th>Nombre</th><th>Mascotas</th><th>Estado</th><th></th></tr>
         ${estado.tipos.map((t) => `
           <tr>
-            <td>${escaparHtml(t.icono)}</td>
             <td>${escaparHtml(t.nombre)}</td>
             <td>${t.totalMascotas}</td>
             <td><span class="badge ${t.activo ? "green" : "gray"}">${t.activo ? "Activo" : "Desactivado"}</span></td>
@@ -145,8 +143,8 @@ function iniciarPagina() {
           <div style="color:#555; font-size:0.88rem; margin-top:4px; overflow-wrap:anywhere;">“${escaparHtml(solicitud.motivo)}”</div>
         </div>
         <div class="acciones">
-          <button type="button" data-responder="${solicitud.id}" data-estado="Aprobada" style="background:var(--green);">✔ Aprobar</button>
-          <button type="button" data-responder="${solicitud.id}" data-estado="Rechazada" class="danger">✕ Rechazar</button>
+          <button type="button" data-responder="${solicitud.id}" data-estado="Aprobada" style="background:var(--green);">${iconoSvg("check")} Aprobar</button>
+          <button type="button" data-responder="${solicitud.id}" data-estado="Rechazada" class="danger">${iconoSvg("equis")} Rechazar</button>
         </div>
       </div>
     `;
@@ -272,7 +270,6 @@ function iniciarPagina() {
       const tipo = estado.tipos.find((t) => t.id === Number(editar.dataset.editarTipo));
       estado.tipoEditando = tipo;
       nombreTipo.value = tipo.nombre;
-      iconoTipo.value = tipo.icono;
       document.getElementById("etiquetaTipo").textContent = `Editar tipo: ${tipo.nombre}`;
       document.getElementById("btnGuardarTipo").textContent = "Guardar cambios";
       document.getElementById("btnCancelarTipo").classList.remove("hidden");
@@ -281,7 +278,7 @@ function iniciarPagina() {
     if (alternar) {
       const tipo = estado.tipos.find((t) => t.id === Number(alternar.dataset.alternarTipo));
       const activo = !tipo.activo;
-      void guardarTipo(tipo.id, { nombre: tipo.nombre, icono: tipo.icono, activo }, `El tipo ${tipo.nombre} se ${activo ? "activó" : "desactivó"}.`);
+      void guardarTipo(tipo.id, { nombre: tipo.nombre, activo }, `El tipo ${tipo.nombre} se ${activo ? "activó" : "desactivó"}.`);
     }
   });
 
@@ -289,7 +286,7 @@ function iniciarPagina() {
 
   formTipo.addEventListener("submit", (evento) => {
     evento.preventDefault();
-    const datos = { nombre: nombreTipo.value.trim(), icono: iconoTipo.value.trim() };
+    const datos = { nombre: nombreTipo.value.trim() };
     const editando = estado.tipoEditando;
     void guardarTipo(editando ? editando.id : null, datos, `El tipo ${datos.nombre} se guardó correctamente.`);
   });
