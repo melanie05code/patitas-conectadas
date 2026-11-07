@@ -15,6 +15,10 @@ const usuarios = [
   { id: 2, nombre: "Edwin Obando", email: "edwin.obando@correo.com", variableContrasena: "SEED_ADOPTANTE_PASSWORD", rol: "adoptante" },
 ];
 
+const perfiles = [
+  { usuarioId: 2, tipoVivienda: "Apartamento", tienePatio: false, personasHogar: 2, ingresosEstables: true, tieneOtrasMascotas: true, otrasMascotasDetalle: "Una gata adulta esterilizada y muy sociable.", experienciaPrevia: true, experienciaDetalle: "Cuidé loras y gatos en casa de mis padres durante más de diez años." },
+];
+
 const mascotas = [
   { id: 1, nombre: "Mechudo", tipoId: 1, edad: "5 años", raza: "Yorkshire Terrier", sexo: "Macho", estado: "En proceso", foto: "mechudo.jpg", descripcion: "Pequeño, cariñoso y muy apegado a las personas. Le encanta que lo carguen y usar su suéter en los días frescos. Ideal para apartamento." },
   { id: 2, nombre: "Cjotas", tipoId: 1, edad: "4 meses", raza: "Mestizo", sexo: "Macho", estado: "Disponible", foto: "cjotas.jpg", descripcion: "Cachorro curioso de pelaje blanco con manchitas grises. Un poco tímido al principio, pero muy noble cuando toma confianza." },
@@ -47,4 +51,4 @@ function marcadorContrasena(variable) {
   return `@@${variable}@@`;
 }
 
-module.exports = { tipos, usuarios, mascotas, solicitudes, notificaciones, marcadorContrasena };
+module.exports = { tipos, usuarios, perfiles, mascotas, solicitudes, notificaciones, marcadorContrasena };
