@@ -25,6 +25,9 @@ async function hashContrasenaSemilla(variable) {
   if (!contrasena) {
     throw new Error(`Falta la variable de entorno ${variable} con la contraseña del usuario demo. Revisa tu archivo .env (usa .env.example como guía).`);
   }
+  if (contrasena.startsWith("EJEMPLO_")) {
+    throw new Error(`La variable ${variable} todavía tiene el valor de ejemplo de .env.example. Cámbiala por una contraseña propia.`);
+  }
   const clave = `${variable}:${contrasena}`;
   if (!hashesCalculados.has(clave)) hashesCalculados.set(clave, await bcrypt.hash(contrasena, RONDAS_BCRYPT));
   return hashesCalculados.get(clave);

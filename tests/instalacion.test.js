@@ -8,6 +8,8 @@ describe("Instalación de la base de datos y estado del servicio", () => {
     delete process.env.SEED_ADMIN_PASSWORD;
     try {
       await expect(reiniciarBaseDatos()).rejects.toThrow("Falta la variable de entorno SEED_ADMIN_PASSWORD");
+      process.env.SEED_ADMIN_PASSWORD = "EJEMPLO_cambia_esta_contrasena_admin";
+      await expect(reiniciarBaseDatos()).rejects.toThrow("todavía tiene el valor de ejemplo");
     } finally {
       process.env.SEED_ADMIN_PASSWORD = original;
     }
