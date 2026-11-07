@@ -8,6 +8,7 @@ const usarPrueba = process.argv.includes("--test");
 if (usarPrueba) process.env.NODE_ENV = "test";
 const { db } = require("../src/config/entorno");
 const { asegurarDirectorioMascotas } = require("../src/utils/archivos");
+const { aplicarMigraciones } = require("./migrar-esquema");
 
 const BD_ORIGINAL = "patitas_conectadas";
 const FOTOS_SEMILLA = path.join(__dirname, "seed-fotos");
@@ -44,6 +45,17 @@ function copiarFotosSemilla() {
   for (const archivo of fs.readdirSync(FOTOS_SEMILLA)) fs.copyFileSync(path.join(FOTOS_SEMILLA, archivo), path.join(destino, archivo));
 }
 
+async function eliminarTablas(conexion) {
+  await conexion.query(`CREATE DATABASE IF NOT EXISTS ${mysql.escapeId(db.database)} CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci`);
+  const [tablas] = await conexion.execute(
+    "SELECT TABLE_NAME AS nombre FROM information_schema.TABLES WHERE TABLE_SCHEMA = ? AND TABLE_TYPE = 'BASE TABLE'",
+    [db.database]
+  );
+  if (tablas.length === 0) return;
+  const lista = tablas.map((t) => `${mysql.escapeId(db.database)}.${mysql.escapeId(t.nombre)}`).join(", ");
+  await conexion.query(`SET FOREIGN_KEY_CHECKS = 0; DROP TABLE ${lista}; SET FOREIGN_KEY_CHECKS = 1;`);
+}
+
 async function instalarBaseDatos({ conSeed = true, silencioso = false } = {}) {
   const seed = conSeed ? await aplicarContrasenasSemilla(leerScript("02_seed.sql")) : null;
   const conexion = await mysql.createConnection({
@@ -55,7 +67,9 @@ async function instalarBaseDatos({ conSeed = true, silencioso = false } = {}) {
     multipleStatements: true,
   });
   try {
+    await eliminarTablas(conexion);
     await conexion.query(leerScript("01_schema.sql"));
+    await aplicarMigraciones(conexion, { silencioso: true });
     if (seed) {
       await conexion.query(seed);
       copiarFotosSemilla();

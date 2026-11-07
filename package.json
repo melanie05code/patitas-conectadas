@@ -17,7 +17,9 @@
     "db:instalar:test": "node database/instalar.js --test",
     "test": "cross-env NODE_ENV=test jest --runInBand --coverage",
     "migrar": "node database/migracion/migrar.js",
-    "capturas": "node scripts/capturas.js"
+    "capturas": "node scripts/capturas.js",
+    "db:migrar": "node database/migrar-esquema.js",
+    "db:migrar:test": "node database/migrar-esquema.js --test"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
