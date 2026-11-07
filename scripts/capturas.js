@@ -122,9 +122,9 @@ async function principal() {
     await capturar(pagina, "PR-14_solicitud_enviada");
 
     await pagina.click("#list .card:has-text('Cjotas')");
-    await pagina.waitForSelector(".timeline .step");
+    await pagina.waitForSelector(".linea-tiempo .etapa");
     const idCjotas = new URL(pagina.url()).searchParams.get("id");
-    await capturar(pagina, "PR-21_seguimiento_en_revision", { fullPage: true });
+    await capturar(pagina, "PR-21_seguimiento_solicitada", { fullPage: true });
 
     await pagina.goto(`${base}/solicitar.html?id=4`);
     await alerta();
@@ -136,12 +136,23 @@ async function principal() {
     await salir();
 
     await entrar("admin@patitas.com", CONTRASENA_ADMIN, "admin.html");
-    await pagina.waitForSelector("#pendingList [data-responder]");
+    await pagina.waitForSelector("#pendingList table");
     await pagina.waitForSelector("#petList .miniatura img");
     await capturar(pagina, "PR-04_login_valido_admin");
-    await pagina.click("#pendingList .row-flex:has-text('Cjotas') [data-estado='Aprobada']");
-    await alerta("#alertaSolicitudes");
-    await capturar(pagina.locator(".card").first(), "PR-18_solicitud_aprobada");
+    await pagina.goto(`${base}/admin-solicitud.html?id=${idCjotas}`);
+    await pagina.waitForSelector("#calendario .calendario");
+    await pagina.click("#calendario [data-dia]:not([disabled]) >> nth=2");
+    await pagina.click("[data-hora]:not([disabled]) >> nth=3");
+    await pagina.click("#btnConfirmarEntrevista");
+    await alerta();
+    await capturar(pagina, "PR-41_entrevista_agendada", { fullPage: true });
+    await pagina.click('[data-accion="entrevistada"]');
+    await pagina.waitForSelector('[data-accion="aprobar"]:not([disabled])');
+    await pagina.click('[data-accion="aprobar"]');
+    await pagina.waitForSelector(".badge:has-text('Aprobada')");
+    await capturar(pagina, "PR-18_solicitud_aprobada", { fullPage: true });
+    await pagina.goto(`${base}/admin.html`);
+    await pagina.waitForSelector("#petList .miniatura img");
 
     const tarjetaTipos = pagina.locator(".card:has(#formTipo)");
     await pagina.fill("#t_nombre", "perro");
@@ -185,7 +196,7 @@ async function principal() {
 
     await entrar("edwin.obando@correo.com", CONTRASENA_ADOPTANTE, "catalogo.html");
     await pagina.goto(`${base}/seguimiento.html?id=${idCjotas}`);
-    await pagina.waitForSelector(".step.current");
+    await pagina.waitForSelector("#seguimientos");
     await capturar(pagina, "PR-18_seguimiento_aprobada", { fullPage: true });
     await contexto.close();
 
