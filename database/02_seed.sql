@@ -47,6 +47,16 @@ INSERT INTO entrevistas (id, solicitud_id, fecha_hora, lugar, notas_admin, reali
   (3, 3, TIMESTAMP(CURDATE() - INTERVAL 65 DAY, '14:00:00'), 'Barrio Las Flores, de la iglesia 2 c. al lago, 1 c. arriba, Managua', 'Se rechaza: el apartamento no tiene patio ni área exterior y Princesa Sucia necesita espacio para jugar todos los días.', TIMESTAMP(CURDATE() - INTERVAL 65 DAY, '14:40:00'), TIMESTAMP(CURDATE() - INTERVAL 68 DAY, '10:00:00')),
   (4, 4, TIMESTAMP(CURDATE() - INTERVAL 210 DAY, '11:00:00'), 'Barrio Las Flores, de la iglesia 2 c. al lago, 1 c. arriba, Managua', 'Experiencia comprobada con aves. Tiene jaula amplia y conoce la dieta de las loras.', TIMESTAMP(CURDATE() - INTERVAL 210 DAY, '11:45:00'), TIMESTAMP(CURDATE() - INTERVAL 213 DAY, '09:00:00'));
 
+INSERT INTO seguimientos (id, solicitud_id, numero, fecha_programada, foto_url, enviado_en, estado, comentario_admin, revisado_en) VALUES
+  (1, 2, 1, CURDATE() + INTERVAL 46 DAY, NULL, NULL, 'Pendiente', NULL, NULL),
+  (2, 2, 2, CURDATE() + INTERVAL 136 DAY, NULL, NULL, 'Pendiente', NULL, NULL),
+  (3, 2, 3, CURDATE() + INTERVAL 226 DAY, NULL, NULL, 'Pendiente', NULL, NULL),
+  (4, 2, 4, CURDATE() + INTERVAL 316 DAY, NULL, NULL, 'Pendiente', NULL, NULL),
+  (5, 4, 1, CURDATE() - INTERVAL 118 DAY, '/uploads/mascotas/lara-control-1.jpg', TIMESTAMP(CURDATE() - INTERVAL 116 DAY, '18:20:00'), 'Todo bien', 'Lara se ve sana, con buen plumaje y muy activa. Todo en orden, gracias por cuidarla.', TIMESTAMP(CURDATE() - INTERVAL 115 DAY, '09:10:00')),
+  (6, 4, 2, CURDATE() - INTERVAL 28 DAY, NULL, NULL, 'Pendiente', NULL, NULL),
+  (7, 4, 3, CURDATE() + INTERVAL 62 DAY, NULL, NULL, 'Pendiente', NULL, NULL),
+  (8, 4, 4, CURDATE() + INTERVAL 152 DAY, NULL, NULL, 'Pendiente', NULL, NULL);
+
 INSERT INTO notificaciones (id, usuario_id, solicitud_id, texto, leida, creado_en) VALUES
   (1, 2, 4, 'Tu entrevista para adoptar a Lara quedó agendada. Revisa la fecha y el lugar en tu seguimiento.', 1, TIMESTAMP(CURDATE() - INTERVAL 213 DAY, '09:00:00')),
   (2, 2, 4, 'Tu solicitud para Lara fue aprobada.', 1, TIMESTAMP(CURDATE() - INTERVAL 208 DAY, '10:00:00')),
@@ -57,6 +67,7 @@ INSERT INTO notificaciones (id, usuario_id, solicitud_id, texto, leida, creado_e
   (7, 2, NULL, 'Nueva mascota disponible: Cjotas', 0, TIMESTAMP(CURDATE() - INTERVAL 6 DAY, '09:00:00')),
   (8, 2, 1, 'Recibimos tu solicitud para Mechudo. Te avisaremos cuando el refugio agende tu entrevista.', 1, TIMESTAMP(CURDATE() - INTERVAL 4 DAY, '10:15:00')),
   (9, 2, 1, 'Tu entrevista para adoptar a Mechudo quedó agendada. Revisa la fecha y el lugar en tu seguimiento.', 0, TIMESTAMP(CURDATE() - INTERVAL 2 DAY, '09:00:00')),
+  (11, 2, 4, 'Revisamos el control 1 de Lara: Todo bien. Lara se ve sana, con buen plumaje y muy activa.', 1, TIMESTAMP(CURDATE() - INTERVAL 115 DAY, '09:10:00')),
   (10, 3, 5, 'Recibimos tu solicitud para Vaquita. Te avisaremos cuando el refugio agende tu entrevista.', 0, TIMESTAMP(CURDATE() - INTERVAL 1 DAY, '15:20:00'));
 
 COMMIT;

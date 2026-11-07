@@ -65,6 +65,21 @@ const entrevistas = [
   { id: 4, solicitudId: 4, fechaHora: haceDias(210, "11:00:00"), lugar: DIRECCION_REFUGIO, notasAdmin: "Experiencia comprobada con aves. Tiene jaula amplia y conoce la dieta de las loras.", realizadaEn: haceDias(210, "11:45:00"), creadoEn: haceDias(213, "09:00:00") },
 ];
 
+function diaRelativo(dias) {
+  return sqlCrudo(dias < 0 ? `CURDATE() - INTERVAL ${-dias} DAY` : `CURDATE() + INTERVAL ${dias} DAY`);
+}
+
+const seguimientos = [
+  { id: 1, solicitudId: 2, numero: 1, fechaProgramada: diaRelativo(46), fotoUrl: null, enviadoEn: null, estado: "Pendiente", comentarioAdmin: null, revisadoEn: null },
+  { id: 2, solicitudId: 2, numero: 2, fechaProgramada: diaRelativo(136), fotoUrl: null, enviadoEn: null, estado: "Pendiente", comentarioAdmin: null, revisadoEn: null },
+  { id: 3, solicitudId: 2, numero: 3, fechaProgramada: diaRelativo(226), fotoUrl: null, enviadoEn: null, estado: "Pendiente", comentarioAdmin: null, revisadoEn: null },
+  { id: 4, solicitudId: 2, numero: 4, fechaProgramada: diaRelativo(316), fotoUrl: null, enviadoEn: null, estado: "Pendiente", comentarioAdmin: null, revisadoEn: null },
+  { id: 5, solicitudId: 4, numero: 1, fechaProgramada: diaRelativo(-118), fotoUrl: "/uploads/mascotas/lara-control-1.jpg", enviadoEn: haceDias(116, "18:20:00"), estado: "Todo bien", comentarioAdmin: "Lara se ve sana, con buen plumaje y muy activa. Todo en orden, gracias por cuidarla.", revisadoEn: haceDias(115, "09:10:00") },
+  { id: 6, solicitudId: 4, numero: 2, fechaProgramada: diaRelativo(-28), fotoUrl: null, enviadoEn: null, estado: "Pendiente", comentarioAdmin: null, revisadoEn: null },
+  { id: 7, solicitudId: 4, numero: 3, fechaProgramada: diaRelativo(62), fotoUrl: null, enviadoEn: null, estado: "Pendiente", comentarioAdmin: null, revisadoEn: null },
+  { id: 8, solicitudId: 4, numero: 4, fechaProgramada: diaRelativo(152), fotoUrl: null, enviadoEn: null, estado: "Pendiente", comentarioAdmin: null, revisadoEn: null },
+];
+
 const notificaciones = [
   { id: 1, usuarioId: 2, solicitudId: 4, texto: "Tu entrevista para adoptar a Lara quedó agendada. Revisa la fecha y el lugar en tu seguimiento.", leida: 1, creadoEn: haceDias(213, "09:00:00") },
   { id: 2, usuarioId: 2, solicitudId: 4, texto: "Tu solicitud para Lara fue aprobada.", leida: 1, creadoEn: haceDias(208, "10:00:00") },
@@ -75,6 +90,7 @@ const notificaciones = [
   { id: 7, usuarioId: 2, solicitudId: null, texto: "Nueva mascota disponible: Cjotas", leida: 0, creadoEn: haceDias(6, "09:00:00") },
   { id: 8, usuarioId: 2, solicitudId: 1, texto: "Recibimos tu solicitud para Mechudo. Te avisaremos cuando el refugio agende tu entrevista.", leida: 1, creadoEn: haceDias(4, "10:15:00") },
   { id: 9, usuarioId: 2, solicitudId: 1, texto: "Tu entrevista para adoptar a Mechudo quedó agendada. Revisa la fecha y el lugar en tu seguimiento.", leida: 0, creadoEn: haceDias(2, "09:00:00") },
+  { id: 11, usuarioId: 2, solicitudId: 4, texto: "Revisamos el control 1 de Lara: Todo bien. Lara se ve sana, con buen plumaje y muy activa.", leida: 1, creadoEn: haceDias(115, "09:10:00") },
   { id: 10, usuarioId: 3, solicitudId: 5, texto: "Recibimos tu solicitud para Vaquita. Te avisaremos cuando el refugio agende tu entrevista.", leida: 0, creadoEn: haceDias(1, "15:20:00") },
 ];
 
@@ -82,4 +98,4 @@ function marcadorContrasena(variable) {
   return `@@${variable}@@`;
 }
 
-module.exports = { tipos, usuarios, perfiles, mascotas, solicitudes, entrevistas, notificaciones, marcadorContrasena };
+module.exports = { tipos, usuarios, perfiles, mascotas, solicitudes, entrevistas, seguimientos, notificaciones, marcadorContrasena };
