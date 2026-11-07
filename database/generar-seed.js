@@ -14,7 +14,7 @@ function generarSeed() {
   const partes = [
     "USE patitas_conectadas;\n",
     "START TRANSACTION;\n",
-    insertar("tipos_mascota", ["id", "nombre", "icono"], datos.tipos.map((t) => [t.id, t.nombre, t.icono])),
+    insertar("tipos_mascota", ["id", "nombre"], datos.tipos.map((t) => [t.id, t.nombre])),
     insertar("usuarios", ["id", "nombre", "email", "password_hash", "rol"], usuarios),
     insertar(
       "mascotas",

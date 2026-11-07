@@ -2,16 +2,16 @@ USE patitas_conectadas;
 
 START TRANSACTION;
 
-INSERT INTO tipos_mascota (id, nombre, icono) VALUES
-  (1, 'Perro', '🐶'),
-  (2, 'Gato', '🐱'),
-  (3, 'Ave', '🦜'),
-  (4, 'Conejo', '🐰'),
-  (5, 'Cuyo', '🐹'),
-  (6, 'Hámster', '🐹'),
-  (7, 'Pez', '🐟'),
-  (8, 'Tortuga', '🐢'),
-  (9, 'Otro', '🐾');
+INSERT INTO tipos_mascota (id, nombre) VALUES
+  (1, 'Perro'),
+  (2, 'Gato'),
+  (3, 'Ave'),
+  (4, 'Conejo'),
+  (5, 'Cuyo'),
+  (6, 'Hámster'),
+  (7, 'Pez'),
+  (8, 'Tortuga'),
+  (9, 'Otro');
 
 INSERT INTO usuarios (id, nombre, email, password_hash, rol) VALUES
   (1, 'Administrador Refugio', 'admin@patitas.com', '@@SEED_ADMIN_PASSWORD@@', 'admin'),
