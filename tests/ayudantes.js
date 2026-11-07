@@ -36,6 +36,28 @@ async function registrarAdoptante(nombre, email) {
   return respuesta.body.token;
 }
 
+const PERFIL_VALIDO = {
+  tipoVivienda: "Casa",
+  tienePatio: true,
+  personasHogar: 3,
+  ingresosEstables: true,
+  tieneOtrasMascotas: false,
+  experienciaPrevia: true,
+  experienciaDetalle: "Tuve dos perros durante mi infancia.",
+};
+
+async function completarPerfil(token, perfil = PERFIL_VALIDO) {
+  const respuesta = await request(app).put("/api/perfil-adoptante").set("Authorization", `Bearer ${token}`).send(perfil);
+  if (respuesta.status !== 200) throw new Error(`No se pudo guardar el perfil: ${respuesta.status}`);
+  return respuesta.body;
+}
+
+async function registrarAdoptanteConPerfil(nombre, email) {
+  const token = await registrarAdoptante(nombre, email);
+  await completarPerfil(token);
+  return token;
+}
+
 async function consultarUna(sql, parametros = []) {
   const [filas] = await pool.query(sql, parametros);
   return filas[0];
@@ -64,6 +86,9 @@ module.exports = {
   reiniciarBaseDatos,
   iniciarSesion,
   registrarAdoptante,
+  registrarAdoptanteConPerfil,
+  completarPerfil,
+  PERFIL_VALIDO,
   consultarUna,
   solicitudValida,
   cerrarConexiones,
