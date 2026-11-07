@@ -20,7 +20,11 @@ function crearSolicitud(token, cuerpo) {
 }
 
 function responder(id, estado) {
-  return request(app).patch(`/api/admin/solicitudes/${id}`).set("Authorization", `Bearer ${tokenAdmin}`).send({ estado });
+  return request(app).patch(`/api/admin/solicitudes/${id}/estado`).set("Authorization", `Bearer ${tokenAdmin}`).send({ estado });
+}
+
+function marcarEntrevistada(id) {
+  return request(app).patch(`/api/admin/solicitudes/${id}/entrevistada`).set("Authorization", `Bearer ${tokenAdmin}`).send({ notas: "Entrevista sin observaciones." });
 }
 
 async function fotografiaDeLaBase(mascotaId) {
@@ -41,15 +45,15 @@ afterEach(() => jest.restoreAllMocks());
 afterAll(cerrarConexiones);
 
 describe("Solicitudes de adopción y transacciones (RF-05, RF-06, RF-08, RF-10)", () => {
-  test("PR-14 crear una solicitud válida la deja En revisión, pasa la mascota a En proceso y notifica", async () => {
+  test("PR-14 crear una solicitud válida la deja Solicitada, pasa la mascota a En proceso y notifica", async () => {
     const respuesta = await crearSolicitud(tokenEdwin, solicitudValida(MASCOTAS.cjotas));
 
     expect(respuesta.status).toBe(201);
-    expect(respuesta.body).toMatchObject({ estado: "En revisión", mascota: { nombre: "Cjotas", estado: "En proceso" }, usuario: { nombre: "Edwin Obando" } });
+    expect(respuesta.body).toMatchObject({ estado: "Solicitada", mascota: { nombre: "Cjotas", estado: "En proceso" }, usuario: { nombre: "Edwin Obando" } });
     const mias = await request(app).get("/api/solicitudes/mias").set("Authorization", `Bearer ${tokenEdwin}`);
-    expect(mias.body[0]).toMatchObject({ id: respuesta.body.id, estado: "En revisión" });
+    expect(mias.body[0]).toMatchObject({ id: respuesta.body.id, estado: "Solicitada" });
     const notificacion = await consultarUna("SELECT texto FROM notificaciones WHERE solicitud_id = ?", [respuesta.body.id]);
-    expect(notificacion.texto).toBe("Tu solicitud para Cjotas está en revisión.");
+    expect(notificacion.texto).toBe("Recibimos tu solicitud para Cjotas. Te avisaremos cuando el refugio agende tu entrevista.");
   });
 
   test("PR-15 una solicitud con teléfono inválido responde 400 y no se guarda", async () => {
@@ -72,26 +76,28 @@ describe("Solicitudes de adopción y transacciones (RF-05, RF-06, RF-08, RF-10)"
 
   test("PR-17 un adoptante que intenta entrar a una ruta de administración recibe 403 (RNF-04)", async () => {
     const listar = await request(app).get("/api/admin/solicitudes").set("Authorization", `Bearer ${tokenEdwin}`);
-    const aprobar = await request(app).patch("/api/admin/solicitudes/1").set("Authorization", `Bearer ${tokenEdwin}`).send({ estado: "Aprobada" });
+    const aprobar = await request(app).patch("/api/admin/solicitudes/1/estado").set("Authorization", `Bearer ${tokenEdwin}`).send({ estado: "Aprobada" });
 
     expect(listar.status).toBe(403);
     expect(aprobar.status).toBe(403);
     expect(listar.body).toEqual({ error: "No tienes permiso para realizar esta acción." });
-    expect((await consultarUna("SELECT estado FROM solicitudes WHERE id = 1")).estado).toBe("En revisión");
+    expect((await consultarUna("SELECT estado FROM solicitudes WHERE id = 1")).estado).toBe("Entrevista programada");
   });
 
-  test("PR-18 aprobar una solicitud cambia la mascota a Adoptada y crea la notificación", async () => {
+  test("PR-18 aprobar una solicitud entrevistada cambia la mascota a Adoptada y crea la notificación", async () => {
+    expect((await marcarEntrevistada(1)).status).toBe(200);
     const respuesta = await responder(1, "Aprobada");
 
     expect(respuesta.status).toBe(200);
     expect(respuesta.body).toMatchObject({ estado: "Aprobada", mascota: { nombre: "Mechudo", estado: "Adoptada" } });
     const notificacion = await consultarUna("SELECT texto, leida FROM notificaciones WHERE solicitud_id = 1 ORDER BY id DESC LIMIT 1");
-    expect(notificacion).toMatchObject({ texto: "¡Tu solicitud para Mechudo fue aprobada!", leida: 0 });
+    expect(notificacion).toMatchObject({ texto: "Tu solicitud para Mechudo fue aprobada. Revisa en tu seguimiento las fechas de los controles post-adopción.", leida: 0 });
     const repetida = await responder(1, "Rechazada");
     expect(repetida.status).toBe(409);
   });
 
   test("PR-19 si falla la notificación, la transacción hace rollback y nada queda guardado", async () => {
+    await marcarEntrevistada(1);
     const antes = await fotografiaDeLaBase(MASCOTAS.mechudo);
     jest.spyOn(repositorioNotificaciones, "crear").mockRejectedValueOnce(new Error("Fallo simulado al insertar la notificación"));
 
@@ -101,7 +107,7 @@ describe("Solicitudes de adopción y transacciones (RF-05, RF-06, RF-08, RF-10)"
     expect(respuesta.body).toEqual({ error: "Error interno del servidor." });
     expect(await fotografiaDeLaBase(MASCOTAS.mechudo)).toEqual(antes);
     expect(antes.estadoMascota).toBe("En proceso");
-    expect((await consultarUna("SELECT estado FROM solicitudes WHERE id = 1")).estado).toBe("En revisión");
+    expect((await consultarUna("SELECT estado FROM solicitudes WHERE id = 1")).estado).toBe("Entrevistada");
   });
 
   test("PR-20 dos solicitudes simultáneas por la misma mascota: solo una se guarda", async () => {
@@ -126,7 +132,8 @@ describe("Solicitudes de adopción y transacciones (RF-05, RF-06, RF-08, RF-10)"
     const ajeno = await request(app).get("/api/solicitudes/1").set("Authorization", `Bearer ${tokenAna}`);
 
     expect(propio.status).toBe(200);
-    expect(propio.body).toMatchObject({ id: 1, estado: "En revisión", mascota: { nombre: "Mechudo" } });
+    expect(propio.body).toMatchObject({ id: 1, estado: "Entrevista programada", mascota: { nombre: "Mechudo" }, entrevista: { solicitudId: 1 } });
+    expect(propio.body.entrevista.notasAdmin).toBeUndefined();
     expect(duracion).toBeLessThan(2000);
     expect(ajeno.status).toBe(403);
   });

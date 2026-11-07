@@ -12,6 +12,7 @@ if (!esPrueba || db.database === "patitas_conectadas") {
 const USUARIOS = {
   admin: { email: "admin@patitas.com", password: process.env.SEED_ADMIN_PASSWORD },
   edwin: { email: "edwin.obando@correo.com", password: process.env.SEED_ADOPTANTE_PASSWORD },
+  ana: { email: "ana.martinez@correo.com", password: process.env.SEED_ADOPTANTE2_PASSWORD },
 };
 
 function contrasenaAleatoria(largo = 16) {
