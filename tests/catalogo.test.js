@@ -1,6 +1,6 @@
 const fs = require("fs");
 const path = require("path");
-const { app, request, USUARIOS, MASCOTAS, reiniciarBaseDatos, iniciarSesion, cerrarConexiones } = require("./ayudantes");
+const { app, request, USUARIOS, MASCOTAS, reiniciarBaseDatos, iniciarSesion, consultarUna, cerrarConexiones } = require("./ayudantes");
 const { directorioMascotas } = require("../src/utils/archivos");
 
 const FOTO_JPG = fs.readFileSync(path.join(__dirname, "..", "database", "seed-fotos", "cjotas.jpg"));
@@ -118,5 +118,19 @@ describe("Catálogo y tipos de mascota (RF-03, RF-04, RF-09, RNF-04, PB-10, PB-1
     expect(activos.body.map((t) => t.nombre)).not.toContain("Conejo");
     expect(crear.status).toBe(400);
     expect(crear.body.error).toContain("está desactivado");
+  });
+
+  test("PR-32 los tipos y las mascotas ya no exponen el ícono y la migración quitó la columna", async () => {
+    const tipos = await request(app).get("/api/tipos-mascota");
+    const mascota = await request(app).get(`/api/mascotas/${MASCOTAS.lara}`);
+    const columna = await consultarUna(
+      "SELECT COUNT(*) AS total FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'tipos_mascota' AND COLUMN_NAME = 'icono'"
+    );
+    const migracion = await consultarUna("SELECT nombre FROM migraciones_esquema WHERE nombre = ?", ["001_quitar_icono_tipos.sql"]);
+    expect(tipos.status).toBe(200);
+    expect(tipos.body.every((t) => !("icono" in t))).toBe(true);
+    expect(mascota.body.tipo).not.toHaveProperty("icono");
+    expect(Number(columna.total)).toBe(0);
+    expect(migracion).toBeTruthy();
   });
 });
