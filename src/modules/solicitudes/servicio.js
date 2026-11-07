@@ -1,6 +1,7 @@
 const repositorio = require("./repositorio");
 const repositorioMascotas = require("../mascotas/repositorio");
 const repositorioNotificaciones = require("../notificaciones/repositorio");
+const servicioPerfiles = require("../perfiles/servicio");
 const ErrorApp = require("../../utils/ErrorApp");
 const { enTransaccion } = require("../../config/db");
 
@@ -16,6 +17,7 @@ async function crear(usuarioId, datos) {
   let id;
   try {
     id = await enTransaccion(async (conexion) => {
+      await servicioPerfiles.exigirPerfil(usuarioId, conexion);
       const mascota = await repositorioMascotas.bloquearPorId(datos.mascotaId, conexion);
       if (!mascota) throw new ErrorApp(404, "Mascota no encontrada.");
       if (await repositorio.existeActiva(usuarioId, datos.mascotaId, conexion)) throw new ErrorApp(409, MENSAJE_DUPLICADA);
