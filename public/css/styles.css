@@ -396,3 +396,8 @@ a.link-line { color: var(--teal-dark); font-weight: bold; text-decoration: none;
 .hero-paw .icono, .logo-block .paw .icono { color: var(--orange); }
 .avatar .icono { width: 55%; height: 55%; color: var(--orange); }
 .step .dot .icono { width: 14px; height: 14px; }
+.alert.info { background: var(--orange-light); color: var(--orange-text); }
+fieldset.pregunta { border: 1px solid #e3e3e3; border-radius: 8px; padding: 6px 12px 10px; margin: 12px 0 0; }
+fieldset.pregunta legend { font-weight: bold; font-size: 0.9rem; color: #555; padding: 0 4px; }
+.opcion { display: inline-flex; align-items: center; gap: 6px; margin: 6px 18px 0 0; font-weight: normal; cursor: pointer; }
+.opcion input { width: auto; margin: 0; }

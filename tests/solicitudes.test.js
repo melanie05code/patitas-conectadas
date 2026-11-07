@@ -5,7 +5,7 @@ const {
   MASCOTAS,
   reiniciarBaseDatos,
   iniciarSesion,
-  registrarAdoptante,
+  registrarAdoptanteConPerfil,
   consultarUna,
   solicitudValida,
   cerrarConexiones,
@@ -62,7 +62,7 @@ describe("Solicitudes de adopción y transacciones (RF-05, RF-06, RF-08, RF-10)"
 
   test("PR-16 solicitar una mascota que no está disponible responde 409", async () => {
     const adoptada = await crearSolicitud(tokenEdwin, solicitudValida(MASCOTAS.encantador));
-    const tokenAna = await registrarAdoptante("Ana López", "ana@correo.com");
+    const tokenAna = await registrarAdoptanteConPerfil("Ana López", "ana@correo.com");
     const enProceso = await crearSolicitud(tokenAna, solicitudValida(MASCOTAS.mechudo));
 
     expect(adoptada.status).toBe(409);
@@ -105,8 +105,8 @@ describe("Solicitudes de adopción y transacciones (RF-05, RF-06, RF-08, RF-10)"
   });
 
   test("PR-20 dos solicitudes simultáneas por la misma mascota: solo una se guarda", async () => {
-    const tokenAna = await registrarAdoptante("Ana López", "ana@correo.com");
-    const tokenBeto = await registrarAdoptante("Beto Ruiz", "beto@correo.com");
+    const tokenAna = await registrarAdoptanteConPerfil("Ana López", "ana@correo.com");
+    const tokenBeto = await registrarAdoptanteConPerfil("Beto Ruiz", "beto@correo.com");
 
     const respuestas = await Promise.all([
       crearSolicitud(tokenAna, solicitudValida(MASCOTAS.elHambriento)),
@@ -122,7 +122,7 @@ describe("Solicitudes de adopción y transacciones (RF-05, RF-06, RF-08, RF-10)"
     const inicio = performance.now();
     const propio = await request(app).get("/api/solicitudes/1").set("Authorization", `Bearer ${tokenEdwin}`);
     const duracion = performance.now() - inicio;
-    const tokenAna = await registrarAdoptante("Ana López", "ana@correo.com");
+    const tokenAna = await registrarAdoptanteConPerfil("Ana López", "ana@correo.com");
     const ajeno = await request(app).get("/api/solicitudes/1").set("Authorization", `Bearer ${tokenAna}`);
 
     expect(propio.status).toBe(200);

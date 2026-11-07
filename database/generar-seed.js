@@ -17,6 +17,11 @@ function generarSeed() {
     insertar("tipos_mascota", ["id", "nombre"], datos.tipos.map((t) => [t.id, t.nombre])),
     insertar("usuarios", ["id", "nombre", "email", "password_hash", "rol"], usuarios),
     insertar(
+      "perfiles_adoptante",
+      ["usuario_id", "tipo_vivienda", "tiene_patio", "personas_hogar", "ingresos_estables", "tiene_otras_mascotas", "otras_mascotas_detalle", "experiencia_previa", "experiencia_detalle"],
+      datos.perfiles.map((p) => [p.usuarioId, p.tipoVivienda, p.tienePatio, p.personasHogar, p.ingresosEstables, p.tieneOtrasMascotas, p.otrasMascotasDetalle, p.experienciaPrevia, p.experienciaDetalle])
+    ),
+    insertar(
       "mascotas",
       ["id", "nombre", "tipo_id", "edad", "raza", "sexo", "descripcion", "estado", "foto_url"],
       datos.mascotas.map((m) => [m.id, m.nombre, m.tipoId, m.edad, m.raza, m.sexo, m.descripcion, m.estado, `/uploads/mascotas/${m.foto}`])

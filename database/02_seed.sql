@@ -17,6 +17,9 @@ INSERT INTO usuarios (id, nombre, email, password_hash, rol) VALUES
   (1, 'Administrador Refugio', 'admin@patitas.com', '@@SEED_ADMIN_PASSWORD@@', 'admin'),
   (2, 'Edwin Obando', 'edwin.obando@correo.com', '@@SEED_ADOPTANTE_PASSWORD@@', 'adoptante');
 
+INSERT INTO perfiles_adoptante (usuario_id, tipo_vivienda, tiene_patio, personas_hogar, ingresos_estables, tiene_otras_mascotas, otras_mascotas_detalle, experiencia_previa, experiencia_detalle) VALUES
+  (2, 'Apartamento', false, 2, true, true, 'Una gata adulta esterilizada y muy sociable.', true, 'Cuidé loras y gatos en casa de mis padres durante más de diez años.');
+
 INSERT INTO mascotas (id, nombre, tipo_id, edad, raza, sexo, descripcion, estado, foto_url) VALUES
   (1, 'Mechudo', 1, '5 años', 'Yorkshire Terrier', 'Macho', 'Pequeño, cariñoso y muy apegado a las personas. Le encanta que lo carguen y usar su suéter en los días frescos. Ideal para apartamento.', 'En proceso', '/uploads/mascotas/mechudo.jpg'),
   (2, 'Cjotas', 1, '4 meses', 'Mestizo', 'Macho', 'Cachorro curioso de pelaje blanco con manchitas grises. Un poco tímido al principio, pero muy noble cuando toma confianza.', 'Disponible', '/uploads/mascotas/cjotas.jpg'),

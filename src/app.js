@@ -9,6 +9,7 @@ const rutasTipos = require("./modules/tipos/rutas");
 const rutasMascotas = require("./modules/mascotas/rutas");
 const { rutas: rutasSolicitudes, rutasAdmin: rutasAdminSolicitudes } = require("./modules/solicitudes/rutas");
 const rutasNotificaciones = require("./modules/notificaciones/rutas");
+const rutasPerfiles = require("./modules/perfiles/rutas");
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use("/api/mascotas", rutasMascotas);
 app.use("/api/solicitudes", rutasSolicitudes);
 app.use("/api/admin/solicitudes", rutasAdminSolicitudes);
 app.use("/api/notificaciones", rutasNotificaciones);
+app.use("/api/perfil-adoptante", rutasPerfiles);
 
 app.use("/api", rutaNoEncontrada);
 app.use(subidas.rutaPublica, express.static(subidas.directorio, { index: false, dotfiles: "deny", maxAge: "1d" }));

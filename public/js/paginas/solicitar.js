@@ -15,12 +15,30 @@ function iniciarPagina() {
     formulario.querySelectorAll("input, textarea, button").forEach((campo) => { campo.disabled = true; });
   }
 
+  function irAlPerfil() {
+    window.location.replace(`perfil.html?volver=${encodeURIComponent(`solicitar.html?id=${mascotaId}`)}`);
+  }
+
+  async function tienePerfil() {
+    try {
+      await api.get("/perfil-adoptante");
+      return true;
+    } catch (error) {
+      if (error.status === 404) return false;
+      throw error;
+    }
+  }
+
   async function cargarMascota() {
     if (!mascotaId) {
       bloquearFormulario("No se indicó la mascota. Vuelve al catálogo y elige una.");
       return;
     }
     try {
+      if (!(await tienePerfil())) {
+        irAlPerfil();
+        return;
+      }
       const mascota = await api.get(`/mascotas/${mascotaId}`);
       banner.innerHTML = `
         <div class="row-flex" style="background:var(--orange-light); padding:12px 16px; border-radius:8px; margin-bottom:6px;">

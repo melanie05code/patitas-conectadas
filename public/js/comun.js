@@ -91,6 +91,7 @@ function renderizarBarra(activa) {
   } else {
     enlaces = enlaceBarra("catalogo.html", "Mascotas", "catalogo", activa)
       + enlaceBarra("mis-solicitudes.html", "Mis Solicitudes", "solicitudes", activa)
+      + enlaceBarra("perfil.html", "Mi perfil", "perfil", activa)
       + enlaceBarra("notificaciones.html", 'Notificaciones<span class="contador hidden" id="contadorNotificaciones"></span>', "notificaciones", activa);
   }
   if (actual) {
