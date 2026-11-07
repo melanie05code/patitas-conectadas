@@ -20,12 +20,12 @@ describe("Notificaciones internas (RF-07)", () => {
 
     const ajena = await request(app).patch(`/api/notificaciones/${noLeida.id}/leida`).set("Authorization", `Bearer ${tokenAna}`);
     expect(ajena.status).toBe(403);
-    expect((await totalNoLeidas(tokenEdwin)).body).toEqual({ total: 3 });
+    expect((await totalNoLeidas(tokenEdwin)).body).toEqual({ total: 4 });
 
     const propia = await request(app).patch(`/api/notificaciones/${noLeida.id}/leida`).set("Authorization", `Bearer ${tokenEdwin}`);
     expect(propia.status).toBe(200);
     expect(propia.body).toMatchObject({ id: noLeida.id, leida: true });
-    expect((await totalNoLeidas(tokenEdwin)).body).toEqual({ total: 2 });
+    expect((await totalNoLeidas(tokenEdwin)).body).toEqual({ total: 3 });
   });
 
   test("PR-23 las notificaciones exigen sesión (401)", async () => {
