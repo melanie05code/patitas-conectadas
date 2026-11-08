@@ -35,6 +35,7 @@ Las fechas de identificación de las observaciones del I Parcial no se registrar
 | DEF-21 | RNF-03 | Media | Con sesión de adoptante, abrir cualquier página en una pantalla de 390 px: la barra mide 411 px y aparece desplazamiento horizontal (se introdujo al agregar "Mi perfil") | Prueba (E2E-15) | M. Obando | 2026-11-07 | La barra hace salto de línea en el celular · [`1cc3453`](https://github.com/melanie05code/patitas-conectadas/commit/1cc3453) | E2E-15 y E2E completa (16/16) | Cerrado |
 | DEF-22 | Seguridad, instalación | Media | Copiar `.env.example` sin cambiar `SEED_*` y ejecutar `npm run db:instalar`: se instalaba con contraseñas demo publicadas en el repositorio | Inspección (instalación desde cero) | M. Obando | 2026-11-07 | El instalador rechaza los valores `EJEMPLO_` · [`7931c1a`](https://github.com/melanie05code/patitas-conectadas/commit/7931c1a) | PR-31, VO-03 | Cerrado |
 | DEF-23 | Seguridad (calidad) | Baja | Las pruebas nuevas (E2E-09, E2E-10 y PR-31) y dos documentos de evidencia (esta bitácora y `instalacion_desde_cero.txt`) contenían contraseñas de ejemplo literales o pares `VARIABLE=valor`; el check **DeepSource: Secrets** del PR #18 pasó a rojo (SCT-A000, *Hardcoded credential*). El `exclude_patterns` de `docs/**` no aplica al analizador de secretos | DeepSource | M. Obando | 2026-11-07 | Valores aleatorios generados en cada ejecución · [`6974314`](https://github.com/melanie05code/patitas-conectadas/commit/6974314), [`4e73fc5`](https://github.com/melanie05code/patitas-conectadas/commit/4e73fc5), [`1021bf5`](https://github.com/melanie05code/patitas-conectadas/commit/1021bf5) | E2E completa (16/16), PR-31; DeepSource Secrets en verde en el CI del PR #18 | Cerrado |
+| DEF-24 | RF-02, seguridad | Media | Abrir `login.html`: debajo del formulario aparecían dos usuarios demo con contraseñas (`Admin…`/`Edwin…`) que ya no funcionaban desde DEF-13 y DEF-22, porque cada instalación define las suyas en el `.env` | Inspección (revisión final de pantallas) | M. Obando | 2026-11-07 | Texto eliminado; las cuentas demo solo se documentan en el README y en las notas del release, sin contraseñas · [`6162620`](https://github.com/melanie05code/patitas-conectadas/commit/6162620) | E2E-09, PR-05 (captura) y búsqueda de credenciales en `public/` sin resultados | Cerrado |
 
 ## 15.2 Evidencia ANTES → modificación → DESPUÉS
 
@@ -56,6 +57,14 @@ E2E-15 → **Fallido** ("Hay desplazamiento horizontal en móvil").
 ```
 
 **DESPUÉS:** `"scroll":390,"ancho":390,"anchos":[]` en las 6 páginas medidas; E2E-15 **Aprobado**. Captura: [`E2E-15_seguimiento_movil.png`](evidencias/final/e2e/E2E-15_seguimiento_movil.png).
+
+### DEF-24 · El login mostraba credenciales demo desactualizadas
+
+**ANTES:** `public/login.html` tenía, debajo del enlace de registro, un párrafo con "Demo admin" y "Demo adoptante": correo y contraseña de cada cuenta. Esas contraseñas eran las del Hito 1; desde DEF-13 y DEF-22 cada instalación toma las suyas de las variables `SEED_*`, así que el texto mostraba datos falsos y anunciaba cuentas reales.
+
+**Modificación** ([`6162620`](https://github.com/melanie05code/patitas-conectadas/commit/6162620), `public/login.html`): se eliminó el párrafo. Una búsqueda de `admin@patitas`, `edwin.obando` y `Demo` en `public/` ya no devuelve resultados. Las cuentas demo quedan en el README (sección *Usuarios demo*), que nombra la variable de cada contraseña sin su valor.
+
+**DESPUÉS:** la pantalla solo tiene el formulario y el enlace de registro ([`PR-05_login_error.png`](evidencias/PR-05_login_error.png), [`E2E-09_login_invalido.png`](evidencias/final/e2e/E2E-09_login_invalido.png)); E2E-09 y la suite E2E completa (16/16) aprobadas.
 
 ### DEF-22 · La instalación aceptaba las contraseñas de ejemplo
 
@@ -142,6 +151,6 @@ No se inyectó ReDoS (ya había dos reales, DEF-15) ni secretos (ya existían cr
 
 | | Cantidad |
 |---|---|
-| Defectos reales corregidos | **23** (DEF-01 a DEF-23), 6 de ellos encontrados hoy (DEF-18 a DEF-23) |
+| Defectos reales corregidos | **24** (DEF-01 a DEF-24), 7 de ellos encontrados hoy (DEF-18 a DEF-24) |
 | Fallos inyectados (no son defectos) | 4, todos corregidos; 3 detectados por las herramientas |
 | Residuales | **7** (RES-01 a RES-07), ninguno crítico |

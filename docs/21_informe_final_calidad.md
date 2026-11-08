@@ -17,8 +17,8 @@
 
 | | Cantidad | Detalle |
 |---|---|---|
-| Defectos reales corregidos | 23 | DEF-01 a DEF-23 ([bitácora](15_bitacora_defectos.md)) |
-| ... encontrados hoy por la suite final | 6 | DEF-18 (cobertura), DEF-19 (ETL), DEF-20 (SonarCloud), DEF-21 (celular), DEF-22 (contraseñas de ejemplo), DEF-23 (contraseñas literales en pruebas, DeepSource Secrets) |
+| Defectos reales corregidos | 24 | DEF-01 a DEF-24 ([bitácora](15_bitacora_defectos.md)) |
+| ... encontrados hoy por la suite final | 7 | DEF-18 (cobertura), DEF-19 (ETL), DEF-20 (SonarCloud), DEF-21 (celular), DEF-22 (contraseñas de ejemplo), DEF-23 (contraseñas literales en pruebas, DeepSource Secrets), DEF-24 (credenciales demo en el login) |
 | Fallos inyectados para validar herramientas | 4 | INY-01 a INY-04; no son defectos del producto |
 | Residuales | 7 | RES-01 a RES-07, ninguno crítico |
 | Hallazgos de usabilidad (III Parcial) | 9 | 7 corregidos y 2 pendientes de severidad 1–2 ([doc 23](23_evaluacion_usabilidad.md)) |
