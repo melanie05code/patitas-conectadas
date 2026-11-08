@@ -17,6 +17,8 @@ Primera versión estable: proceso de adopción completo, verificado y documentad
 - La barra de navegación desbordaba en el celular (DEF-21).
 - El instalador aceptaba las contraseñas `EJEMPLO_` de `.env.example` (DEF-22).
 - Contraseñas literales en las pruebas nuevas, que detectó DeepSource Secrets (DEF-23).
+- La pantalla de inicio de sesión mostraba credenciales demo desactualizadas; ahora las cuentas demo solo se documentan en el README, sin contraseñas (DEF-24).
+- La ficha de la mascota recortaba la foto: ahora se ve completa sobre un fondo neutro, y las tarjetas del catálogo encuadran más arriba para no cortar la cabeza.
 - README: `npm ci`, variables nuevas y migraciones, verificados con una instalación desde cero.
 
 ### Seguridad

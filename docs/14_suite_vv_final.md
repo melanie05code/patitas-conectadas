@@ -151,6 +151,7 @@ Casos reejecutados después de corregir cada defecto (detalle en la [bitácora](
 
 | Defecto | Corrección | Casos reejecutados | Resultado antes | Resultado después |
 |---|---|---|---|---|
+| DEF-24: el login mostraba credenciales demo desactualizadas | [`6162620`](https://github.com/melanie05code/patitas-conectadas/commit/6162620) | E2E-09, PR-05 y E2E completa | El login mostraba dos cuentas con contraseñas que ya no servían | Pantalla sin credenciales; E2E 16/16 |
 | DEF-21: la barra de navegación desborda en el celular | [`1cc3453`](https://github.com/melanie05code/patitas-conectadas/commit/1cc3453) | E2E-15 y E2E-01 a E2E-16 completos | E2E-15 Fallido (ancho de 411 px en una pantalla de 390) | 16/16; ancho de 390 px en 6 páginas |
 | DEF-22: la instalación aceptaba las contraseñas `EJEMPLO_` | [`7931c1a`](https://github.com/melanie05code/patitas-conectadas/commit/7931c1a) | PR-31 y VO-03 paso 3 | Se instalaba con contraseñas conocidas | Error claro; PR-31 aprobado |
 | DEF-23: contraseñas literales en las pruebas (DeepSource Secrets) | [`6974314`](https://github.com/melanie05code/patitas-conectadas/commit/6974314), [`4e73fc5`](https://github.com/melanie05code/patitas-conectadas/commit/4e73fc5), [`1021bf5`](https://github.com/melanie05code/patitas-conectadas/commit/1021bf5) | E2E completa y PR-31 | DeepSource Secrets Falla en el PR #18 | E2E 16/16 y PR-31 aprobados; DeepSource Secrets en verde |
@@ -158,5 +159,7 @@ Casos reejecutados después de corregir cada defecto (detalle en la [bitácora](
 | DEF-20: autoasignación en la migración 003 (SonarCloud S1656) | [`88b3125`](https://github.com/melanie05code/patitas-conectadas/commit/88b3125) | Suite completa en el CI del PR #16 | Quality Gate ERROR (Reliability C) | Quality Gate OK; 44/44 |
 | DEF-18: cobertura del código nuevo de 69 % (< 80 %) en el PR #13 | [`73e97ce`](https://github.com/melanie05code/patitas-conectadas/commit/73e97ce) | PR-33 + suite en el CI | Quality Gate ERROR | 86,2 % y Quality Gate OK |
 | DEF-01 a DEF-17 (Hito 1, II Parcial y calidad) | ver bitácora | PR-01 a PR-31 (suite completa) | — | 50/50 hoy |
+
+**Después de DEF-24 y del ajuste de las fotos (PR #19):** se volvieron a ejecutar `npm test` (50/50) y `npm run test:e2e` (16/16, `resultados.json` con hora `2026-11-08T04:06Z`, 22:06 en Managua) y se regeneraron las capturas con `npm run capturas` y `npm run capturas:manual`.
 
 **Regresión completa de hoy:** después del último cambio de código (`7931c1a`) se volvieron a ejecutar `npm test` (50/50) y `npm run test:e2e` (16/16). La corrida final antes del release fue a las 18:15 (Jest) y a las 18:17 (E2E), hora de Managua; `resultados.json` guarda la hora en UTC (`2026-11-08T00:17Z`).
