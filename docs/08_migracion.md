@@ -48,14 +48,15 @@ flowchart LR
 | Mascota que ya existe (mismo nombre y tipo) | Se vincula, no se duplica | — |
 | Teléfono | Se dejan solo los dígitos (y se quita el prefijo 505) → formato `8888-1234` | No quedan 8 dígitos → se descarta la solicitud |
 | Solicitud sin usuario o sin mascota | — | Se descarta como **huérfana** |
-| Solicitud que rompe las reglas (segunda *En revisión* o *Aprobada* de la misma mascota, o duplicada) | — | Se descarta |
+| Estado de la solicitud | **"En revisión" → "Solicitada"** (III Parcial: el prototipo solo conocía *En revisión*, *Aprobada* y *Rechazada*; desde la migración de esquema 003 la primera etapa se llama *Solicitada*). *Aprobada* y *Rechazada* se conservan y se registra `respondida_en` con la fecha de la solicitud. Las etapas *Entrevista programada* y *Entrevistada* no existen en el origen | Estado desconocido → se descarta |
+| Solicitud que rompe las reglas (segunda solicitud activa o *Aprobada* de la misma mascota, o duplicada) | — | Se descarta |
 | Fecha `YYYY-MM-DD` | `DATETIME` a las 00:00 | — |
 | Fecha relativa ("Hace un momento", "Hace N minutos/horas/días", "Ayer") | Se calcula a partir de la fecha de exportación del respaldo (`exportadoEn`) | Texto ilegible → fecha de exportación y aviso |
 | Notificaciones | Se cargan como leídas (el prototipo no guardaba ese estado) y sin solicitud asociada (el prototipo no tenía ese vínculo) | Usuario inexistente → se descarta |
 
 ## 8.5 Resultado real de la migración de prueba
 
-Ejecución: `node database/migracion/migrar.js` contra `patitas_test`, recién instalada con los datos semilla. Salida completa en [`docs/evidencias/migracion.txt`](evidencias/migracion.txt).
+Ejecución del **2026-11-07** (III Parcial, con el esquema y el seed de `v1.0.0`): `node database/migracion/migrar.js` contra `patitas_test`, recién instalada con los datos semilla. Salida completa en [`docs/evidencias/migracion.txt`](evidencias/migracion.txt).
 
 | Entidad | Origen | Insertados | Vinculados | Descartados |
 |---|---|---|---|---|
@@ -68,7 +69,8 @@ Ejecución: `node database/migracion/migrar.js` contra `patitas_test`, recién i
 - **Vinculados:** `admin@patitas.com` ya existía en el destino; `JUAN@correo.com` era un duplicado de `juan@correo.com` en el origen y se unificó.
 - **Descartados:** un usuario con correo inválido, una solicitud huérfana (mascota 999), una solicitud con teléfono `88-12` y una notificación de un usuario descartado.
 - **Transformaciones:** 2 contraseñas hasheadas (una con aviso por tener menos de 8 caracteres), el tipo "Hurón" asignado a "Otro", el teléfono `8765 4321` normalizado, 4 fechas relativas convertidas y 1 fecha ilegible reemplazada.
-- **Validación:** 11 de 11 comprobaciones en OK. Conteos en el destino: usuarios 2 → 4, mascotas 10 → 18, solicitudes 4 → 9, notificaciones 5 → 10.
+- **Estados:** las solicitudes *En revisión* del prototipo se cargaron como *Solicitada*. Antes de agregar esa equivalencia se descartaban como "estado desconocido" (DEF-19, detectado por PR-25).
+- **Validación:** 11 de 11 comprobaciones en OK. Conteos en el destino: usuarios 3 → 5, mascotas 10 → 18, solicitudes 5 → 10, notificaciones 11 → 16.
 - **Decisión:** **ACEPTADA (COMMIT)**. Los usuarios migrados inician sesión con su contraseña anterior (ahora protegida con bcrypt) y las mascotas migradas aparecen en el catálogo.
 
 ### Demostración del rollback
@@ -76,7 +78,7 @@ Ejecución: `node database/migracion/migrar.js` contra `patitas_test`, recién i
 Ejecución: `node database/migracion/migrar.js --max-descartes 0` (criterio de aceptación estricto: ningún descarte permitido). Salida completa en [`docs/evidencias/migracion_rollback.txt`](evidencias/migracion_rollback.txt).
 
 - La validación "Descartes dentro del umbral aceptado (máximo 0)" **falla** (4 descartados).
-- Decisión: **RECHAZADA (ROLLBACK)**. Los conteos del destino son idénticos antes y después: usuarios 2, mascotas 10, solicitudes 4, notificaciones 5.
+- Decisión: **RECHAZADA (ROLLBACK)**. Los conteos del destino son idénticos antes y después: usuarios 3, mascotas 10, solicitudes 5, notificaciones 11 (ejecución del 2026-11-07).
 
 ### Repetir la migración
 

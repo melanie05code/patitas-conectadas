@@ -20,7 +20,10 @@
     "capturas": "node scripts/capturas.js",
     "db:migrar": "node database/migrar-esquema.js",
     "db:migrar:test": "node database/migrar-esquema.js --test",
-    "recordatorios": "node scripts/recordatorios.js"
+    "recordatorios": "node scripts/recordatorios.js",
+    "test:e2e": "node tests/e2e/adopcion.e2e.js",
+    "medir:tiempos": "node scripts/medir-tiempos.js",
+    "capturas:manual": "node scripts/capturas-manual.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",

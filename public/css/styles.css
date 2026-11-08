@@ -369,6 +369,7 @@ button:disabled { opacity: 0.6; cursor: not-allowed; }
 .topbar { flex-wrap: wrap; gap: 6px 12px; }
 .topbar nav a { white-space: nowrap; }
 @media (max-width: 600px) {
+  .topbar nav { display: flex; flex-wrap: wrap; row-gap: 6px; max-width: 100%; }
   .topbar nav a { margin-left: 0; margin-right: 14px; }
 }
 a.link-line { color: var(--teal-dark); font-weight: bold; text-decoration: none; }
