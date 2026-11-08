@@ -1,6 +1,6 @@
 MIGRACIÓN DE DATOS — PATITAS CONECTADAS
 ============================================================
-Fecha de ejecución : 2026-10-25 02:47:02
+Fecha de ejecución : 2026-11-07 18:10:33
 Archivo de origen  : C:\proyectos\patitas-parcial2\patitas-conectadas\database\migracion\respaldo_localstorage.ejemplo.json
 Origen declarado   : Prototipo Hito 1 (localStorage del navegador) — ejemplo con casos de prueba
 Fecha de referencia: 2026-08-28 16:00:00 (para convertir fechas relativas)
@@ -8,8 +8,8 @@ Base de datos      : patitas_test (entorno de pruebas)
 Modo               : real
 
 1. RESPALDO
-  Copia del JSON : C:\proyectos\patitas-parcial2\patitas-conectadas\database\migracion\respaldos\2026-10-25_0247\respaldo_localstorage_2026-10-25_0247.json
-  mysqldump      : C:\proyectos\patitas-parcial2\patitas-conectadas\database\migracion\respaldos\2026-10-25_0247\patitas_test_2026-10-25_0247.sql (12.3 KB)
+  Copia del JSON : C:\proyectos\patitas-parcial2\patitas-conectadas\database\migracion\respaldos\2026-11-07_1810\respaldo_localstorage_2026-11-07_1810.json
+  mysqldump      : C:\proyectos\patitas-parcial2\patitas-conectadas\database\migracion\respaldos\2026-11-07_1810\patitas_test_2026-11-07_1810.sql (23.1 KB)
 
 2-4. EXTRACCIÓN, TRANSFORMACIÓN Y CARGA
   entidad         origen insertados vinculados descartados
@@ -54,11 +54,9 @@ Transformaciones y avisos (10)
   [OK] Sin notificaciones huérfanas — 0 huérfanas
 
 Conteos en el destino
-  antes:    usuarios=2  mascotas=10  solicitudes=4  notificaciones=5
-  después:  usuarios=4  mascotas=18  solicitudes=9  notificaciones=10
+  antes:    usuarios=3  mascotas=10  solicitudes=5  notificaciones=11
+  después:  usuarios=5  mascotas=18  solicitudes=10  notificaciones=16
 
 6. DECISIÓN
   ACEPTADA — se confirmó la transacción (COMMIT)
 
-
-Reporte guardado en database\migracion\migracion_reporte.txt
