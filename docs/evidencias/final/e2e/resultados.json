@@ -1,5 +1,5 @@
 {
-  "fecha": "2026-11-08T00:17:58.559Z",
+  "fecha": "2026-11-08T00:23:07.762Z",
   "node": "v24.20.0",
   "navegador": "msedge",
   "ejecutados": 16,
@@ -10,91 +10,91 @@
       "id": "E2E-01",
       "nombre": "Adoptante: registro, inicio de sesión y perfil completo",
       "estado": "Aprobado",
-      "duracionMs": 5052
+      "duracionMs": 3950
     },
     {
       "id": "E2E-02",
       "nombre": "Adoptante: catálogo con filtro, detalle y solicitud",
       "estado": "Aprobado",
-      "duracionMs": 2182
+      "duracionMs": 2492
     },
     {
       "id": "E2E-03",
       "nombre": "Admin: crear y editar una mascota con foto",
       "estado": "Aprobado",
-      "duracionMs": 2477
+      "duracionMs": 2046
     },
     {
       "id": "E2E-04",
       "nombre": "Admin: agendar la entrevista en el calendario",
       "estado": "Aprobado",
-      "duracionMs": 1411
+      "duracionMs": 1347
     },
     {
       "id": "E2E-05",
       "nombre": "Adoptante: ve la entrevista en su seguimiento",
       "estado": "Aprobado",
-      "duracionMs": 1234
+      "duracionMs": 1129
     },
     {
       "id": "E2E-06",
       "nombre": "Admin: marcar entrevistada y aprobar; la mascota queda Adoptada con 4 controles",
       "estado": "Aprobado",
-      "duracionMs": 2008
+      "duracionMs": 1966
     },
     {
       "id": "E2E-07",
       "nombre": "Adoptante: sube la foto de un control vencido",
       "estado": "Aprobado",
-      "duracionMs": 1997
+      "duracionMs": 1405
     },
     {
       "id": "E2E-08",
       "nombre": "Admin: revisa el control como Todo bien",
       "estado": "Aprobado",
-      "duracionMs": 1321
+      "duracionMs": 1169
     },
     {
       "id": "E2E-09",
       "nombre": "Negativo: inicio de sesión con contraseña incorrecta",
       "estado": "Aprobado",
-      "duracionMs": 763
+      "duracionMs": 752
     },
     {
       "id": "E2E-10",
       "nombre": "Negativo: registro con datos inválidos",
       "estado": "Aprobado",
-      "duracionMs": 1311
+      "duracionMs": 999
     },
     {
       "id": "E2E-11",
       "nombre": "Negativo: solicitar sin perfil lleva a completar el perfil",
       "estado": "Aprobado",
-      "duracionMs": 1209
+      "duracionMs": 1038
     },
     {
       "id": "E2E-12",
       "nombre": "Negativo: solicitar una mascota que no está disponible",
       "estado": "Aprobado",
-      "duracionMs": 1415
+      "duracionMs": 1160
     },
     {
       "id": "E2E-13",
       "nombre": "Negativo: un adoptante que entra al panel admin es redirigido",
       "estado": "Aprobado",
-      "duracionMs": 923
+      "duracionMs": 959
     },
     {
       "id": "E2E-14",
       "nombre": "Negativo: foto de tipo inválido y foto mayor a 2 MB",
       "estado": "Aprobado",
-      "duracionMs": 2644
+      "duracionMs": 2420
     },
     {
       "id": "E2E-15",
       "nombre": "Interfaz móvil: línea de tiempo vertical y sin desbordes",
       "estado": "Aprobado",
-      "duracionMs": 1493
+      "duracionMs": 1007
     },
     {
       "id": "E2E-16",

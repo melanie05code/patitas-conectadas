@@ -13,6 +13,8 @@ const FOTOS = path.join(__dirname, "..", "..", "database", "seed-fotos");
 const CANAL = process.env.CAPTURAS_NAVEGADOR || "msedge";
 const ADMIN = { email: "admin@patitas.com", password: process.env.SEED_ADMIN_PASSWORD };
 const EDWIN = { email: "edwin.obando@correo.com", password: process.env.SEED_ADOPTANTE_PASSWORD };
+const INCORRECTA = randomBytes(12).toString("base64url");
+const CORTA = randomBytes(3).toString("hex");
 const NUEVA = { nombre: "Valeria Prueba", email: `valeria.${Date.now()}@correo.com`, password: randomBytes(12).toString("base64url") };
 
 const resultados = [];
@@ -220,7 +222,7 @@ async function principal() {
       await salir();
       await pagina.goto(`${base}/login.html`);
       await pagina.fill("#email", ADMIN.email);
-      await pagina.fill("#password", "incorrecta-123");
+      await pagina.fill("#password", INCORRECTA);
       await pagina.click("#loginForm button[type=submit]");
       await pagina.waitForSelector("#alertBox .alert.error");
       esperar((await textoDe("#alertBox")).includes("Correo o contraseña incorrectos"), "Mensaje inesperado");
@@ -232,18 +234,18 @@ async function principal() {
       await pagina.goto(`${base}/registro.html`);
       await pagina.fill("#name", "A");
       await pagina.fill("#email", "correo-sin-arroba");
-      await pagina.fill("#password", "corta");
-      await pagina.fill("#password2", "distinta");
+      await pagina.fill("#password", CORTA);
+      await pagina.fill("#password2", `${CORTA}x`);
       await pagina.click("#regForm button[type=submit]");
       await pagina.waitForTimeout(500);
       const valido = await pagina.evaluate(() => document.getElementById("regForm").checkValidity());
       const alerta = await pagina.locator("#alertBox .alert.error").count();
       esperar(!valido || alerta === 1, "El formulario aceptó datos inválidos");
       esperar(pagina.url().endsWith("registro.html"), "No debía salir de registro");
-      const api = await pagina.evaluate(async () => {
-        const r = await fetch("/api/auth/registro", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ nombre: "A", email: "correo-sin-arroba", password: "corta" }) });
+      const api = await pagina.evaluate(async (clave) => {
+        const r = await fetch("/api/auth/registro", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ nombre: "A", email: "correo-sin-arroba", password: clave }) });
         return r.status;
-      });
+      }, CORTA);
       esperar(api === 400, `La API respondió ${api}`);
       const [[fila]] = await pool.query("SELECT COUNT(*) AS total FROM usuarios WHERE email = 'correo-sin-arroba'");
       esperar(Number(fila.total) === 0, "Se guardó un usuario inválido");
