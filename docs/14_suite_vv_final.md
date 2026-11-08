@@ -158,4 +158,4 @@ Casos reejecutados después de corregir cada defecto (detalle en la [bitácora](
 | DEF-18: cobertura del código nuevo de 69 % (< 80 %) en el PR #13 | [`73e97ce`](https://github.com/melanie05code/patitas-conectadas/commit/73e97ce) | PR-33 + suite en el CI | Quality Gate ERROR | 86,2 % y Quality Gate OK |
 | DEF-01 a DEF-17 (Hito 1, II Parcial y calidad) | ver bitácora | PR-01 a PR-31 (suite completa) | — | 50/50 hoy |
 
-**Regresión completa de hoy:** después del último cambio de código (`7931c1a`) se volvieron a ejecutar `npm test` (50/50) y `npm run test:e2e` (16/16).
+**Regresión completa de hoy:** después del último cambio de código (`7931c1a`) se volvieron a ejecutar `npm test` (50/50) y `npm run test:e2e` (16/16). La corrida final antes del release fue a las 18:15 (Jest) y a las 18:17 (E2E), hora de Managua; `resultados.json` guarda la hora en UTC (`2026-11-08T00:17Z`).
