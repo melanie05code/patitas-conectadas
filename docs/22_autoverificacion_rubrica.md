@@ -12,7 +12,7 @@
 | Validación en el backend y manejo de errores | PR-03, PR-15, PR-35, PR-37, PR-38, PR-48, E2E-10, E2E-14 |
 | Seguridad (roles, dueño, fotos, contraseñas) | PR-10, PR-17, PR-36, PR-47, PR-49, E2E-13 · [doc 04 §4.4](04_arquitectura.md) |
 | Calidad estática y dependencias | Quality Gate OK en los PR #12 a #17, Snyk sin High · [doc 21 §21.3](21_informe_final_calidad.md) |
-| Defectos detectados y corregidos | 22 corregidos, 7 residuales justificados · [doc 15](15_bitacora_defectos.md) |
+| Defectos detectados y corregidos | 23 corregidos, 7 residuales justificados · [doc 15](15_bitacora_defectos.md) |
 | Interfaz sin emojis, coherente y responsive | PR #13, PR-32, E2E-15 · [doc 23](23_evaluacion_usabilidad.md) |
 
 ## 22.2 Diseño y arquitectura (10 puntos)

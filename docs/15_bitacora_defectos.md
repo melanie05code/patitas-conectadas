@@ -34,6 +34,7 @@ Las fechas de identificación de las observaciones del I Parcial no se registrar
 | DEF-20 | BD | Baja | `UPDATE … actualizado_en = actualizado_en` en la migración 003 (S1656, Reliability C en el Quality Gate del PR #16) | SonarCloud | M. Obando | 2026-11-07 | Asignación de izquierda a derecha sin autoasignación · [`88b3125`](https://github.com/melanie05code/patitas-conectadas/commit/88b3125) | Suite completa en el CI del PR #16 | Cerrado |
 | DEF-21 | RNF-03 | Media | Con sesión de adoptante, abrir cualquier página en una pantalla de 390 px: la barra mide 411 px y aparece desplazamiento horizontal (se introdujo al agregar "Mi perfil") | Prueba (E2E-15) | M. Obando | 2026-11-07 | La barra hace salto de línea en el celular · [`1cc3453`](https://github.com/melanie05code/patitas-conectadas/commit/1cc3453) | E2E-15 y E2E completa (16/16) | Cerrado |
 | DEF-22 | Seguridad, instalación | Media | Copiar `.env.example` sin cambiar `SEED_*` y ejecutar `npm run db:instalar`: se instalaba con contraseñas demo publicadas en el repositorio | Inspección (instalación desde cero) | M. Obando | 2026-11-07 | El instalador rechaza los valores `EJEMPLO_` · [`7931c1a`](https://github.com/melanie05code/patitas-conectadas/commit/7931c1a) | PR-31, VO-03 | Cerrado |
+| DEF-23 | Seguridad (calidad) | Baja | Las pruebas nuevas (E2E-09, E2E-10 y PR-31) y dos documentos de evidencia (esta bitácora y `instalacion_desde_cero.txt`) contenían contraseñas de ejemplo literales o pares `VARIABLE=valor`; el check **DeepSource: Secrets** del PR #18 pasó a rojo (SCT-A000, *Hardcoded credential*). El `exclude_patterns` de `docs/**` no aplica al analizador de secretos | DeepSource | M. Obando | 2026-11-07 | Valores aleatorios generados en cada ejecución · [`6974314`](https://github.com/melanie05code/patitas-conectadas/commit/6974314), [`4e73fc5`](https://github.com/melanie05code/patitas-conectadas/commit/4e73fc5) | E2E completa (16/16), PR-31, CI del PR #18 | Cerrado |
 
 ## 15.2 Evidencia ANTES → modificación → DESPUÉS
 
@@ -58,7 +59,7 @@ E2E-15 → **Fallido** ("Hay desplazamiento horizontal en móvil").
 
 ### DEF-22 · La instalación aceptaba las contraseñas de ejemplo
 
-**ANTES:** con `SEED_ADMIN_PASSWORD=EJEMPLO_cambia_esta_contrasena_admin`, `npm run db:instalar` terminaba "instalada con datos semilla", con una contraseña de administrador publicada en el repositorio.
+**ANTES:** con la variable de la contraseña del admin en su valor de ejemplo (`EJEMPLO_…` de `.env.example`), `npm run db:instalar` terminaba "instalada con datos semilla", con una contraseña de administrador publicada en el repositorio.
 
 **Modificación** ([`7931c1a`](https://github.com/melanie05code/patitas-conectadas/commit/7931c1a), `database/instalar.js`):
 ```js
@@ -141,6 +142,6 @@ No se inyectó ReDoS (ya había dos reales, DEF-15) ni secretos (ya existían cr
 
 | | Cantidad |
 |---|---|
-| Defectos reales corregidos | **22** (DEF-01 a DEF-22), 5 de ellos encontrados hoy (DEF-18 a DEF-22) |
+| Defectos reales corregidos | **23** (DEF-01 a DEF-23), 6 de ellos encontrados hoy (DEF-18 a DEF-23) |
 | Fallos inyectados (no son defectos) | 4, todos corregidos; 3 detectados por las herramientas |
 | Residuales | **7** (RES-01 a RES-07), ninguno crítico |

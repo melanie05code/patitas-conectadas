@@ -10,7 +10,7 @@ added 422 packages, and audited 423 packages in 37s
 == Paso 2: usuario patitas_app — ya existe en este equipo (se omite la creación; se verifica la conexión en el paso 4)
 
 == Paso 3: .env desde .env.example
-PORT= DB_HOST= DB_PORT= DB_USER= DB_PASSWORD= DB_NAME= DB_NAME_TEST= JWT_SECRET= JWT_EXPIRA= MYSQLDUMP_PATH= SEED_ADMIN_PASSWORD= SEED_ADOPTANTE_PASSWORD= SEED_ADOPTANTE2_PASSWORD= SEGUIMIENTO_INTERVALO_DIAS= SEGUIMIENTO_CANTIDAD= 
+Variables de .env.example: PORT, DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME, DB_NAME_TEST, JWT_SECRET, JWT_EXPIRA, MYSQLDUMP_PATH, SEED_ADMIN_PASSWORD, SEED_ADOPTANTE_PASSWORD, SEED_ADOPTANTE2_PASSWORD, SEGUIMIENTO_INTERVALO_DIAS, SEGUIMIENTO_CANTIDAD
    Se completaron DB_PASSWORD, JWT_SECRET (48 bytes aleatorios) y las 3 contraseñas demo SEED_* (aleatorias). DB_NAME=patitas_test para no borrar la base de desarrollo.
 
 == Paso 4: npm run db:instalar

@@ -16,6 +16,7 @@ Primera versión estable: proceso de adopción completo, verificado y documentad
 ### Corregido
 - La barra de navegación desbordaba en el celular (DEF-21).
 - El instalador aceptaba las contraseñas `EJEMPLO_` de `.env.example` (DEF-22).
+- Contraseñas literales en las pruebas nuevas, que detectó DeepSource Secrets (DEF-23).
 - README: `npm ci`, variables nuevas y migraciones, verificados con una instalación desde cero.
 
 ### Seguridad
