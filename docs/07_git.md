@@ -207,3 +207,21 @@ git log --oneline --graph --all
 ## 7.6 Corrección del historial
 
 Al cerrar el Segundo Parcial se reescribió el historial de `main` para corregir el correo de autor de los commits hechos desde la terminal, que tenía un identificador de cuenta equivocado y no quedaban vinculados a `melanie05code`, y para unificar los títulos en pasado con «se». El contenido de los archivos no cambió: el árbol de cada commit es idéntico al original. Los commits del Hito 1 hechos desde la web conservan su hash y su firma de GitHub. Los hashes citados en esta documentación corresponden al historial corregido y se actualizaron en el [PR #11](https://github.com/melanie05code/patitas-conectadas/pull/11).
+
+## III Parcial (2026-11-07)
+
+Mismo flujo: una rama por parte, commits pequeños en pasado con «se» y prefijo, PR hacia `main` con merge commit cuando Tests, SonarCloud (Quality Gate) y Snyk están en verde.
+
+| PR | Rama | Título | Estado | Merge |
+|---|---|---|---|---|
+| [#12](https://github.com/melanie05code/patitas-conectadas/pull/12) | `dev` | Análisis de calidad y seguridad con SonarCloud, DeepSource y Snyk | Fusionado | `1057f5a` |
+| [#13](https://github.com/melanie05code/patitas-conectadas/pull/13) | `refactor/sin-emojis` | Interfaz sin emojis | Fusionado | `8b59e80` |
+| [#14](https://github.com/melanie05code/patitas-conectadas/pull/14) | `feat/perfil-adoptante` | Perfil del adoptante (RF-11) | Fusionado | `48cc483` |
+| [#15](https://github.com/melanie05code/patitas-conectadas/pull/15) | `feat/entrevistas` | Entrevistas y etapas de la solicitud | **Cerrado sin fusionar**: apuntaba a `feat/perfil-adoptante`, y GitHub lo cerró al borrar esa rama tras fusionar el #14; se reabrió como #16 | — |
+| [#16](https://github.com/melanie05code/patitas-conectadas/pull/16) | `feat/entrevistas` | Entrevistas y etapas de la solicitud (RF-05, RF-08, RF-12) | Fusionado | `537ecbc` |
+| [#17](https://github.com/melanie05code/patitas-conectadas/pull/17) | `feat/seguimiento-post-adopcion` | Seguimiento post-adopción y recordatorios (RF-13, RF-14, RF-15) | Fusionado | `be68a37` |
+| (cierre) | `docs/cierre-tercer-parcial` | Cierre del III Parcial: suite V&V, documentación y `v1.0.0` | — | — |
+
+**Lección:** al encadenar ramas, el PR siguiente se abre hacia `main` **después** de fusionar el anterior; si apunta a una rama que se borra al fusionar, GitHub lo cierra.
+
+El release [`v1.0.0`](https://github.com/melanie05code/patitas-conectadas/releases/tag/v1.0.0) se etiqueta sobre `main` después de fusionar el PR de cierre.
